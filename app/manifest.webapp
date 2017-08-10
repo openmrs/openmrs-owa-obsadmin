@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "name": "Obsadmin",
+  "description": "Manage encounters and observations",
+  "launch_path": "index.html",
+  "icons": {
+    "48": "/img/omrs-button.png"
+  },
+  "developer": {
+    "name": "andela-cuchendu",
+    "url": "https://github.com/andela-cuchendu/openmrs-owa-obsadmin"
+  },
+  "default_locale": "en",
+    "activities": {
+      "openmrs": {
+        "href": "*"
+      }
+    }
+}
