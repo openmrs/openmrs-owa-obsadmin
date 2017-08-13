@@ -1,7 +1,4 @@
 node_modules
-<<<<<<< HEAD
-webpack.config.js
-=======
 bower_components
 dist
 config.json
@@ -10,8 +7,7 @@ node_modules
 dist
 *.log
 webpack.config.js
-cohortbuilder.zip
 .DS_STORE
 package-lock.json
 npm-debug.log
->>>>>>> [Task] Setup development environment
+obsadmin.zip

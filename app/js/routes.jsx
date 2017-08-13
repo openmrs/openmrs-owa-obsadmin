@@ -10,12 +10,18 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 import React from 'react'
-import {Route} from 'react-router'
+import {Route, IndexRoute} from 'react-router'
 import App from './components/App'
+import Patient from './components/patient'
+import Search from './components/search'
 
 export default () => {
   return (
+
     <Route path="/" component={App}>
+      <IndexRoute component={Search} />
+      <Route path="/patient/:id" component={Patient} />
+      <Route path="*" component={Search} />
     </Route>
   );
 }
