@@ -1,0 +1,26 @@
+{
+  "name": "obsadmin",
+  "description": "Manage encounters and observations",
+  "main": "",
+  "authors": [
+    "andela-cuchendu"
+  ],
+  "license": "MPL-2.0",
+  "keywords": [
+    "OpenMRS",
+    "Open",
+    "Web",
+    "App"
+  ],
+  "homepage": "https://github.com/andela-cuchendu/openmrs-owa-obsadmin",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3.3.7"
+  }
+}

@@ -7,13 +7,17 @@
     "url": "https://github.com/andela-cuchendu/openmrs-owa-obsadmin"
   },
   "dependencies": {
+    "bower": "^1.8.0",
     "chai": "^4.1.1",
     "jsdom": "^8.5.0",
     "nyc": "^11.1.0",
     "react": "^15.4.1",
+    "react-bootstrap-typeahead": "^2.0.0-alpha.3",
     "react-dom": "^15.4.1",
     "react-router": "^3.0.0",
-    "sinon": "^3.1.0"
+    "react-table": "^6.5.3",
+    "sinon": "^3.1.0",
+    "superagent": "^3.5.2"
   },
   "devDependencies": {
     "archiver": "^1.0.0",
