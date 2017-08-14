@@ -1,14 +1,13 @@
-<<<<<<< HEAD
 # openmrs-owa-obsadmin
 Open Web Application for managing patient observations data
-=======
 <img src="https://cloud.githubusercontent.com/assets/668093/12567089/0ac42774-c372-11e5-97eb-00baf0fccc37.jpg" alt="OpenMRS"/>
 
 # Obsadmin
 
 This repository contains the Obsadmin OpenMRS Open Web App.
 
-> Add a description of what your app does here.
+This is a suite of tools for a Data Manager who might want to clean up a patient's data. So, don't think of this as "CRUD for visits, encounters, obs", but rather think like "As a Data Manager, I want to fix an incorrectly-recorded encounter so that I can fix the patient's medical record".
+
 
 For further documentation about OpenMRS Open Web Apps see
 [the wiki page](https://wiki.openmrs.org/display/docs/Open+Web+Apps+Module).
@@ -23,6 +22,11 @@ Once you have NodeJS installed, install the dependencies (first time only):
 
 ```sh
 npm install
+```
+Then:
+
+```sh
+bower install
 ```
 
 Build the distributable using [Webpack](https://webpack.github.io/) as follows:
@@ -114,4 +118,3 @@ See instructions [here](http://enable-cors.org/server_tomcat.html) for Tomcat 7 
 ## License
 
 [MPL 2.0 w/ HD](http://openmrs.org/license/)
->>>>>>> [Task] Setup development environment
