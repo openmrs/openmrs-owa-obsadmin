@@ -9,14 +9,21 @@
  * under the License.
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-import React from 'react';
+import React, { PropTypes } from 'react';
+import Header from '../common/header';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Hello, world</h1>
+/**
+ * Main application component.
+ */
+const App = (props) => {
+  return(
+    <div>
+      <div id="tabbed-cohort" >
+        <Header />
       </div>
-    )
-  }
+      {props.children}
+    </div>
+  );
 }
+
+export default App;

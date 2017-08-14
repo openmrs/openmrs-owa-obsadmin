@@ -1,14 +1,12 @@
-<<<<<<< HEAD
 # openmrs-owa-obsadmin
 Open Web Application for managing patient observations data
-=======
 <img src="https://cloud.githubusercontent.com/assets/668093/12567089/0ac42774-c372-11e5-97eb-00baf0fccc37.jpg" alt="OpenMRS"/>
 
 # Obsadmin
 
 This repository contains the Obsadmin OpenMRS Open Web App.
 
-> Add a description of what your app does here.
+Add a description of what your app does here.
 
 For further documentation about OpenMRS Open Web Apps see
 [the wiki page](https://wiki.openmrs.org/display/docs/Open+Web+Apps+Module).
@@ -114,4 +112,3 @@ See instructions [here](http://enable-cors.org/server_tomcat.html) for Tomcat 7 
 ## License
 
 [MPL 2.0 w/ HD](http://openmrs.org/license/)
->>>>>>> [Task] Setup development environment
