@@ -1,13 +1,10 @@
-/**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+/* * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
  */
 body {
     font-family: "OpenSans", Arial, sans-serif;
@@ -144,4 +141,74 @@ li>a:focus {
 
 .rt-td {
     text-align: center;
+}
+
+.patient-header {
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 24px;
+    color: #fff;
+    background: #363463;
+}
+
+.collapsible-header {
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 24px;
+    color: #fff;
+    background: #363463;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.Collapsible {
+  background-color: white; }
+
+.Collapsible__contentInner {
+  padding: 10px;
+  border: 1px solid #ebebeb;
+  border-top: 0; }
+  .Collapsible__contentInner p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px; }
+    .Collapsible__contentInner p:last-child {
+      margin-bottom: 0; }
+
+.Collapsible__trigger {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  color: #363463 !important;
+  position: relative;
+  border: 1px solid white;
+  padding: 10px;
+  background: #D3D3D3;
+  color: white; }
+  .Collapsible__trigger:after {
+    font-family: 'Glyphicons Halflings';
+    content: '\e252';
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: block;
+    transition: transform 300ms; }
+  .Collapsible__trigger.is-open:after {
+    transform: rotateZ(180deg); }
+  .Collapsible__trigger.is-disabled {
+    opacity: 0.5;
+    background-color: grey; }
+
+.CustomTriggerCSS {
+  background-color: lightcoral;
+  transition: background-color 200ms ease; }
+
+.CustomTriggerCSS--open {
+  background-color: #363463 ;
+  color: #FFF !important; }
+
+.collapsible-header-top {
+    margin-top: 20px;
 }
