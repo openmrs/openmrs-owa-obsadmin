@@ -12,6 +12,7 @@ import App from './components/App'
 import Patient from './components/patient'
 import Search from './components/search'
 import Demographics from './components/demographics'
+import Name from './components/names'
 
 export default () => {
   return (
@@ -19,7 +20,8 @@ export default () => {
     <Route path="/" component={App}>
       <IndexRoute component={Search} />
       <Route path="/patient/:id" component={Patient} />
-        <Route path="/patient/:id/demographics" component={Demographics} />
+      <Route path="/patient/:id/demographics" component={Demographics} />
+      <Route path="/patient/:id/name" component={Name} />
       <Route path="*" component={Search} />
     </Route>
   );
