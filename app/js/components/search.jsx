@@ -107,7 +107,7 @@ export default class Search extends React.Component {
                     onClick: (e, handleOriginal) => {
                       if(rowInfo){
                         this.setState({uuid: rowInfo.row.uuid});
-                        this.props.router.push(`/patient/${rowInfo.row.uuid}`,);
+                        this.props.router.push(`/patient/${rowInfo.row.uuid}`);
                         if (handleOriginal) {
                           handleOriginal()
                         }                      

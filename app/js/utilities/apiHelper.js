@@ -13,6 +13,7 @@ export default function apiCall(data, type, url) {
   return new Promise((resolve, reject) => {
     request[type](BASE_URL)
       .send(data)
+      .set('Content-Type','application/json')
       .end((err, res) => {
         if (res) {
           return resolve(res.body);
