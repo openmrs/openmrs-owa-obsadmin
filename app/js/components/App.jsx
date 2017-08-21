@@ -13,7 +13,7 @@ import Header from '../common/header';
  * Main application component.
  */
 const App = (props) => {
-  return(
+  return (
     <div>
       <div id="tabbed-cohort" >
         <Header />

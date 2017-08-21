@@ -241,6 +241,28 @@ li>a:focus {
     color: #636c72!important;
 }
 
+.card1{  
+ width: 47%;
+ height: auto;
+ float:left;
+ box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+ margin-top: 1%;
+ margin-left: 2%;
+ text-align: auto;
+ align-items: left;
+}
+.card-header{
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #f7f7f9;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.card-body{
+    text-indent: 2%;
+    justify-content: space-around;
+    margin: auto;
+    width: 90%;
+}
 .card-footer {
     padding: .75rem 1.25rem;
     background-color: #f7f7f9;
@@ -251,14 +273,18 @@ li>a:focus {
     border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
 }
 
-.card-header {
-    padding: .75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: #f7f7f9;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-
 .card-plain {
     padding-left: 15px;
     margin-bottom: 15px;
+    }
+#buttons{
+    margin:auto;
+    margin-bottom: px;
+    width:50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#buttons button{
+    margin-bottom: 2px;
 }
