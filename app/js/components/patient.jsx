@@ -11,11 +11,11 @@ import Collapsible from 'react-collapsible';
 import apiCall from '../utilities/apiHelper';
 import Addresses from './addresses'
 //import your collapsible component here
-
+import Name from './names'
 /**
  * Represents the Patient.
  * Used in managing patient data
- * 
+ *
  * @class Patient
  * @extends {React.Component}
  */
@@ -30,9 +30,9 @@ export default class Patient extends React.Component {
   }
 
   /**
-   * 
+   *
    * Loads pantient data and store in the state
-   * 
+   *
    * @memberOf Patient
    */
   componentDidMount(){
@@ -40,22 +40,22 @@ export default class Patient extends React.Component {
     if(this.state.uuid){
       apiCall(null, 'get', `/patient/${this.state.uuid}?v=full`).then((response) => {
         this.setState({patient: response});
-      }); 
+      });
     } else {
       goHome()
     }
   }
   /**
-   * 
+   *
    * Pushes location backwards.
-   */  
+   */
   goHome(){
     this.props.router.push("/");
   }
 
   /**
    * Renders the component
-   * 
+   *
    * @memberOf Patient
    */
   render(){
@@ -66,7 +66,7 @@ export default class Patient extends React.Component {
           <span onClick={this.goHome} className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
             aria-hidden="true">Back</span>
             <header className="patient-header">
-              Patient: {this.state.patient.display}  
+              Patient: {this.state.patient.display}
             </header>
             <div className="collapsible-header-top"></div>
             <Collapsible open={true} trigger="Identifiers" triggerOpenedClassName="CustomTriggerCSS--open">
@@ -78,24 +78,23 @@ export default class Patient extends React.Component {
               <p>It can even be another Collapsible component. Check out the next section!</p>
               <p>This is the collapsible content. It can be any element or React component you like.</p>
               <p>It can even be another Collapsible component. Check out the next section!</p>
-            </Collapsible>  
-            <Collapsible triggerOpenedClassName="CustomTriggerCSS--open"          
+            </Collapsible>
+            <Collapsible triggerOpenedClassName="CustomTriggerCSS--open"
             trigger="Names">
-              <p>This is the collapsible content. It can be any element or React component you like.</p>
-              <p>It can even be another Collapsible component. Check out the next section!</p>
-            </Collapsible>   
+              <Name uuid={this.props.params.id} />
+            </Collapsible>
             <Collapsible trigger="Addresses" triggerOpenedClassName="CustomTriggerCSS--open">
               <Addresses patient={this.state.patient}
               uuid={this.state.uuid || this.props.params.id} />
-            </Collapsible>   
+            </Collapsible>
             <Collapsible trigger="Demographics" triggerOpenedClassName="CustomTriggerCSS--open">
               <p>This is the collapsible content. It can be any element or React component you like.</p>
               <p>It can even be another Collapsible component. Check out the next section!</p>
-            </Collapsible>   
+            </Collapsible>
             <Collapsible trigger="Vists & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
               <p>This is the collapsible content. It can be any element or React component you like.</p>
               <p>It can even be another Collapsible component. Check out the next section!</p>
-            </Collapsible>                        
+            </Collapsible>
           </div>
         </div>
       </div>
