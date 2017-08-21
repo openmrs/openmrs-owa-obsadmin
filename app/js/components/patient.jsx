@@ -10,6 +10,7 @@ import React from 'react';
 import Collapsible from 'react-collapsible';
 import apiCall from '../utilities/apiHelper';
 import Addresses from './addresses'
+import Demographics from './demographics';
 //import your collapsible component here
 import Name from './names'
 /**
@@ -87,9 +88,8 @@ export default class Patient extends React.Component {
               <Addresses patient={this.state.patient}
               uuid={this.state.uuid || this.props.params.id} />
             </Collapsible>
-            <Collapsible trigger="Demographics" triggerOpenedClassName="CustomTriggerCSS--open">
-              <p>This is the collapsible content. It can be any element or React component you like.</p>
-              <p>It can even be another Collapsible component. Check out the next section!</p>
+          <Collapsible trigger="Demographics" triggerOpenedClassName="CustomTriggerCSS--open">
+              <Demographics uuid={this.props.params.id}/>
             </Collapsible>
             <Collapsible trigger="Vists & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
               <p>This is the collapsible content. It can be any element or React component you like.</p>
