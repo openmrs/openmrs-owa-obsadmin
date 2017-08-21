@@ -45,15 +45,17 @@ export default class Demographics extends React.Component {
    * @memberOf Demographics
    */
   componentWillMount() {
-    this.state.uuid = this.props.params.id;
-    apiCall(null,'get',`/${this.state.uuid}?v=full`)
+    this.state.uuid = this.props.uuid;
+    apiCall(null,'get',`/patient/${this.state.uuid}?v=full`)
       .then((res) => {
-        const { auditInfo, gender, birthdate, birthDateEstimated, dead: deceased, deathDate, deathDateEstimated, voided: deleted } = res.person
+        console.log("here",res )
+        const { auditInfo, gender, birthdate, birthDateEstimated, dead: deceased, causeOfDeath, deathDate, deathDateEstimated, voided: deleted } = res.person
         const { display: createdBy } = auditInfo.creator
         const dateCreated = auditInfo.dateCreated
+        const nameOfCauseOfDeath = causeOfDeath && causeOfDeath.uuid
 
         this.setState(
-          { gender, birthdate, birthDateEstimated, deceased, createdBy, dateCreated, deleted }
+          { gender, birthdate, birthDateEstimated, deceased, deathDate, nameOfCauseOfDeath, createdBy, dateCreated, deleted }
         )
       })
 
@@ -119,7 +121,7 @@ export default class Demographics extends React.Component {
         "deathdateEstimated": deathDateEstimated,
         "gender": gender
 
-      },'post',`/person/${this.state.uuid}?v=full`,
+      },'post',`/person/${this.state.uuid}`,
 
     ).then((res) => {
       toastr.error(res.error.message)
@@ -142,8 +144,6 @@ export default class Demographics extends React.Component {
     return (
       <div>
         <form>
-          <h3> Demographic Information </h3>
-
           <div className="form-row">
             <label className="col-sm-2 col-form-label">Gender</label>
             <div className="form-group col-sm-10">
@@ -184,13 +184,13 @@ export default class Demographics extends React.Component {
               className="form-control"
               name="deceased"
               type="checkbox"
-              defaultChecked={this.state.deceased}
+              checked={this.state.deceased}
               onChange={this.onDeceased}
             
             />
           </div>
           
-          {this.state.deceased === true &&
+          {this.state.deceased &&
             <div className="form-row">
               <div className="form-group col-sm-4">
                 <label className="col-form-label"> Death Date </label>
@@ -214,7 +214,7 @@ export default class Demographics extends React.Component {
               </div>
               <div className="form-group col-sm-4">
                 <label className="col-form-label"> Cause of death </label>
-                <select className= "form-control" onChange={this.handleChange} name="nameOfCauseOfDeath" value={this.state.causeOfDeath}>
+                <select className= "form-control" onChange={this.handleChange} name="nameOfCauseOfDeath" value={this.state.nameOfCauseOfDeath}>
                   {
                     this.state.causeOfDeath.map((cause) => (
                       <option value={cause.uuid}>{cause.display}</option>
@@ -230,6 +230,7 @@ export default class Demographics extends React.Component {
             <label className="col-sm-12 col-form-label"> Created By </label>
             <div className="form-group col-sm-6">
               <input
+              disabled={true}
                 className="form-control"
                 name="created-by"
                 type="text"
@@ -238,6 +239,8 @@ export default class Demographics extends React.Component {
             </div>
             <div className="form-group col-sm-6">
                 <DatePicker
+                  disabled={true}
+                  display="view" 
                   dateFormat="DD-MM-YYYY"
                   className="form-control"
                   name="dateCreated"
