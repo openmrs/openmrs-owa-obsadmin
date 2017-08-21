@@ -262,3 +262,32 @@ li>a:focus {
     padding-left: 15px;
     margin-bottom: 15px;
 }
+.card1{  
+ width: 47%;
+ height: 100%;
+ float:left;
+ box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+ margin-top: 1%;
+ margin-left: 2%;
+ text-align: auto;
+ align-items: left;
+}
+.card-body{
+    text-indent: 2%;
+    justify-content: space-around;
+    margin: auto;
+    width: 90%;
+    margin-bottom: 5%;
+}
+#buttons{
+    margin: auto;
+    margin-top:5%;
+    width:50%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+button.btn.btn.success{
+    padding: 6% 12%;
+}
