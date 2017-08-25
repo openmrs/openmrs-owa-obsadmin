@@ -48,7 +48,6 @@ export default class Demographics extends React.Component {
     this.state.uuid = this.props.uuid;
     apiCall(null,'get',`/patient/${this.state.uuid}?v=full`)
       .then((res) => {
-        console.log("here",res )
         const { auditInfo, gender, birthdate, birthDateEstimated, dead: deceased, causeOfDeath, deathDate, deathDateEstimated, voided: deleted } = res.person
         const { display: createdBy } = auditInfo.creator
         const dateCreated = auditInfo.dateCreated

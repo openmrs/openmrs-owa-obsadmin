@@ -13,6 +13,8 @@ import Patient from './components/patient'
 import Search from './components/search'
 import Demographics from './components/demographics'
 import Name from './components/names'
+import Visit from './components/visit'
+import Encounter from './components/encounter'
 
 export default () => {
   return (
@@ -22,6 +24,8 @@ export default () => {
       <Route path="/patient/:id" component={Patient} />
       <Route path="/patient/:id/demographics" component={Demographics} />
       <Route path="/patient/:id/name" component={Name} />
+      <Route path="/patient/:patentId/visit/:visitId" component={Visit} />
+      <Route path="/patient/:patentId/encounter/:encounterId" component={Encounter} />
       <Route path="*" component={Search} />
     </Route>
   );
