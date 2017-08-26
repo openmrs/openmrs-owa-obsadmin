@@ -11,7 +11,6 @@
  */
 import React from 'react';
 import apiCall from '../utilities/apiHelper';
-import toastr from 'toastr'
 
 class Name extends React.Component {
     constructor(props) {
@@ -94,32 +93,38 @@ class Name extends React.Component {
     handleSave(){
         this.setState((prevState) => (
             {   display: 'view',
-                res: {
-                    preferredName: {
-                        givenName: this.refs.givenname.value,
-                        middleName: this.refs.middlename.value,
-                        familyName: this.refs.familyname.value
-                    },
-                    auditInfo: {
-                        creator: {
-                            display: prevState.creator
-                        },
-                        dateCreated: prevState.dateCreated
-                    }
-                }
+                givenName: this.refs.givenname.value,
+                middleName: this.refs.middlename.value,
+                familyName: this.refs.familyname.value,
+                creator: prevState.creator,
+                dateCreated: prevState.dateCreated
         }));
-        apiCall(
-          {
-            "givenName": this.state.givenName,
-            "middleName": this.state.middleName,
-            "familyName": this.state.familyName
-        },'post','/person/' + this.state.res.uuid + '/name/' + this.state.res.preferredName.uuid)
-        .then((res) => {
-            console.log("here",res)
-            toastr.error(res.error.message)
-        });
-        window.location.reload();
-    };
+        if ( this.state.givenName && this.state.familyName){
+            apiCall(
+              {
+                "givenName": this.state.givenName,
+                "middleName": this.state.middleName,
+                "familyName": this.state.familyName
+            },'post','/person/' + this.state.res.uuid + '/name/' + this.state.res.preferredName.uuid)
+            .then((res) => {
+            this.props.newName()});
+            toastr.success('Name updated sucessfully');
+            }
+
+        else{
+            this.fetch();
+            this.setState((prevState) => (
+                {   display: 'view',
+                    givenName: prevState.res.preferredName.givenName,
+                    middleName: prevState.middleName,
+                    familyName: prevState.res.preferredName.familyName,
+                    creator: prevState.creator,
+                    dateCreated: prevState.dateCreated
+            }));
+            toastr.error('Error: Please provide names for both Given Name and Family Name');
+            }
+        }
+
 
     /**
      * handleCancel - resets info names field to state before start of edit
@@ -128,11 +133,15 @@ class Name extends React.Component {
      * @memberOf Name
      */
     handleCancel(){
+        this.fetch();
+        const given = this.state.res.preferredName.givenName;
+        const middle = this.state.res.preferredName.middleName;
+        const family = this.state.res.preferredName.familyName;
         this.setState((prevState) => (
             {   display: 'view',
-                givenName: prevState.res.preferredName.givenName,
-                middleName: prevState.res.preferredName.middleName,
-                familyName: prevState.res.preferredName.familyName,
+                givenName: given === null ? '' : prevState.givenName,
+                middleName: middle === null ? '' : prevState.middleName,
+                familyName: family === null ? '' : prevState.familyName,
                 voided: prevState.res.preferredName.voided,
                 preferred: prevState.preferred,
                 creator: prevState.res.auditInfo.creator.display,
@@ -151,16 +160,17 @@ class Name extends React.Component {
         return (
             <div>
             <form className="form-horizontal">
+                {this.state.display === "view" &&
                 <div className="form-group">
                     <div className="col-sm-2">
                         <input className="btn btn-success form-control"
                                name="edit"
                                type="button"
                                value="Edit Name"
-                               onClick={this.handleEdit}
-                               disabled={this.state.display !== 'view' ? 'disabled' : null}/>
+                               onClick={this.handleEdit}/>
                     </div>
                 </div>
+                }
 
                 <div className="form-group ">
                     <label className="control-label col-sm-2">Preferred</label>
@@ -183,7 +193,8 @@ class Name extends React.Component {
                                 value={this.state.givenName}
                                 onChange={this.handleChange}
                                 readOnly={this.state.display === 'view' ? 'readonly' : null}
-                                required />
+                                required
+                                 />
                     </div>
                 </div>
 
@@ -195,8 +206,9 @@ class Name extends React.Component {
                                 name="middleName"
                                 type="text"
                                 value={this.state.middleName}
-                                onChange={(event) => this.handleChange(event)}
-                                readOnly={this.state.display === 'view' ? 'readonly' : null}/>
+                                onChange={this.handleChange}
+                                readOnly={this.state.display === 'view' ? 'readonly' : null}
+                                />
                     </div>
                 </div>
 
@@ -208,7 +220,7 @@ class Name extends React.Component {
                                 name="familyName"
                                 type="text"
                                 value={this.state.familyName}
-                                onChange={(event) => this.handleChange(event)}
+                                onChange={this.handleChange}
                                 readOnly={this.state.display === 'view' ? 'readonly' : null}
                                 required />
                     </div>
@@ -225,25 +237,24 @@ class Name extends React.Component {
                                 disabled />
                     </div>
                 </div>
-
+                {this.state.display == "edit" &&
                 <div className="form-group">
                     <div className="col-sm-2">
                         <button type="submit"
                              name="update"
                              onClick={this.handleSave}
-                             disabled={this.state.display === 'view' ? 'disabled' : null}
-                             className="btn btn-default form-control">
+                             className="btn btn-success form-control">
                              Save</button>
                     </div>
                     <div className="col-sm-2">
                         <button type="button"
                              name="cancel"
                              onClick={this.handleCancel}
-                             disabled={this.state.display === 'view' ? 'disabled' : null}
                              className="btn btn-default form-control cancelBtn">
                              Cancel</button>
                     </div>
                </div>
+            }
 
             </form>
             </div>
