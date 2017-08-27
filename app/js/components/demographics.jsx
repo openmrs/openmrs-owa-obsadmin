@@ -9,7 +9,6 @@
 import React from 'react';
 import apiCall from '../utilities/apiHelper';
 import DatePicker from "react-bootstrap-date-picker";
-import toastr from 'toastr'
 
 export default class Demographics extends React.Component {
   constructor(props) {
@@ -39,9 +38,9 @@ export default class Demographics extends React.Component {
   }
 
   /**
-   * 
+   *
    * set to state patient attributes
-   * 
+   *
    * @memberOf Demographics
    */
   componentWillMount() {
@@ -59,9 +58,9 @@ export default class Demographics extends React.Component {
       })
 
   /**
-   * 
+   *
    * make API call to get the values then set to state
-   * 
+   *
    * @memberOf Demographics
    */
     apiCall(null,'get','/concept')
@@ -70,11 +69,11 @@ export default class Demographics extends React.Component {
           causeOfDeath: res.results
         })
       })
-  }
+    }
     /**
-   * 
+   *
    * set to state the array of concepts
-   * 
+   *
    * @memberOf Demographics
    */
 
@@ -90,8 +89,8 @@ export default class Demographics extends React.Component {
   handleTimeChange(name) {
     return value => {
       this.setState({
-        [name]: value // ISO String, ex: "2016-11-19T12:00:00.000Z" 
-        
+        [name]: value // ISO String, ex: "2016-11-19T12:00:00.000Z"
+
       });
     }
   }
@@ -108,7 +107,8 @@ export default class Demographics extends React.Component {
   setDeathDateEstimate(e) {
     this.setState({ deathDateEstimated: !this.state.deathDateEstimated })
   }
-  handleSave() {
+  handleSave(e) {
+    e.preventDefault();
     const { gender, birthdate, birthDateEstimated, nameOfCauseOfDeath, deceased, deathDate, deathDateEstimated } = this.state;
     apiCall(
       {
@@ -123,152 +123,144 @@ export default class Demographics extends React.Component {
       },'post',`/person/${this.state.uuid}`,
 
     ).then((res) => {
-      toastr.error(res.error.message)
+        if (res.error){
+        toastr.error(res.error.message)
+    }
+    else{
+        toastr.success("Demographics Updated")
+    }
     });
   }
     /**
-   * 
+   *
    * post to the end point values of attribute stored in state after editing
-   * 
+   *
    * @memberOf Demographics
    */
 
   render() {
         /**
-   * 
+   *
    * Render patient attributes
-   * 
+   *
    * @memberOf Demographics
    */
     return (
-      <div>
-        <form>
-          <div className="form-row">
-            <label className="col-sm-2 col-form-label">Gender</label>
-            <div className="form-group col-sm-10">
-                <label className="radio-inline">
-                  <input type="radio" id="inlineRadio1" value="option1"name="male" type="radio" value="M" checked={this.state.gender === "M"} onChange={this.setGender}/> Male
-                </label>
-                <label className="radio-inline">
-                    <input type="radio" id="inlineRadio2" value="option2" name="female" type="radio" value="F" checked={this.state.gender === "F"} onChange={this.setGender}/> Female
-                </label>
-              </div>
-          </div>
+        <div>
+            <form className="form-horizontal" onSubmit={this.handleSave}>
+                <div className="form-group">
+                        <label className="control-label col-sm-2">Gender</label>
+                        <div className="col-sm-5">
+                            <label className="radio-inline">
+                                <input type="radio" id="inlineRadio1" value="option1"name="male" type="radio" value="M" checked={this.state.gender === "M"} onChange={this.setGender}/> Male
+                            </label>
+                            <label className="radio-inline">
+                                <input type="radio" id="inlineRadio2" value="option2" name="female" type="radio" value="F" checked={this.state.gender === "F"} onChange={this.setGender}/> Female
+                            </label>
+                        </div>
+                </div>
 
-          <div className="form-row">
-                <div className="col-md-4">
-                    <label className="col-form-label">Birth Date</label>
-                    <DatePicker
-                        dateFormat="DD-MM-YYYY"
-                        className="form-control"
-                        name="birthdate"
-                        value={this.state.birthdate} onChange={this.handleTimeChange('birthdate')}
-                    />
+                <div className="form-group ">
+                    <label className="control-label col-sm-2">Birth Date</label>
+                    <div className="col-sm-5">
+                        <DatePicker
+                            dateFormat="DD-MM-YYYY"
+                            className="form-control"
+                            name="birthdate"
+                            value={this.state.birthdate} onChange={this.handleTimeChange('birthdate')}/>
+                    </div>
+                    <label className="control-label col-sm-2"> Estimated </label>
+                    <div className="col-sm-2">
+                        <input
+                            name="estimates"
+                            type="checkbox"
+                            defaultChecked={this.state.birthDateEstimated}
+                            onChange={this.setBirthDateEstimate}/>
+                    </div>
                 </div>
-                <div className="col-sm-8">
-                  <label className="col-form-label"> Estimated </label>
-                    <input
-                      name="estimates"
-                      type="checkbox"
-                      className="form-control"
-                      defaultChecked={this.state.birthDateEstimated}
-                      onChange={this.setBirthDateEstimate} 
-                    />
+
+                <div className="form-group">
+                    <label className="control-label col-sm-2"> Deceased </label>
+                    <div className="col-sm-2">
+                        <input
+                            name="deceased"
+                            type="checkbox"
+                            checked={this.state.deceased}
+                            onChange={this.onDeceased}/>
+                    </div>
                 </div>
-          </div>
-          
-          <div className="form-group">
-            <label className="col-form-label"> Deceased </label>
-            <input
-              className="form-control"
-              name="deceased"
-              type="checkbox"
-              checked={this.state.deceased}
-              onChange={this.onDeceased}
-            
-            />
-          </div>
-          
-          {this.state.deceased &&
-            <div className="form-row">
-              <div className="form-group col-sm-4">
-                <label className="col-form-label"> Death Date </label>
+
+                {this.state.deceased &&
+                <div>
+                <div className="form-group">
+                    <label className="control-label col-sm-2"> Death Date </label>
+                    <div className="col-sm-5">
                         <DatePicker
                             dateFormat="DD-MM-YYYY"
                             className="form-control"
                             name="deathDate"
-                  type="text"
-                  value={this.state.deathDate}
-                  onChange={this.handleTimeChange('deathDate')}
-                        />
-              </div>
-              <div className="form-group col-sm-4">
-                  <label className="col-form-label"> Estimated </label>
-                  <input
-                    className="form-control"
-                    name="estimated"
-                    type="checkbox"
-                    value={this.state.deathDateEstimated}
-                  />
-              </div>
-              <div className="form-group col-sm-4">
-                <label className="col-form-label"> Cause of death </label>
-                <select className= "form-control" onChange={this.handleChange} name="nameOfCauseOfDeath" value={this.state.nameOfCauseOfDeath}>
-                  {
-                    this.state.causeOfDeath.map((cause) => (
-                      <option value={cause.uuid}>{cause.display}</option>
+                            type="text"
+                            value={this.state.deathDate}
+                            onChange={this.handleTimeChange('deathDate')}/>
+                    </div>
+                    <label className="control-label col-sm-2"> Estimated </label>
+                    <div className="col-sm-2">
+                        <input
+                            name="estimated"
+                            type="checkbox"
+                            value={this.state.deathDateEstimated}/>
+                    </div>
+                </div>
 
-                    ))
-                  }
-                </select>
-              </div>
-            </div>
-          }
-           <div className="form-row">
-          <div className="form-group col-sm-6">
-            <label className="col-sm-12 col-form-label"> Created By </label>
-            <div className="form-group col-sm-6">
-              <input
-              disabled={true}
-                className="form-control"
-                name="created-by"
-                type="text"
-                value={this.state.createdBy}
-              />
-            </div>
-            <div className="form-group col-sm-6">
-                <DatePicker
-                  disabled={true}
-                  display="view" 
-                  dateFormat="DD-MM-YYYY"
-                  className="form-control"
-                  name="dateCreated"
-                  type="text"
-                  value={this.state.dateCreated}
+                <div className="form-group">
+                    <label className="control-label col-sm-2"> Cause of death </label>
+                    <div className="col-sm-5">
+                        <select className= "form-control" onChange={this.handleChange} name="nameOfCauseOfDeath" value={this.state.nameOfCauseOfDeath}>
+                          {
+                            this.state.causeOfDeath.map((cause) => (
+                              <option value={cause.uuid}>{cause.display}</option>
 
-                        />
-              </div>
-          </div>
-          </div>
-          
-          
-          <div className="form-group">
-             <div className="form-group col-sm-12">
-            <label className="col-form-label"> Deleted </label>
-            <input
-              className="form-control col-sm-6"
-              disabled
-              name="deleted"
-              type="text"
-              value={this.state.deleted}
-            />
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group col-sm-12">
-            <button onClick={this.handleSave}>Save</button>
-            </div>
-          </div>
+                            ))
+                          }
+                        </select>
+                    </div>
+                </div>
+                </div>
+                }
+
+                <div className="form-group">
+                    <label className="control-label col-sm-2"> Created By </label>
+                    <div className="col-sm-5">
+                        <input
+                            className="form-control"
+                            disabled={true}
+                            name="created-by"
+                            type="text"
+                            value={this.state.createdBy + ' ' + this.state.dateCreated}/>
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label className="control-label col-sm-2"> Deleted </label>
+                    <div className="col-sm-2">
+                        <input
+                            className="form-control"
+                            disabled
+                            name="deleted"
+                            type="text"
+                            value={this.state.deleted}/>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label className="control-label col-sm-1"> </label>
+                    <div className="control-label col-sm-2">
+                        <button
+                            type="submit"
+                            onClick={this.handleSave}
+                            className="btn btn-success form-control">
+                            Save</button>
+                    </div>
+                </div>
         </form>
       </div>
     )
