@@ -30,6 +30,8 @@ export default class Patient extends React.Component {
       uuid: null,
     }
     this.goHome = this.goHome.bind(this);
+    this.updateName = this.updateName.bind(this);
+    this.reload = this.reload.bind(this);
   }
 
   /**
@@ -41,9 +43,7 @@ export default class Patient extends React.Component {
   componentDidMount() {
     this.state.uuid = this.props.params.id;
     if (this.state.uuid) {
-      apiCall(null, 'get', `/patient/${this.state.uuid}?v=full`).then((response) => {
-        this.setState({ patient: response });
-      });
+      this.reload();
     } else {
       goHome()
     }
@@ -55,6 +55,23 @@ export default class Patient extends React.Component {
   goHome() {
     this.props.router.push("/");
   }
+  /**
+   *
+   * make API call to get the values then set to state
+   */
+  reload(){
+      apiCall(null, 'get', `/patient/${this.state.uuid}?v=full`).then((response) => {
+        this.setState({ patient: response });
+      });
+  }
+
+  /**
+   *
+   * updates the patients name being displayed.
+   */
+  updateName() {
+    this.reload();
+  };
 
   /**
    * Renders the component
@@ -77,7 +94,7 @@ export default class Patient extends React.Component {
             </Collapsible>
             <Collapsible triggerOpenedClassName="CustomTriggerCSS--open"
               trigger="Names">
-              <Name uuid={this.props.params.id} />
+              <Name uuid={this.props.params.id} newName={this.updateName} />
             </Collapsible>
             <Collapsible trigger="Addresses" triggerOpenedClassName="CustomTriggerCSS--open">
               <Addresses patient={this.state.patient}
