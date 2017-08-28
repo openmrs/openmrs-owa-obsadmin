@@ -7,7 +7,6 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import ReactTable from 'react-table'
 import "react-table/react-table.css";
 
@@ -15,7 +14,7 @@ import apiCall from '../utilities/apiHelper';
 
 /**
  * Represents the landing page with patient search feature
- * 
+ *
  * @class Search
  * @extends {React.Component}
  */
@@ -32,9 +31,9 @@ export default class Search extends React.Component {
 
   /**
    * Peforms the real search for patient
-   * 
-   * @param {any} e 
-   * 
+   *
+   * @param {any} e
+   *
    * @memberOf Search
    */
   search(e) {
@@ -42,12 +41,12 @@ export default class Search extends React.Component {
     this.setState({searchTerm: searchValue});
     apiCall(null, 'get', `/patient?q=${searchValue}&v=custom:(person)`).then((response) => {
       this.setState({patients: response.results});
-    }); 
+    });
   }
 
   /**
    * Renders the component
-   * 
+   *
    * @memberOf Search
    */
   render() {
@@ -78,11 +77,12 @@ export default class Search extends React.Component {
     return (
       <div>
         <div className="section top">
-          <div className="col-sm-12 section search">                   
-            <div className="col-sm-6 col-sm-offset-3 custom-typehead">  
+          <div className="col-sm-12 section search">
+            <div className="col-sm-6 col-sm-offset-3 custom-typehead">
               <input type="text"
+              ref = "search"
               className="form-control bootstrap-typeahead-input-main"
-              onChange={this.search} placeholder="Search Patient" />
+              onChange={this.search} placeholder="Search for patient by typing at least 2 letters of the name" />
             </div>
           </div>
         </div>
@@ -91,14 +91,15 @@ export default class Search extends React.Component {
           <div className="col-sm-12 section search">
             {this.state.patients.length > 0 ?
               <div>
-                <h3>Search result </h3>  
-                <span className="spanable">Sort table by clicking on the header.
-                  Resize by dragging column.
-                  Click on a patient to view.</span> 
-                  <p/>  
+                <h3>Search result </h3>
+                <span className="spanable">You can sort table by clicking on the header or
+                  resize by dragging from the edge of a column.<br />
+                  Click on a patient's row to view their details.</span>
+                  <p/>
               <ReactTable
                 className="-striped -highlight"
                 data={this.state.patients}
+                pageSize= {this.state.patients.length}
                 columns={columns}
                 noDataText='No patient found'
                 showPageSizeOptions={false}
@@ -110,15 +111,15 @@ export default class Search extends React.Component {
                         this.props.router.push(`/patient/${rowInfo.row.uuid}`);
                         if (handleOriginal) {
                           handleOriginal()
-                        }                      
+                        }
                       }
                     }
                   }
                 }}
               />
               </div>
-            : ''
-            } 
+            : this.state.searchTerm.length > 1 ? 'No Results Found' : ''
+            }
           </div>
         </div>
 
