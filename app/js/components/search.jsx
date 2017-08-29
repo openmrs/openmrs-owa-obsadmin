@@ -92,10 +92,6 @@ export default class Search extends React.Component {
             {this.state.patients.length > 0 ?
               <div>
                 <h3>Search result </h3>
-                <span className="spanable">You can sort table by clicking on the header or
-                  resize by dragging from the edge of a column.<br />
-                  Click on a patient's row to view their details.</span>
-                  <p/>
               <ReactTable
                 className="-striped -highlight"
                 data={this.state.patients}
