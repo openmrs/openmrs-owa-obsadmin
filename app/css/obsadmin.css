@@ -305,3 +305,11 @@ a {
     margin-bottom: 15px;
     margin-top: 25px;
 }
+.glyphicon {
+    color: black;
+    font-size: 12px;
+}
+form{
+    display: inline-block;
+    text-align: center;
+}
