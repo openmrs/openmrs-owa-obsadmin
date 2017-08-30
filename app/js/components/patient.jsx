@@ -103,7 +103,7 @@ export default class Patient extends React.Component {
             <Collapsible trigger="Demographics" triggerOpenedClassName="CustomTriggerCSS--open">
               <Demographics uuid={this.props.params.id} />
             </Collapsible>
-            <Collapsible trigger="Vists & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
+            <Collapsible trigger="Visits & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
              <VisitsAndEncounters uuid={this.props.params.id}/>
             </Collapsible>
           </div>

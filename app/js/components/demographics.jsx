@@ -110,6 +110,7 @@ export default class Demographics extends React.Component {
   handleSave(e) {
     e.preventDefault();
     const { gender, birthdate, birthDateEstimated, nameOfCauseOfDeath, deceased, deathDate, deathDateEstimated } = this.state;
+    console.log('nn',this.state)
     apiCall(
       {
         "birthdate": birthdate,

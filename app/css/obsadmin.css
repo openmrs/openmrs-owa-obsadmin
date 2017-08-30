@@ -296,3 +296,11 @@ a {
     text-decoration: underline;
     cursor: pointer;
 }
+.glyphicon {
+    color: black;
+    font-size: 12px;
+}
+form{
+    display: inline-block;
+    text-align: center;
+}
