@@ -86,8 +86,8 @@ export default class Identifiers extends React.Component {
       })
   }
   /**
-   * 
-   * @param {*} isPreferred 
+   *
+   * @param {*} isPreferred
    * @param {*} identifier_uuid
    *It handle change of the preferred identifier
    */
@@ -99,41 +99,42 @@ export default class Identifiers extends React.Component {
     }
   }
   /**
-   * 
+   *
    * @param {*} e
    *Handles chnage of input during edit
    */
-  handleChange(e) {
-    const { name: label, value } = e.target;
-    this.setState({
-      editIdentifiers: Object.assign({}, this.state.editIdentifiers, {
-        [label]: value
-      })
-    })
+  handleChange(e, index) {
+      e.preventDefault();
+        const { name, value } = e.target;
+        this.setState({
+          editIdentifiers: Object.assign({}, this.state.editIdentifiers, {
+            [name]: value
+          })
+        })
   }
 
   /**
-   * 
+   *
    * @param {*} e
    *handles input change during creating new identifier
    */
   handleCreateChange(e) {
     const label = e.target.name;
+    const value = e.target.value;
     const { addIdentifiers } = this.state;
 
     if (label === 'preferred') {
       addIdentifiers['preferred'] = e.target.checked;
     } else {
-      addIdentifiers[label] = e.target.value;
+      addIdentifiers[label] = value;
     }
     this.setState({
       addIdentifiers
     });
   }
-
   /**
-   * 
-   * @param {*} id 
+   *
+   * @param {*} id
    * @param {*} uuid
    *sets to state currently active card
    */
@@ -151,7 +152,7 @@ export default class Identifiers extends React.Component {
   }
 
   /**
-   * 
+   *
    * @param {*} e
    *creates new identifier
    */
@@ -197,7 +198,7 @@ export default class Identifiers extends React.Component {
   }
 
   /**
-   * 
+   *
    * @param {*} e
    *called on save when editing an identifier
    */
@@ -262,19 +263,21 @@ export default class Identifiers extends React.Component {
         .catch(error => toastr.error(error))
     }
     this.setState({
+        editState: false,
+        active_card: '',
       editIdentifiers: {
         identifier: '',
         identifierType: '',
         location: '',
-        preferred: false
+        preferred: false,
       }
     })
   }
 
   /**
-   * 
-   * @param {*} uuid 
-   * @param {*} voided 
+   *
+   * @param {*} uuid
+   * @param {*} voided
    * @param {*} preferred
    *handles delete of an idientifier
    */
@@ -288,16 +291,22 @@ export default class Identifiers extends React.Component {
         })
         .catch(error => toastr.error(error))
     } else {
-      toastr.error("cant delete preferred Identifier");
+      toastr.error("Can not delete Preferred Identifier");
     }
   }
   /**
-   * 
+   *
    * @param {*} e
    *handels closing the card on cancel
    */
   callCancel(e) {
-    this.setState({ editState: false, newState: false })
+    this.setState((prevState) => (
+                    {   editState: false,
+                        newState: false,
+                        active_card: '',
+                        identifier: prevState.identifier,
+                        identifierType: prevState.identifierType
+                }));
   }
 
   render() {
@@ -320,23 +329,26 @@ export default class Identifiers extends React.Component {
                       className="form-control"
                       type="text"
                       name="identifier"
-                      value={editIdentifiers.identifier || id.identifier}
-                      onChange={this.handleChange} />
+                      value={this.state.active_card !== index ? id.identifier : editIdentifiers.identifier || id.identifier}
+                      onChange={(e)=>this.handleChange(e,index)}
+                      disabled={!this.editState && (this.state.active_card !== index) ? "disabled" : null}/>
                   </div>
                   {this.state.editState && this.state.active_card == index &&
                     <div>
                       <div>
-                        <h6><b>Identifier type</b></h6>
+                        <h6><b>Identifier Type</b></h6>
                         <select
                           className="form-control"
                           name="identifierType"
                           value={editIdentifiers.identifierType || id.identifierType.display}
-                          onChange={this.handleChange}>
+                          onChange={(e)=>this.handleChange(e,index)}>
+
                           {
                             this.state.identifierstypes_array.map((id_type) => (
                               <option value={id_type.display}>{id_type.display}</option>
                             ))
                           }
+                          disabled={!this.state.editState ? 'disabled' : null}
                         </select>
                       </div>
                       <div>
@@ -351,16 +363,17 @@ export default class Identifiers extends React.Component {
                               <option value={location.display}>{location.display}</option>
                             ))
                           }
+                          disabled={!this.state.editState ? 'disabled' : null}
                         </select>
                       </div>
-                      <div>
-                        <h6><b>Created By:</b></h6>
+                      <div className="arrange-horizontally">
+                        <h6><b>Created By :</b></h6>
                         <h6
                           name="creator">{id.auditInfo.creator.display} on {new Date(id.auditInfo.dateCreated).toString()}
                         </h6>
                       </div>
-                      <div>
-                        <h6><b>Preferred</b></h6>
+                      <div className="arrange-horizontally">
+                        <h6><b>Preferred  :</b></h6> <t />
                         <input
                           className="form-check-input"
                           type="Checkbox"
@@ -368,10 +381,10 @@ export default class Identifiers extends React.Component {
                           defaultChecked={id.preferred}
                           onChange={() => this.handlePreferred(id.preferred, id.uuid)}
                         />
-                      </div>
+                        </div>
                       <div id="buttons">
-                        <button type="button" className="btn btn-success" onClick={this.callSave}>save</button>
-                        <button type="button" className="btn btn-light" onClick={this.callCancel}>cancel</button>
+                        <button type="button" className="btn btn-success" onClick={this.callSave}>Save</button>
+                        <button type="button" className="btn btn-light" onClick={this.callCancel}>Cancel</button>
                       </div>
                     </div>
                   }
@@ -382,8 +395,7 @@ export default class Identifiers extends React.Component {
                         className="form-control"
                         type="text"
                         name="identifierType"
-                        value={editIdentifiers.identifier || id.identifierType.display}
-                        onChange={this.handleChange}
+                        value={id.identifierType.display}
                       />
                     </div>
                   }
@@ -414,9 +426,17 @@ export default class Identifiers extends React.Component {
            */
         }
         <div className="card1" id="add-card">
-          <div className="card-header">
-            <label className="card-link" onClick={this.callNew}>new identifier</label>
+          <div className="card-header" >
+            <h4  onClick={this.callNew}>Add New Identifier</h4>
           </div>
+          { !this.state.newState &&
+            <div className="form-group">
+              <div className="col-sm-offset-4 col-sm-4 btn-margin">
+                <button type="button" name="add" onClick={this.callNew}
+                  className="btn btn-success form-control">Add</button>
+              </div>
+            </div>
+          }
           <div className="card-body">
             {this.state.newState &&
               <div>
@@ -427,13 +447,14 @@ export default class Identifiers extends React.Component {
                   name="identifier"
                   defaultValue={this.state.addIdentifiers.id} onChange={this.handleCreateChange}
                 />
-                <h6><b>Identifier type</b></h6>
+                <h6><b>Identifier Type</b></h6>
                 <select
                   className="form-control"
                   name="identifierType"
                   defaultValue={this.state.addIdentifiers.type}
                   onChange={this.handleCreateChange}
                 >
+                <option value="">Choose type</option>
                   {
                     this.state.identifierstypes_array.map((id_type) => (
                       <option value={id_type.display}>{id_type.display}</option>
@@ -447,13 +468,15 @@ export default class Identifiers extends React.Component {
                   defaultValue={this.state.addIdentifiers.location}
                   onChange={this.handleCreateChange}
                 >
+                <option value="">Choose location</option>
                   {
                     this.state.location_array.map((location) => (
                       <option value={location.display}>{location.display}</option>
                     ))
                   }
                 </select>
-                <h6><b>Preferred</b></h6>
+                <div className="arrange-horizontally">
+                <h6><b>Preferred  :</b></h6> <t />
                 <input
                   className="form-check-input"
                   type="Checkbox"
@@ -461,9 +484,10 @@ export default class Identifiers extends React.Component {
                   defaultChecked={this.state.addIdentifiers.preferred}
                   onChange={this.handleCreateChange}
                 />
+                </div>
                 <div id="buttons">
-                  <button type="button" className="btn btn-success" onClick={this.callCreate}>create</button>
-                  <button type="button" className="btn btn-light" onClick={this.callCancel}>cancel</button>
+                  <button type="button" className="btn btn-success" onClick={this.callCreate}>Create</button>
+                  <button type="button" className="btn btn-light" onClick={this.callCancel}>Cancel</button>
                 </div>
               </div>
             }

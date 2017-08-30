@@ -107,7 +107,7 @@ li>a:focus {
 }
 
 .top {
-    margin-top: 15px; 
+    margin-top: 15px;
 }
 
 .search {
@@ -262,7 +262,7 @@ li>a:focus {
     padding-left: 15px;
     margin-bottom: 15px;
 }
-.card1{  
+.card1{
  width: 47%;
  height: 100%;
  float:left;
@@ -294,5 +294,14 @@ button.btn.btn.success{
 a {
     color: #337ab7;
     text-decoration: underline;
-    cursor: pointer;
+    cursor: pointer;
+}
+
+.arrange-horizontally > * {
+    display: inline-block;
+}
+
+.btn-margin {
+    margin-bottom: 15px;
+    margin-top: 25px;
 }
