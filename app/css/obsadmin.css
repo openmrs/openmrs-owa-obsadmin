@@ -309,7 +309,41 @@ a {
     color: black;
     font-size: 12px;
 }
-form{
-    display: inline-block;
+.encounter{
+    margin-bottom: 10px;
+}
+
+.provider{
+    margin-bottom: 10px;
+}
+.encounter-header {
     text-align: center;
+    color: #fff;
+    background: #363463;
+    min-height: 35px;
+    padding-top: 1%;
+}
+
+.encounter-form{
+    width: 70%;
+    height: 80%;
+    margin: auto;
+    margin-top: 3%;
+}
+#selectedPatient{
+    display: block;
+}
+.glyphicon {
+    color: black;
+    font-size: 12px;
+}
+.modal-dialog{
+    width: 35%;
+}
+.modal-header{
+    background-color: #D3D3D3;
+    color: black;
+}
+#button{
+    margin-left: 20%;
 }

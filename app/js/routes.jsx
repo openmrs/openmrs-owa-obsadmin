@@ -7,25 +7,26 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react'
-import {Route, IndexRoute} from 'react-router'
+import { Route, IndexRoute } from 'react-router'
 import App from './components/App'
 import Patient from './components/patient'
 import Search from './components/search'
 import Demographics from './components/demographics'
 import Name from './components/names'
 import ManageVisit from './components/manageVisit'
-import Encounter from './components/encounter'
+import Encounters from './components/encounters/encountersParent';
+import Observations from './components/observations';
 
 export default () => {
   return (
-
     <Route path="/" component={App}>
       <IndexRoute component={Search} />
       <Route path="/patient/:id" component={Patient} />
       <Route path="/patient/:id/demographics" component={Demographics} />
       <Route path="/patient/:id/name" component={Name} />
       <Route path="/patient/:patentId/visit/:visitId" component={ManageVisit} />
-      <Route path="/patient/:patentId/encounter/:encounterId" component={Encounter} />
+      <Route path="/patient/:patentId/encounter/:encounterId" component={Encounters} />
+      <Route path="/patient/:patentId/encounter/:encounterId/obs/:observationId" component={Observations} />
       <Route path="*" component={Search} />
     </Route>
   );
