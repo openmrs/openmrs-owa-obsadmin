@@ -16,7 +16,7 @@ import AddressForm from './addressForm';
 
 /**
  * Represents the adderesses component which loads different addresses
- * 
+ *
  * @class Address
  * @extends {React.Component}
  */
@@ -42,35 +42,35 @@ export default class Address extends React.Component {
       activeCard: '1990',
       secondryAction: 'new'
     }
-    this.reload = this.reload.bind(this);  
+    this.reload = this.reload.bind(this);
   }
 /**
  * Calls reload function to fetch addresses for the patient
- * 
- * 
+ *
+ *
  * @memberOf Address
  */
   componentDidMount(){
-    this.reload();    
+    this.reload();
   }
 
 /**
  * Fetches addresses and set the state
- * 
- * 
+ *
+ *
  * @memberOf Address
  */
   reload(){
-    apiCall(null, 'get', `/person/${this.props.uuid}?v=full`).then((response) => {
-      this.setState({addresses: response.addresses});
-    }); 
+    apiCall(null, 'get', `/person/${this.props.uuid}/address?v=full`).then((response) => {
+      this.setState({addresses: response.results});
+    });
   }
 
 /**
  * Renders the component
- * 
+ *
  * @returns the react element to be rendered.
- * 
+ *
  * @memberOf Address
  */
   render() {
@@ -83,11 +83,12 @@ export default class Address extends React.Component {
               <CardHeader>{source.display}</CardHeader>
               <CardBlock>
                 <CardText>
-                  <AddressForm address={source} reload={this.reload} 
+                  <AddressForm address={source} reload={this.reload}
                   parentUuid={this.state.parentUuid} action="display"/>
                 </CardText>
               </CardBlock>
-              <CardFooter>Created by: {this.state.creator}</CardFooter>
+
+              <CardFooter>Created by: {source.auditInfo.creator.display} {source.auditInfo.dateCreated}</CardFooter>
             </Card>
           </Col>
           ))}

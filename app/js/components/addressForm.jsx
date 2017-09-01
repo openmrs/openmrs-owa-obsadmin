@@ -13,7 +13,7 @@ import apiCall from '../utilities/apiHelper';
 
 /**
  * Represents the address form. Used in adding and editing addresses.
- * 
+ *
  * @export
  * @class AddressForm
  * @extends {React.Component}
@@ -41,7 +41,7 @@ export default class AddressForm extends React.Component {
       uuid: address.uuid,
       parentUuid: props.parentUuid,
       isShowingModal: false,
-      
+
     }
     this.defaultValues = {
       address1: address.address1,
@@ -51,7 +51,7 @@ export default class AddressForm extends React.Component {
       country: address.country,
       postalCode: address.postalCode,
       preferred: address.preferred,
-      action: 'display', 
+      action: 'display',
       activeCard: '',
       uuid: '1990',
       activeButton: null
@@ -63,16 +63,16 @@ export default class AddressForm extends React.Component {
       stateProvince: '',
       country: '',
       postalCode: '',
-      preferred: 'false'  
+      preferred: 'false'
     }
     this.editClick = this.editClick.bind(this);
     this.addClick = this.addClick.bind(this);
     this.deleteClick = this.deleteClick.bind(this);
     this.delete = this.delete.bind(this);
     this.save = this.save.bind(this);
-    this.update = this.update.bind(this);   
-    this.onChange = this.onChange.bind(this);  
-    this.onChangeBox = this.onChangeBox.bind(this); 
+    this.update = this.update.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onChangeBox = this.onChangeBox.bind(this);
     this.cancelClick = this.cancelClick.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -80,8 +80,8 @@ export default class AddressForm extends React.Component {
 
 /**
  * handleClick - Displays the modal form by changing state
- * 
- * 
+ *
+ *
  * @memberOf AddressForm
  */
   handleClick(){
@@ -90,8 +90,8 @@ export default class AddressForm extends React.Component {
 
 /**
  * handleClose - Closes the modal form by changing state
- * 
- * 
+ *
+ *
  * @memberOf AddressForm
  */
   handleClose(){
@@ -100,9 +100,9 @@ export default class AddressForm extends React.Component {
 
 /**
  * onChange - handles changes on input elements
- * 
+ *
  * @param {object} e - event object
- * 
+ *
  * @memberOf AddressForm
  */
   onChange(e) {
@@ -115,9 +115,9 @@ export default class AddressForm extends React.Component {
 
 /**
  * onChangeBox - handles changes on checkbox elements
- * 
+ *
  * @param {object} e - event object
- * 
+ *
  * @memberOf AddressForm
  */
   onChangeBox(e) {
@@ -130,15 +130,15 @@ export default class AddressForm extends React.Component {
 
 /**
  * editClick - sets state to prepare for changes
- * 
+ *
  * @param {object} e - event object
  * @param {string} uuid - address uuid
- * 
+ *
  * @memberOf AddressForm
  */
   editClick(e,uuid){
       this.setState({
-        action: 'edit', 
+        action: 'edit',
         activeCard: uuid,
         activeButton: e.target
       });
@@ -146,10 +146,10 @@ export default class AddressForm extends React.Component {
 
 /**
  * addClick - sets state to prepare for new address form
- * 
+ *
  * @param {object} e - event object
  * @param {string} uuid - address uuid
- * 
+ *
  * @memberOf AddressForm
  */
   addClick(e,uuid){
@@ -165,8 +165,8 @@ export default class AddressForm extends React.Component {
 
 /**
  * cancelClick - Sets state to cancel current action
- * 
- * 
+ *
+ *
  * @memberOf AddressForm
  */
   cancelClick(){
@@ -177,8 +177,8 @@ export default class AddressForm extends React.Component {
 
 /**
  * deleteClick - calls the open modal to confirm delete action
- * 
- * 
+ *
+ *
  * @memberOf AddressForm
  */
   deleteClick(){
@@ -187,10 +187,10 @@ export default class AddressForm extends React.Component {
 
 /**
  * delete - deletes address from database
- * 
+ *
  * @param {object} e - event object
  * @param {string} uuid - address uuid
- * 
+ *
  * @memberOf AddressForm
  */
   delete(e,uuid){
@@ -206,8 +206,8 @@ export default class AddressForm extends React.Component {
 
 /**
  * save - saves address from the adressForm to database
- * 
- * 
+ *
+ *
  * @memberOf AddressForm
  */
   save(){
@@ -223,10 +223,10 @@ export default class AddressForm extends React.Component {
 
 /**
  * update update updates exisiting address.
- * 
+ *
  * @param {object} e - event object
  * @param {string} uuid - address uuid
- * 
+ *
  * @memberOf AddressForm
  */
   update(e,uuid){
@@ -250,9 +250,9 @@ export default class AddressForm extends React.Component {
 
 /**
  * Renders the component
- * 
+ *
  * @returns react element to be rendered.
- * 
+ *
  * @memberOf AddressForm
  */
   render() {
@@ -290,8 +290,8 @@ export default class AddressForm extends React.Component {
             <div className="form-group ">
               <label className="control-label col-sm-4">Address:</label>
               <div className="col-sm-8">
-                <input type="text" name="address1" 
-                  value={this.state.address1} 
+                <input type="text" name="address1"
+                  value={this.state.address1}
                   className="form-control"
                   onChange={this.onChange}
                   placeholder={this.state.action === 'display'? "": "Enter Address"}
@@ -305,7 +305,7 @@ export default class AddressForm extends React.Component {
                   onChange={this.onChange}
                   disabled={this.state.action==='display'}
                   placeholder={this.state.action === 'display'? "": "Enter Address 2"}/>
-              </div>      
+              </div>
             </div>
             <div className="form-group">
               <label className="col-sm-4 control-label">City/Village:</label>
@@ -321,11 +321,11 @@ export default class AddressForm extends React.Component {
               <div className="col-sm-8">
                 <input type="text" value={this.state.stateProvince}
                   onChange={this.onChange}
-                  name="stateProvince" className="form-control" 
+                  name="stateProvince" className="form-control"
                   placeholder={this.state.action === 'display'? "": "Enter State/Province"}
                   disabled={this.state.action==='display'}
                   />
-              </div>      
+              </div>
             </div>
             <div className="form-group">
               <label className="col-sm-4 control-label">Country:</label>
@@ -341,12 +341,12 @@ export default class AddressForm extends React.Component {
               <label className="col-sm-4 control-label">Postal Code:</label>
               <div className="col-sm-8">
                 <input type="text" name="postalCode" value={this.state.postalCode}
-                  className="form-control" 
+                  className="form-control"
                   placeholder={this.state.action === 'display'? "": "Enter Postal Code"}
                   onChange={this.onChange}
                   disabled={this.state.action==='display'}
                   />
-              </div>      
+              </div>
             </div>
           </form>
         :
@@ -359,26 +359,73 @@ export default class AddressForm extends React.Component {
               </div>
             </div>
             :
-            <div className="card-plain">
-              <span>Preferred: {this.state.preferred ? 'True': 'False'} </span>
-              <br />
-              <span>Address: {this.state.address1} </span>
-              <br />
-              <span>Address 2: {this.state.address2} </span>
-              <br />
-              <span>City/Villae: {this.state.cityVillage} </span>
-              <br />
-              <span>State/Province: {this.state.stateProvince} </span>
-              <br />
-              <span>Country: {this.state.address1} </span>
-              <br />
-              <span>Postal Code: {this.state.postalCode} </span>
-              <br />
-              <span>Deleted: {this.state.voided ? 'True': 'False'}</span>
-              <br />
-              <p></p>
-            </div>
-          }
+            <form className="form-horizontal">
+              <div className="form-group ">
+                <label className="control-label col-sm-4">Preferred:</label>
+                <div className="col-sm-8">
+                  <input name="preferred"
+                    checked={this.state.preferred} type="checkbox"
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="form-group ">
+                <label className="control-label col-sm-4">Address:</label>
+                <div className="col-sm-8">
+                  <input type="text" name="address1"
+                    value={this.state.address1}
+                    className="form-control"
+                    placeholder={this.state.action === 'display'? "": "Enter Address"}
+                    disabled/>
+                </div>
+              </div>
+              <div className="form-group ">
+                <label className="control-label col-sm-4">Address 2:</label>
+                <div className="col-sm-8">
+                  <input type="text" value={this.state.address2} name="address2" className="form-control"
+                    disabled
+                    placeholder={this.state.action === 'display'? "": "Enter Address 2"}/>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-4 control-label">City/Village:</label>
+                <div className="col-sm-8">
+                  <input type="text" name="cityVillage" value={this.state.cityVillage}
+                    className="form-control"
+                    disabled
+                    placeholder={this.state.action === 'display'? "": "Enter City/Village"}/>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-4 control-label">State/Province:</label>
+                <div className="col-sm-8">
+                  <input type="text" value={this.state.stateProvince}
+                    name="stateProvince" className="form-control"
+                    placeholder={this.state.action === 'display'? "": "Enter State/Province"}
+                    disabled
+                    />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-4 control-label">Country:</label>
+                <div className="col-sm-8">
+                  <input name="country" type="text" value={this.state.country} className="form-control"
+                    placeholder={this.state.action === 'display'? "": "Enter Country"}
+                    disabled
+                    />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-4 control-label">Postal Code:</label>
+                <div className="col-sm-8">
+                  <input type="text" name="postalCode" value={this.state.postalCode}
+                    className="form-control"
+                    placeholder={this.state.action === 'display'? "": "Enter Postal Code"}
+                    disabled
+                    />
+                </div>
+              </div>
+            </form>          }
         </div>
         }
         {this.state.action ==="new" ?
@@ -416,7 +463,7 @@ export default class AddressForm extends React.Component {
             <div className="col-sm-3">
               <button type="button" name="cancel" onClick={this.cancelClick}
                 className="btn btn-default form-control cancelBtn">Cancel</button>
-            </div> 
+            </div>
           </div>
           :''
         }
