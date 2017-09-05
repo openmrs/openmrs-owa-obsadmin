@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'react-proptypes';
 
 const Providers = (props) => {
   return (
@@ -34,7 +35,7 @@ const Providers = (props) => {
                 className="form-check-input"
                 type="checkbox"
                 value={props.isChecked}
-                onChange={(event) => props.handleProviderChecked(event, provider.uuid)}
+                onChange={event => props.handleProviderChecked(event, provider.uuid)}
               />
               </td>
             </tr>
@@ -76,7 +77,12 @@ const Providers = (props) => {
           <div className="modal-content">
             <div className="modal-header">
               <label>Add Provider</label>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -94,8 +100,8 @@ const Providers = (props) => {
                     >
                       <option value="" />
                       {
-                        props.encounterRoles.map((role, key) => (
-                          <option value={role.uuid}>{role.display}</option>
+                        props.encounterRoles.map((role, index) => (
+                          <option key={index} value={role.uuid}>{role.display}</option>
                         ))
                       }
                     </select>
@@ -113,8 +119,8 @@ const Providers = (props) => {
                     >
                       <option value="" />
                       {
-                        props.createProvidersArray.map((providerName, key) => (
-                          <option value={providerName.uuid}>{providerName.display}</option>
+                        props.createProvidersArray.map((providerName, index) => (
+                          <option key={index} value={providerName.uuid}>{providerName.display}</option>
                         ))
                       }
                     </select>
@@ -146,5 +152,15 @@ const Providers = (props) => {
   );
 };
 
+Providers.propTypes = {
+  providers: PropTypes.array.isRequired,
+  isChecked: PropTypes.bool.isRequired,
+  saveNewProvider: PropTypes.func.isRequired,
+  createProvidersArray: PropTypes.array.isRequired,
+  handleProviderChecked: PropTypes.func.isRequired,
+  removeProvider: PropTypes.func.isRequired,
+  encounterRoles: PropTypes.array.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};
 
 export default Providers;

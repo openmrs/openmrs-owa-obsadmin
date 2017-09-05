@@ -16,7 +16,7 @@ import { withRouter } from 'react-router'
 
 const getSuggestionValue = suggestion => suggestion.name;
 
-export default class ManageVisit extends React.Component {
+export class ManageVisit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,9 +73,9 @@ export default class ManageVisit extends React.Component {
         const stopDatetime = moment(time2).format('YYYY-MM-DD HH:mm:ss')
         const finalStopDatetime = moment(stopDatetime).format('YYYY-MM-DDTHH:mm:ss.000Z')
 
-        this.setState(
-          { display, locationName, encounters, patientName, startDatetime, finalStartTime, finalStopDatetime, stopDatetime, visitTypeName, voided }
-        )
+        this.setState((prevState) => {
+          return { display, locationName, encounters, patientName, startDatetime, finalStartTime, finalStopDatetime, stopDatetime, visitTypeName, voided }
+        });
       })
       .catch(error => toastr.error(error));
     apiCall(null, 'get', `location`)
@@ -142,7 +142,7 @@ export default class ManageVisit extends React.Component {
         <header className="patient-header">
           Manage Visit
             </header>
-        <form style= {{width:""}}className="form-horizontal">
+        <form style={{ width: "" }} className="form-horizontal">
           <div className="form-group ">
           </div>
           <div className="form-group ">
