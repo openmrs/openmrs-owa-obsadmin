@@ -22,8 +22,6 @@ export default () => {
     <Route path="/" component={App}>
       <IndexRoute component={Search} />
       <Route path="/patient/:id" component={Patient} />
-      <Route path="/patient/:id/demographics" component={Demographics} />
-      <Route path="/patient/:id/name" component={Name} />
       <Route path="/patient/:patentId/visit/:visitId" component={ManageVisit} />
       <Route path="/patient/:patentId/encounter/:encounterId" component={Encounters} />
       <Route path="/patient/:patentId/encounter/:encounterId/obs/:observationId" component={Observations} />

@@ -100,7 +100,7 @@ export default class Encounters extends React.Component {
           encounterType: res.encounterType.display,
           encounterTypeUuid: res.encounterType.uuid,
           observations: res.obs,
-          visit: res.visit.uuid,
+          visit: res.visit ? res.visit.uuid: null,
           form: res.form && res.form.display,
           formUuid: res.form && res.form.uuid,
           creator: res.auditInfo.creator.display,

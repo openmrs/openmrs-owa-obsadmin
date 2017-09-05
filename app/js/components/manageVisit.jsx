@@ -16,7 +16,7 @@ import { withRouter } from 'react-router'
 
 const getSuggestionValue = suggestion => suggestion.name;
 
-class ManageVisit extends React.Component {
+export default class ManageVisit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -136,7 +136,7 @@ class ManageVisit extends React.Component {
   render() {
     const { searchTerm, patients } = this.state;
     return (
-      <div>
+      <div className="section top">
         <span onClick={this.goHome} className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
           aria-hidden="true">Back</span>
         <header className="patient-header">
@@ -270,5 +270,4 @@ class ManageVisit extends React.Component {
     )
   }
 }
-
 export default withRouter(ManageVisit);
