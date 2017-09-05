@@ -55,9 +55,9 @@ export default class Encounters extends React.Component {
       searchValue: '',
       obsUuid: [],
       providersUuid: [],
-      format: "YYYY-MM-DD HH:mm:ss",
-      inputFormat: "YYYY-MM-DD HH:mm:ss",
-      mode: "date",
+      format: 'YYYY-MM-DD HH:mm:ss',
+      inputFormat: 'YYYY-MM-DD HH:mm:ss',
+      mode: 'date',
     };
     this.goHome = this.goHome.bind(this);
     this.fetchData = this.fetchData.bind(this);
@@ -90,12 +90,14 @@ export default class Encounters extends React.Component {
   }
 
   fetchData(id) {
+    console.log('i was called', id);
     apiCall(null, 'get', `encounter/${id}?v=full`)
       .then((res) => {
-        const encounterDatetime = moment(res.encounterDatetime).format('YYYY-MM-DD HH:mm:ss')
-        const finalEncounterDatetime = moment(encounterDatetime).format('YYYY-MM-DDTHH:mm:ss.000Z')
+        console.log('FETCH DATA RES', res);
+        const encounterDatetime = moment(res.encounterDatetime).format('YYYY-MM-DD HH:mm:ss');
+        const finalEncounterDatetime = moment(encounterDatetime).format('YYYY-MM-DDTHH:mm:ss.000Z');
         this.setState({
-          patientName: res.patient.display,
+          patientName: res.patient.display.split('-')[1],
           location: res.location.uuid,
           encounterType: res.encounterType.display,
           encounterTypeUuid: res.encounterType.uuid,
@@ -104,15 +106,15 @@ export default class Encounters extends React.Component {
           form: res.form && res.form.display,
           formUuid: res.form && res.form.uuid,
           creator: res.auditInfo.creator.display,
-          encounterDatetime: encounterDatetime,
+          encounterDatetime,
           finalEncounterDatetime,
           changedBy: res.auditInfo.changedBy,
           dateChanged: res.auditInfo.dateChanged,
           providers: res.encounterProviders,
           voided: res.voided,
           orders: res.orders,
-
         });
+        console.log('AFTER SETSTATE, ', this.state);
       })
       .catch(error => toastr.error(error));
 
@@ -143,16 +145,15 @@ export default class Encounters extends React.Component {
         this.setState({
           createProvidersArray: response.results,
         });
-      })
+      });
   }
 
   handleTimeChange(name) {
-    return dateTime => {
+    return (dateTime) => {
       this.setState({
-        [name]: dateTime
-
+        [name]: dateTime,
       });
-    }
+    };
   }
 
   handleChange(event) {
@@ -175,7 +176,7 @@ export default class Encounters extends React.Component {
     $('#selectedPatient').hide();
     apiCall(null, 'get', `visit?patient=${newPatientUuid}`)
       .then((res) => {
-        this.setState(Object.assign({}, this.state.newPatientUuid, this.state.patientName, this.state.visit_array, {
+        this.setState(Object.assign({}, this.state.newPatientUuid, this.state.patientName, this.state.visit_array, this.state.visit, {
           newPatientUuid,
           visit_array: res.results,
           patientName: patientname.split('-')[1],
@@ -194,12 +195,14 @@ export default class Encounters extends React.Component {
 
   handleUpdate(event) {
     event.preventDefault();
+    const finalDate = moment(this.state.encounterDatetime).format('YYYY-MM-DDTHH:mm:ss.000Z');
     if (this.state.providers.length > 0) {
       if (this.state.prevPatient === this.state.patientName) {
-        const { patientName, prevPatient, location, visit, finalEncounterDatetime } = this.state;
+        const { patientName, prevPatient, location, visit } = this.state;
         apiCall({
           location,
-          encounterDatetime: finalEncounterDatetime,
+          encounterDatetime: finalDate,
+          visit,
         }, 'post', `encounter/${this.state.encounterUuid}`)
           .then((res) => {
             (res.error) ? toastr.error(res.error) : toastr.success('Successfully Updated');
@@ -209,11 +212,25 @@ export default class Encounters extends React.Component {
           editable: false,
         });
       } else {
-        this.setState({
-          toDelete: true,
-          voidReason: `moved to patient${this.state.patientName}`,
-        }, () => {
-          this.handleCreateNewEncounter();
+        const updatePromise = new Promise((resolve, reject) => {
+          resolve(this.setState({
+            toDelete: true,
+            voidReason: `moved to patient${this.state.patientName}`,
+            editable: false,
+          }));
+        });
+
+        const createEncounter = new Promise((resolve, reject) => {
+          resolve(this.handleCreateNewEncounter());
+        });
+
+        updatePromise.then(() => {
+          console.log('PROMISE UPDATED >>>>>');
+          createEncounter.then(() => {
+            console.log('ENCOUNTER CREATED >>>');
+            this.fetchData(this.state.encounterUuid);
+            console.log('ENCOUNTER DONE >>>');
+          });
         });
       }
     } else {
@@ -224,34 +241,38 @@ export default class Encounters extends React.Component {
   handleCreateNewEncounter() {
     const obsUuids = this.state.observations.map(obs => ({ uuid: obs.uuid }));
     const providersUuids = this.state.observations.map(provider => ({ uuid: provider.uuid }));
+    const finalDate = moment(this.state.encounterDatetime).format('YYYY-MM-DDTHH:mm:ss.000Z');
     this.setState({
       obsUuid: obsUuids,
       providersUuid: providersUuids,
     });
-    const { obsUuid, providersUuid, form, location, newPatientUuid, finalEncounterDatetime, visit, encounterTypeUuid } = this.state;
+    const { obsUuid, providersUuid, form, location, newPatientUuid, visit, encounterTypeUuid } = this.state;
     apiCall({
       encounterType: encounterTypeUuid,
       form,
       patient: newPatientUuid,
-      encounterDatetime: finalEncounterDatetime,
+      encounterDatetime: finalDate,
       location,
       visit,
       encounterProviders: providersUuid,
     }, 'post', 'encounter')
       .then((response) => {
-        (response.error) ? toastr.error(response.error) : toastr.success('Encounter successfully created');
         apiCall({
           obs: obsUuids,
         }, 'post', `encounter/${response.uuid}`)
-          .then(response => {
+          .then((response) => {
             (response.error) ? toastr.error(response.error) : this.handleDelete();
           })
-          .catch(error => toastr.error(error))
+          .catch(error => toastr.error(error));
       })
       .catch(error => toastr.error(error));
   }
 
   handleDelete() {
+    const patient = (
+      (this.state.prevPatient !== this.state.patientName) &&
+      (this.state.prevPatient !== null)) ?
+      this.state.prevPatient : this.state.patientName;
     if (!this.state.toDelete) {
       this.setState({
         toDelete: true,
@@ -263,7 +284,7 @@ export default class Encounters extends React.Component {
             .then((response) => {
               (response.error)
                 ? toastr.error(response.error)
-                : toastr.success(`Encounter for ${this.state.patientName} successfully deleted`);
+                : toastr.success(`Encounter for ${patient} successfully deleted`);
             })
             .catch(error => toastr.error(error));
         })
@@ -292,15 +313,20 @@ export default class Encounters extends React.Component {
   }
 
   removeProvider() {
-    apiCall(
-      null,
-      'delete',
-      `encounter/${this.state.encounterUuid}/encounterprovider/${this.state.selectedProviderUuid}`
-    )
-      .then((response) => {
-        toastr.success('Provider deleted');
-      })
-      .catch(error => toastr.error(error));
+    if (this.state.providers.length === 1 || this.state.providers === null) {
+      toastr.error('At least one provider is required');
+    } else {
+      apiCall(
+        null,
+        'delete',
+        `encounter/${this.state.encounterUuid}/encounterprovider/${this.state.selectedProviderUuid}`,
+      )
+        .then((response) => {
+          toastr.success('Provider deleted');
+          this.fetchData(this.state.encounterUuid);
+        })
+        .catch(error => toastr.error(error));
+    }
   }
 
   saveNewProvider(event) {
@@ -311,8 +337,8 @@ export default class Encounters extends React.Component {
       encounterRole,
     }, 'post', `/encounter/${this.state.encounterUuid}/encounterprovider`)
       .then((response) => {
-        this.props.router.push(`/patient/${this.state.patientUuid}/encounter/${this.state.encounterUuid}`);
         (response.error) ? toastr.error(response.error) : toastr.success('Provider Added');
+        this.fetchData(this.state.encounterUuid);
       })
       .catch(error => toastr.error(error));
   }
@@ -320,15 +346,18 @@ export default class Encounters extends React.Component {
   handleCancel() {
     this.setState(
       Object.assign({}, this.state.editable, {
-        editable: false
-      })
-    )
+        editable: false,
+      }),
+    );
+    this.fetchData(this.state.encounterUuid);
   }
 
   goHome() {
     this.props.router.goBack();
   }
   render() {
+    console.log('the name', this.state.encounterDatetime);
+
     return (
       <div>
         <div className="section top">
@@ -369,6 +398,7 @@ export default class Encounters extends React.Component {
                 inputFormat={this.state.inputFormat}
                 format={this.state.inputFormat}
                 handleTimeChange={this.handleTimeChange}
+                prevPatient={this.state.prevPatient}
               />
 
               <Providers
@@ -387,7 +417,7 @@ export default class Encounters extends React.Component {
               <div className="observation">
                 <header className="encounter-header">
                   Observations
-                  </header>
+                </header>
                 <table className="table table-striped">
                   <thead>
                     <tr>
