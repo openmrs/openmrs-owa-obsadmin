@@ -9,4 +9,4 @@ node_modules
 npm-debug.log
 obsadmin.zip
 libs
-nyc_output
+.nyc_output
