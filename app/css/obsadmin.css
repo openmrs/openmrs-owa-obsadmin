@@ -347,3 +347,9 @@ a {
 #button{
     margin-left: 20%;
 }
+.custom-label{
+    text-align: left !important;
+}
+.pointer {
+    cursor: pointer;
+}

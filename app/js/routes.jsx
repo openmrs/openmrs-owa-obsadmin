@@ -15,7 +15,7 @@ import Demographics from './components/demographics'
 import Name from './components/names'
 import ManageVisit from './components/manageVisit'
 import Encounters from './components/encounters/encountersParent';
-import Observations from './components/observations';
+import Observations from './components/obs';
 
 export default () => {
   return (
@@ -24,7 +24,7 @@ export default () => {
       <Route path="/patient/:id" component={Patient} />
       <Route path="/patient/:patentId/visit/:visitId" component={ManageVisit} />
       <Route path="/patient/:patentId/encounter/:encounterId" component={Encounters} />
-      <Route path="/patient/:patentId/encounter/:encounterId/obs/:observationId" component={Observations} />
+      <Route path="/patient/:patentId/encounter/:encounterId/obs/:obsId" component={Observations} />
       <Route path="*" component={Search} />
     </Route>
   );
