@@ -291,9 +291,8 @@ li>a:focus {
 button.btn.btn.success{
     padding: 6% 12%;
 }
-a {
+a.nav-link{
     color: #337ab7;
-    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -352,4 +351,23 @@ a {
 }
 .pointer {
     cursor: pointer;
+}
+.nav-tabs .nav-link.active {
+    color:#00688B;
+    text-decoration: underline;
+    background-color: #a6c;
+    font-weight: bold;
+    background-color: #fff;
+    border-color: #ddd #ddd #fff;
+}
+#custom-a-tag a {
+    color: #337ab7;
+    cursor: pointer;
+    
+}
+li>a:hover {
+    color: rgba(232, 140, 140, 0.96);
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px solid gold;
 }

@@ -258,7 +258,7 @@ export class ManageVisit extends React.Component {
         <header className="patient-header">
           Encounters
             </header>
-        <ListGroup>
+        <ListGroup id="custom-a-tag">
           {
             this.state.encounters.map((encounter) => (
               <a><ListGroupItem onClick={() => this.handleEncounterClick(encounter.uuid)} value={encounter.uuid}>{encounter.display}</ListGroupItem></a>
