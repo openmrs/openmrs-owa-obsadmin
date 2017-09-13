@@ -1,10 +1,47 @@
+/* * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 import React from 'react';
 import PropTypes from 'react-proptypes';
 import DateTimeField from 'react-bootstrap-datetimepicker';
 
+/**
+ * displays the form for encounter details
+ * @param {*} props 
+ */
 const Encounter = props => (
   <div className="encounter">
     <form className="encounter-form">
+      <div className="form-group row">
+        <div className="col-sm-3">
+          {props.moveEncounter &&
+            <button
+              type="button"
+              name="update"
+              data-toggle="modal"
+              data-target="#myModal"
+              className="btn btn-success form-control"
+            >
+              Confirm Move</button>
+          }
+          {!props.moveEncounter &&
+            <button
+              type="button"
+              name="move"
+              onClick={props.handleMoveEncounter}
+              className="btn btn-success form-control"
+              disabled={(props.voided) || props.editable}
+            >
+              Move Encounter</button>
+          }
+        </div>
+      </div>
+
       <div className="form-group row">
         <label className="col-sm-4 col-form-label"> Patient</label>
         <div className="col-sm-6">
@@ -14,10 +51,10 @@ const Encounter = props => (
             type="text"
             value={props.patientName}
             required
-            disabled={(props.editable === false)}
+            disabled={!props.moveEncounter}
             onChange={props.handleSearchPatient}
           />
-          {(props.editable === true && props.searchedPatients.length > 0) &&
+          {((props.editable || props.moveEncounter) && props.searchedPatients.length > 0) &&
             <div className="dropdown-menu" id="selectedPatient">
               {
                 props.searchedPatients.map((patient, index) => (
@@ -42,7 +79,7 @@ const Encounter = props => (
             className="form-control"
             name="location"
             value={props.location}
-            disabled={(props.editable === false)}
+            disabled={!props.editable && !props.moveEncounter}
             onChange={props.handleChange}
           >
             {
@@ -63,7 +100,7 @@ const Encounter = props => (
             format={props.format}
             inputFormat={props.inputFormat}
             dateTime={props.encounterDatetime}
-            disabled={(props.editable === false)}
+            disabled={!props.editable && !props.moveEncounter}
             onChange={props.handleTimeChange('encounterDatetime')}
           />
         </div>
@@ -77,10 +114,10 @@ const Encounter = props => (
             name="visit"
             type="text"
             value={props.visit}
-            disabled={(props.editable === false)}
+            disabled={!props.editable && !props.moveEncounter}
             onChange={props.handleChange}
           >
-            <option value="" />
+            <option value="" >none</option>
             {
               props.visit_array.map((visit, index) => (
                 <option key={index} value={visit.uuid}>{visit.display}</option>
@@ -146,7 +183,8 @@ const Encounter = props => (
         </div>
       </div>
 
-      {props.toDelete && props.editable &&
+      {
+        props.toDelete && !props.voided &&
         <div className="form-group row">
           <label className="col-sm-4 col-form-label">Reason for Deletion</label>
           <div className="col-sm-6">
@@ -181,7 +219,7 @@ const Encounter = props => (
               name="update"
               onClick={props.handleEdit}
               className="btn btn-success form-control"
-              disabled={(props.voided === true)}
+              disabled={(props.voided || props.moveEncounter)}
             >
               Edit</button>
           }
@@ -191,11 +229,11 @@ const Encounter = props => (
           <button
             type="button"
             name="cancel"
-            onClick={(props.editable || props.voided) ? props.handleCancel : props.handleDelete}
+            onClick={(props.editable || props.voided || props.moveEncounter) ? props.handleCancel : props.handleDelete}
             className="btn btn-danger form-control cancelBtn"
             disabled={(props.voided === true)}
           >
-            {(props.editable || props.voided) ? 'Cancel' : 'Delete'}</button>
+            {(props.editable || props.voided || props.moveEncounter) ? 'Cancel' : 'Delete'}</button>
         </div>
       </div>
     </form>
@@ -220,13 +258,14 @@ const Encounter = props => (
               <button
                 type="button"
                 className="btn btn-success form-control"
-                onClick={e => props.handleUpdate(e)}
+                onClick={props.moveEncounter ? (e => props.handleUpdateNewPatient(e)) : (e => props.handleUpdateCurrentPatient(e))}
                 data-dismiss="modal"
               >Confirm
               </button>
             </div>
             <div className="col-sm-4">
-              <button type="button"
+              <button
+                type="button"
                 className="btn btn-danger form-control cancelBtn"
                 data-dismiss="modal"
               >Close
@@ -237,23 +276,24 @@ const Encounter = props => (
       </div>
     </div>
 
-  </div >
+  </div>
 );
 
 Encounter.propTypes = {
   editable: PropTypes.bool,
   handleSearchPatient: PropTypes.func,
   searchedPatients: PropTypes.array,
-  location: PropTypes.String,
+  location: PropTypes.string,
   handleChange: PropTypes.func,
   location_array: PropTypes.array,
   visit_array: PropTypes.array,
   handleTimeChange: PropTypes.func,
-  visit: PropTypes.String,
-  handleUpdate: PropTypes.func,
+  visit: PropTypes.string,
+  handleUpdateCurrentPatient: PropTypes.func,
+  handleUpdateNewPatient: PropTypes.func,
   handleCancel: PropTypes.func,
   handleDelete: PropTypes.func,
   handleEdit: PropTypes.func,
-  form: PropTypes.String,
+  form: PropTypes.string,
 };
 export default Encounter;
