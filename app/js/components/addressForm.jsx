@@ -362,67 +362,44 @@ export default class AddressForm extends React.Component {
             <form className="form-horizontal">
               <div className="form-group ">
                 <label className="control-label col-sm-4">Preferred:</label>
-                <div className="col-sm-8">
-                  <input name="preferred"
-                    checked={this.state.preferred} type="checkbox"
-                    disabled
-                  />
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.preferred? 'True' : 'False'}
                 </div>
               </div>
               <div className="form-group ">
                 <label className="control-label col-sm-4">Address:</label>
-                <div className="col-sm-8">
-                  <input type="text" name="address1"
-                    value={this.state.address1}
-                    className="form-control"
-                    placeholder={this.state.action === 'display'? "": "Enter Address"}
-                    disabled/>
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.address1}
                 </div>
               </div>
               <div className="form-group ">
                 <label className="control-label col-sm-4">Address 2:</label>
-                <div className="col-sm-8">
-                  <input type="text" value={this.state.address2} name="address2" className="form-control"
-                    disabled
-                    placeholder={this.state.action === 'display'? "": "Enter Address 2"}/>
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.address2}
                 </div>
               </div>
               <div className="form-group">
                 <label className="col-sm-4 control-label">City/Village:</label>
-                <div className="col-sm-8">
-                  <input type="text" name="cityVillage" value={this.state.cityVillage}
-                    className="form-control"
-                    disabled
-                    placeholder={this.state.action === 'display'? "": "Enter City/Village"}/>
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.cityVillage}
                 </div>
               </div>
               <div className="form-group">
                 <label className="col-sm-4 control-label">State/Province:</label>
-                <div className="col-sm-8">
-                  <input type="text" value={this.state.stateProvince}
-                    name="stateProvince" className="form-control"
-                    placeholder={this.state.action === 'display'? "": "Enter State/Province"}
-                    disabled
-                    />
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.stateProvince}
                 </div>
               </div>
               <div className="form-group">
                 <label className="col-sm-4 control-label">Country:</label>
-                <div className="col-sm-8">
-                  <input name="country" type="text" value={this.state.country} className="form-control"
-                    placeholder={this.state.action === 'display'? "": "Enter Country"}
-                    disabled
-                    />
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.country}
                 </div>
               </div>
               <div className="form-group">
                 <label className="col-sm-4 control-label">Postal Code:</label>
-                <div className="col-sm-8">
-                  <input type="text" name="postalCode" value={this.state.postalCode}
-                    className="form-control"
-                    placeholder={this.state.action === 'display'? "": "Enter Postal Code"}
-                    disabled
-                    />
+                <div className="col-sm-8 control-label custom-label">
+                  {this.state.postalCode}
                 </div>
               </div>
             </form>          }
@@ -434,7 +411,7 @@ export default class AddressForm extends React.Component {
             <button type="button" name="save" onClick={this.save}
               className="btn btn-success form-control">Save</button>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-4">
             <button type="button" name="reset" onClick={this.cancelClick}
               className="btn btn-default form-control cancelBtn">Cancel</button>
           </div>
@@ -447,7 +424,7 @@ export default class AddressForm extends React.Component {
             <button type="button" name="edit" onClick={(e) => this.editClick(e,this.state.uuid)}
               className="btn btn-success form-control">Edit</button>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-4">
             <button type="button" name="delete" onClick={this.deleteClick}
               className="btn btn-default form-control cancelBtn">Delete</button>
           </div>
@@ -456,11 +433,11 @@ export default class AddressForm extends React.Component {
         }
         {this.state.action ==="edit" ?
           <div className="form-group">
-            <div className="col-sm-3">
+            <div className="col-sm-4">
               <button type="button" name="update" onClick={(e) => this.update(e,this.state.uuid)}
                 className="btn btn-success form-control">Update</button>
             </div>
-            <div className="col-sm-3">
+            <div className="col-sm-4">
               <button type="button" name="cancel" onClick={this.cancelClick}
                 className="btn btn-default form-control cancelBtn">Cancel</button>
             </div>
