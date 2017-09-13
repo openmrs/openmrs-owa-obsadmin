@@ -10,6 +10,10 @@
 import React from 'react';
 import PropTypes from 'react-proptypes';
 
+/**
+ * displays the providers' form
+ * @param {*} props 
+ */
 const Providers = (props) => {
   return (
     <div className="provider">
@@ -25,8 +29,8 @@ const Providers = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.providers.map((provider, index) => (
-            <tr key={index}>
+          {props.providers && props.providers.map(provider => (
+            <tr key={provider.uuid}>
               <td>{provider.encounterRole.display}</td>
               <td>{provider.provider.display.split('-')[1]}</td>
               <td>{provider.provider.display.split('-')[0]}</td>
@@ -50,6 +54,7 @@ const Providers = (props) => {
             type="submit"
             name="add"
             className="btn btn-success form-control"
+            disabled={props.voided === true}
           >
             Add Provider</button>
         </div>
@@ -59,7 +64,7 @@ const Providers = (props) => {
             type="button"
             name="delete"
             onClick={props.removeProvider}
-            disabled={!props.isChecked}
+            disabled={!props.isChecked || props.voided === true}
             className="btn btn-danger form-control cancelBtn"
           >
             Remove</button>
@@ -100,8 +105,8 @@ const Providers = (props) => {
                     >
                       <option value="" />
                       {
-                        props.encounterRoles.map((role, index) => (
-                          <option key={index} value={role.uuid}>{role.display}</option>
+                        props.encounterRoles.map(role => (
+                          <option key={role.uuid} value={role.uuid}>{role.display}</option>
                         ))
                       }
                     </select>
@@ -119,8 +124,8 @@ const Providers = (props) => {
                     >
                       <option value="" />
                       {
-                        props.createProvidersArray.map((providerName, index) => (
-                          <option key={index} value={providerName.uuid}>{providerName.display}</option>
+                        props.createProvidersArray.map(providerName => (
+                          <option key={providerName.uuid} value={providerName.uuid}>{providerName.display}</option>
                         ))
                       }
                     </select>
@@ -154,6 +159,8 @@ const Providers = (props) => {
 
 Providers.propTypes = {
   providers: PropTypes.array.isRequired,
+  providerName: PropTypes.string,
+  encounterRole: PropTypes.string,
   isChecked: PropTypes.bool.isRequired,
   saveNewProvider: PropTypes.func.isRequired,
   createProvidersArray: PropTypes.array.isRequired,
