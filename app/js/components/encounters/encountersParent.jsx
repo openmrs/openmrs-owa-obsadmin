@@ -59,6 +59,7 @@ export default class Encounters extends React.Component {
       inputFormat: 'YYYY-MM-DD HH:mm:ss',
       mode: 'date',
     };
+    
     this.goHome = this.goHome.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
@@ -225,11 +226,9 @@ export default class Encounters extends React.Component {
         });
 
         updatePromise.then(() => {
-          console.log('PROMISE UPDATED >>>>>');
           createEncounter.then(() => {
-            console.log('ENCOUNTER CREATED >>>');
             this.fetchData(this.state.encounterUuid);
-            console.log('ENCOUNTER DONE >>>');
+           
           });
         });
       }
@@ -356,8 +355,6 @@ export default class Encounters extends React.Component {
     this.props.router.goBack();
   }
   render() {
-    console.log('the name', this.state.encounterDatetime);
-
     return (
       <div>
         <div className="section top">
@@ -433,7 +430,7 @@ export default class Encounters extends React.Component {
                         if (ob.groupMembers !== null) {
                           return (
                             (ob.groupMembers.map((observation, index) => (
-                              <tr key={index}>
+                              <tr key={index} id="custom-a-tag">
                                 <a>
                                   <td
                                     onClick={() => { this.handleObservationClick(observation.uuid); }}
@@ -448,7 +445,7 @@ export default class Encounters extends React.Component {
                           );
                         }
                         return (
-                          <tr>
+                          <tr id="custom-a-tag">
                             <a>
                               <td
                                 onClick={() => { this.handleObservationClick(ob.uuid); }}
