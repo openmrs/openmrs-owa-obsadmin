@@ -1,4 +1,4 @@
-/* * This Source Code Form is subject to the terms of the Mozilla Public License,
+/* This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
@@ -11,6 +11,17 @@ import React from 'react';
 import PropTypes from 'react-proptypes';
 
 const Providers = (props) => {
+  const {
+    isChecked,
+    encounterRoles,
+    createProvidersArray,
+    providerName,
+    encounterRole,
+    encounterData,
+  } = props.stateData;
+  const providers = encounterData.encounterProviders;
+  const voided = encounterData.voided;
+
   return (
     <div className="provider">
       <header className="encounter-header">
@@ -25,21 +36,23 @@ const Providers = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.providers.map((provider, index) => (
-            <tr key={index}>
-              <td>{provider.encounterRole.display}</td>
-              <td>{provider.provider.display.split('-')[1]}</td>
-              <td>{provider.provider.display.split('-')[0]}</td>
-              <td><input
-                name="voided"
-                className="form-check-input"
-                type="checkbox"
-                value={props.isChecked}
-                onChange={event => props.handleProviderChecked(event, provider.uuid)}
-              />
-              </td>
-            </tr>
-          ))}
+          {
+            (providers !== undefined) ? providers.map(provider => (
+              <tr key={provider.uuid}>
+                <td>{provider.encounterRole.display}</td>
+                <td>{provider.provider.display.split('-')[1]}</td>
+                <td>{provider.provider.display.split('-')[0]}</td>
+                <td><input
+                  name="voided"
+                  className="form-check-input"
+                  type="checkbox"
+                  value={isChecked}
+                  onChange={event => props.handleProviderChecked(event, provider.uuid)}
+                />
+                </td>
+              </tr>
+            )) : <tr />
+          }
         </tbody>
       </table>
       <div className="form-group row">
@@ -50,6 +63,7 @@ const Providers = (props) => {
             type="submit"
             name="add"
             className="btn btn-success form-control"
+            disabled={voided === true}
           >
             Add Provider</button>
         </div>
@@ -59,7 +73,7 @@ const Providers = (props) => {
             type="button"
             name="delete"
             onClick={props.removeProvider}
-            disabled={!props.isChecked}
+            disabled={!isChecked || voided === true}
             className="btn btn-danger form-control cancelBtn"
           >
             Remove</button>
@@ -95,13 +109,13 @@ const Providers = (props) => {
                     <select
                       className="form-control"
                       name="encounterRole"
-                      defaultValue={props.encounterRole}
+                      defaultValue={encounterRole}
                       onChange={props.handleChange}
                     >
                       <option value="" />
                       {
-                        props.encounterRoles.map((role, index) => (
-                          <option key={index} value={role.uuid}>{role.display}</option>
+                        encounterRoles.map(role => (
+                          <option key={role.uuid} value={role.uuid}>{role.display}</option>
                         ))
                       }
                     </select>
@@ -114,13 +128,13 @@ const Providers = (props) => {
                     <select
                       className="form-control"
                       name="providerName"
-                      defaultValue={props.providerName}
+                      defaultValue={providerName}
                       onChange={props.handleChange}
                     >
                       <option value="" />
                       {
-                        props.createProvidersArray.map((providerName, index) => (
-                          <option key={index} value={providerName.uuid}>{providerName.display}</option>
+                        createProvidersArray.map(providerName => (
+                          <option key={providerName.uuid} value={providerName.uuid}>{providerName.display}</option>
                         ))
                       }
                     </select>
@@ -153,13 +167,10 @@ const Providers = (props) => {
 };
 
 Providers.propTypes = {
-  providers: PropTypes.array.isRequired,
-  isChecked: PropTypes.bool.isRequired,
+  stateData: PropTypes.object.isRequired,
   saveNewProvider: PropTypes.func.isRequired,
-  createProvidersArray: PropTypes.array.isRequired,
   handleProviderChecked: PropTypes.func.isRequired,
   removeProvider: PropTypes.func.isRequired,
-  encounterRoles: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
 };
 
