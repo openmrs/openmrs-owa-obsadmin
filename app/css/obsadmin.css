@@ -363,11 +363,17 @@ a.nav-link{
 #custom-a-tag a {
     color: #337ab7;
     cursor: pointer;
-    
+
 }
 li>a:hover {
     color: rgba(232, 140, 140, 0.96);
     cursor: pointer;
     text-decoration: none;
     border-bottom: 1px solid gold;
+}
+.input {
+    color: #FF0000;
+}
+.has-error {
+    color: #FF0000;
 }
