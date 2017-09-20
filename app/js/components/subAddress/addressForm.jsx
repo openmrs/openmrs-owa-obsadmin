@@ -9,15 +9,8 @@
 import React from 'react';
 import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import apiCall from '../utilities/apiHelper';
+import AddressFormat from './addressFormat';
 
-
-/**
- * Represents the address form. Used in adding and editing addresses.
- *
- * @export
- * @class AddressForm
- * @extends {React.Component}
- */
 export default class AddressForm extends React.Component {
   constructor(props) {
     super(props);
@@ -78,33 +71,14 @@ export default class AddressForm extends React.Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-/**
- * handleClick - Displays the modal form by changing state
- *
- *
- * @memberOf AddressForm
- */
   handleClick(){
     this.setState({isShowingModal: true});
   }
 
-/**
- * handleClose - Closes the modal form by changing state
- *
- *
- * @memberOf AddressForm
- */
   handleClose(){
     this.setState({isShowingModal: false});
   }
 
-/**
- * onChange - handles changes on input elements
- *
- * @param {object} e - event object
- *
- * @memberOf AddressForm
- */
   onChange(e) {
     const { name, value } = e.target;
     const newValues = this.state.editValues;
@@ -113,13 +87,6 @@ export default class AddressForm extends React.Component {
     this.setState({ editValues: newValues });
   }
 
-/**
- * onChangeBox - handles changes on checkbox elements
- *
- * @param {object} e - event object
- *
- * @memberOf AddressForm
- */
   onChangeBox(e) {
     const { name, checked } = e.target;
     const newValues = this.state.editValues;
@@ -128,14 +95,6 @@ export default class AddressForm extends React.Component {
     this.setState({ editValues: newValues });
   }
 
-/**
- * editClick - sets state to prepare for changes
- *
- * @param {object} e - event object
- * @param {string} uuid - address uuid
- *
- * @memberOf AddressForm
- */
   editClick(e,uuid){
       this.setState({
         action: 'edit',
@@ -144,14 +103,6 @@ export default class AddressForm extends React.Component {
       });
   }
 
-/**
- * addClick - sets state to prepare for new address form
- *
- * @param {object} e - event object
- * @param {string} uuid - address uuid
- *
- * @memberOf AddressForm
- */
   addClick(e,uuid){
     if(this.state.action === 'display'){
       const newValues = this.defaultValues;
@@ -163,39 +114,19 @@ export default class AddressForm extends React.Component {
     }
   }
 
-/**
- * cancelClick - Sets state to cancel current action
- *
- *
- * @memberOf AddressForm
- */
   cancelClick(){
     const defaults = this.defaultValues;
     defaults.action = "display";
     this.setState(defaults);
   }
 
-/**
- * deleteClick - calls the open modal to confirm delete action
- *
- *
- * @memberOf AddressForm
- */
   deleteClick(){
     this.handleClick();
   }
 
-/**
- * delete - deletes address from database
- *
- * @param {object} e - event object
- * @param {string} uuid - address uuid
- *
- * @memberOf AddressForm
- */
   delete(e,uuid){
     this.setState({isShowingModal: false});
-    apiCall(this.state.editValues, 'delete', `person/${this.state.parentUuid}/address/${this.state.uuid}?!purge`)
+    apiCall(this.state.editValues, 'delete', `person/${this.state.parentUuid}/address/${this.state.uuid}`)
       .then((response) => {
         this.reload();
         toastr.options.closeButton = true;
@@ -204,12 +135,6 @@ export default class AddressForm extends React.Component {
       .catch(error => toastr.error(error));
   }
 
-/**
- * save - saves address from the adressForm to database
- *
- *
- * @memberOf AddressForm
- */
   save(){
     apiCall(this.state.editValues, 'post', `person/${this.state.parentUuid}/address`)
       .then((response) => {
@@ -221,14 +146,6 @@ export default class AddressForm extends React.Component {
       .catch(error => toastr.error(error));
   }
 
-/**
- * update update updates exisiting address.
- *
- * @param {object} e - event object
- * @param {string} uuid - address uuid
- *
- * @memberOf AddressForm
- */
   update(e,uuid){
     if(Object.keys(this.state.editValues).length > 0){
       apiCall(this.state.editValues, 'post', `person/${this.state.parentUuid}/address/${uuid}`)
@@ -248,13 +165,6 @@ export default class AddressForm extends React.Component {
     }
   }
 
-/**
- * Renders the component
- *
- * @returns react element to be rendered.
- *
- * @memberOf AddressForm
- */
   render() {
     return (
       <div>
@@ -359,50 +269,8 @@ export default class AddressForm extends React.Component {
               </div>
             </div>
             :
-            <form className="form-horizontal">
-              <div className="form-group ">
-                <label className="control-label col-sm-4">Preferred:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.preferred? 'True' : 'False'}
-                </div>
-              </div>
-              <div className="form-group ">
-                <label className="control-label col-sm-4">Address:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.address1}
-                </div>
-              </div>
-              <div className="form-group ">
-                <label className="control-label col-sm-4">Address 2:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.address2}
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="col-sm-4 control-label">City/Village:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.cityVillage}
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="col-sm-4 control-label">State/Province:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.stateProvince}
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="col-sm-4 control-label">Country:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.country}
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="col-sm-4 control-label">Postal Code:</label>
-                <div className="col-sm-8 control-label custom-label">
-                  {this.state.postalCode}
-                </div>
-              </div>
-            </form>          }
+            <AddressFormat address={this.state} formatString={this.props.addressFormat}/>
+          }
         </div>
         }
         {this.state.action ==="new" ?
