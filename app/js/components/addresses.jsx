@@ -7,19 +7,13 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import { parseString } from 'xml2js';
 import { Card, Button, CardHeader, CardFooter, CardBlock,
   CardTitle, CardText, Row, Col } from 'reactstrap';
 
 import apiCall from '../utilities/apiHelper';
-import AddressForm from './addressForm';
+import AddressForm from './subAddress/addressForm';
 
-
-/**
- * Represents the adderesses component which loads different addresses
- *
- * @class Address
- * @extends {React.Component}
- */
 export default class Address extends React.Component {
   constructor(props) {
     super(props);
@@ -41,42 +35,58 @@ export default class Address extends React.Component {
       uuid: '1990',
       activeCard: '1990',
       secondryAction: 'new'
-    }
+    };
+    this.addressFormat = null;
     this.reload = this.reload.bind(this);
+    this.parseAddressFormat = this.parseAddressFormat.bind(this);
   }
-/**
- * Calls reload function to fetch addresses for the patient
- *
- *
- * @memberOf Address
- */
+
   componentDidMount(){
     this.reload();
   }
 
-/**
- * Fetches addresses and set the state
- *
- *
- * @memberOf Address
- */
   reload(){
     apiCall(null, 'get', `/person/${this.props.uuid}/address?v=full`).then((response) => {
       this.setState({addresses: response.results});
     });
+    apiCall(null, 'get', '/systemsetting/layout.address.format').then((response) => {
+      this.parseAddressFormat(response)
+    });
   }
 
-/**
- * Renders the component
- *
- * @returns the react element to be rendered.
- *
- * @memberOf Address
- */
+  parseAddressFormat(xmlString){
+    let localAddressFormat = {};
+    if(xmlString.value){
+      parseString(xmlString.value, function (err, result) {
+        if(result){
+          if(result["org.openmrs.layout.address.AddressTemplate"] &&
+            result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0] &&
+            result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0].string){
+              localAddressFormat = 
+              result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0].string;
+          }
+        }
+      });
+    }
+    this.addressFormat = localAddressFormat;
+  }
+
   render() {
     return (
       <div>
         <Row>
+          <Col sm="6">
+            <Card>
+              <CardHeader>Add new address</CardHeader>
+                <CardBlock>
+                  <CardText>
+                    <AddressForm address={this.addNew} reload={this.reload}
+                    addressFormat={this.addressFormat}
+                    action="display" parentUuid={this.state.parentUuid}/>
+                  </CardText>
+                </CardBlock>
+            </Card>
+          </Col>
           {this.state.addresses.map(source => (
           <Col key={source.uuid} sm="6">
             <Card>
@@ -84,6 +94,7 @@ export default class Address extends React.Component {
               <CardBlock>
                 <CardText>
                   <AddressForm address={source} reload={this.reload}
+                  addressFormat={this.addressFormat}
                   parentUuid={this.state.parentUuid} action="display"/>
                 </CardText>
               </CardBlock>
@@ -92,17 +103,6 @@ export default class Address extends React.Component {
             </Card>
           </Col>
           ))}
-          <Col sm="6">
-            <Card>
-              <CardHeader>Add new address</CardHeader>
-                <CardBlock>
-                  <CardText>
-                    <AddressForm address={this.addNew} reload={this.reload}
-                    action="display" parentUuid={this.state.parentUuid}/>
-                  </CardText>
-                </CardBlock>
-            </Card>
-          </Col>
         </Row>
       </div>
     );
