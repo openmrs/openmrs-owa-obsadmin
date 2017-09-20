@@ -365,6 +365,12 @@ a.nav-link{
     cursor: pointer;
 
 }
+#bolded-a-tag {
+    color: #054b63;
+    cursor: pointer;
+    font-weight: bold;
+    
+}
 li>a:hover {
     color: rgba(232, 140, 140, 0.96);
     cursor: pointer;

@@ -19,8 +19,8 @@ class VisitsAndEncounters extends React.Component {
       uuid: this.props.uuid,
       visits: [],
       encounters: {},
-      showEncounters: {},
-      expanded: false,
+      showEncounters: {
+      },
       encounterSource: "visit",
       encountersWithNoVisits: [],
       activeTab: '1'
@@ -89,12 +89,21 @@ class VisitsAndEncounters extends React.Component {
       showEncounters: Object.assign({}, showEncounters, {
         [id]: {
           id,
-          length: encounter.length
+          length: encounter.length,
+          expanded: !this.state.expanded
         }
       }),
-      expanded: !this.state.expanded
+      
     })
     )
+  }
+
+  handleShowLess(encounter, id) {
+    this.setState(({ showEncounters }) => ({
+      showEncounters: Object.assign({}, showEncounters, {
+        [id]: undefined
+      }),
+    }))
   }
 
   handleEncountersWithNoVisits() {
@@ -153,9 +162,9 @@ class VisitsAndEncounters extends React.Component {
                   <tbody>
                     {this.state.visits.map((visit) => {
                       const showEncounter = this.state.showEncounters[visit.uuid]
-                      const endIndex = showEncounter ? showEncounter.length : 5;
+                      const endIndex = showEncounter ? showEncounter.length : 3;
                       return (
-                        <tr id="custom-a-tag">
+                        <tr id="custom-a-tag" key={visit.uuid}>
                           <a><td name="visituuid" onClick={() => this.handleVisitClick(visit.uuid)} value={visit.uuid}>{visit.display}</td></a>
                           <td>{visit.location.display}</td>
                           <td>{new Date(visit.startDatetime).toString()}</td>
@@ -165,9 +174,12 @@ class VisitsAndEncounters extends React.Component {
 
                           ))
                           }
-                            {(this.state.encounters[visit.uuid].length > 5)
-                              ? <a onClick={() => this.handleShowMore(this.state.encounters[visit.uuid], visit.uuid)}>
-                                {this.state.expanded ? '' : ' Show more!'}
+                            {(this.state.encounters[visit.uuid].length > 3 && !showEncounter)
+                              ? <a id="bolded-a-tag" onClick={() => this.handleShowMore(this.state.encounters[visit.uuid], visit.uuid)}>
+                                Show More!
+                              </a>
+                              :(showEncounter) ? <a id="bolded-a-tag" onClick={() => this.handleShowLess(this.state.encounters[visit.uuid], visit.uuid)}>
+                                Show Less!
                               </a>
                               : ''
                             }
@@ -199,7 +211,7 @@ class VisitsAndEncounters extends React.Component {
                       {this.state.encountersWithNoVisits.map((encounter) => {
 
                         return (
-                          <tr>
+                          <tr key={encounter.uuid}>
                             <a><td name="encounteruuid" onClick={() => this.handleEncounterClick(encounter.uuid)} value={encounter.uuid}>{encounter.display}</td></a>
                             <td>{encounter.location.display}</td>
                             <td>{new Date(encounter.encounterDatetime).toString()}</td>
