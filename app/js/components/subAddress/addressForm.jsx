@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import {ModalContainer, ModalDialog} from 'react-modal-dialog';
-import apiCall from '../utilities/apiHelper';
+import apiCall from '../../utilities/apiHelper';
 import AddressFormat from './addressFormat';
 
 export default class AddressForm extends React.Component {
