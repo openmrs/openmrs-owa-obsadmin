@@ -14,7 +14,7 @@ import Demographics from './demographics';
 import VisitsAndEncounters from './visitsAndEncounters'
 //import your collapsible component here
 import Name from './names'
-import Identifiers from './identifiers';
+import Identifiers from './identifiers/identifiers';
 /**
  * Represents the Patient.
  * Used in managing patient data
