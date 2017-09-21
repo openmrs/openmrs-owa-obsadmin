@@ -40,7 +40,15 @@ header .logo {
 header .logo img {
     width: 120px;
 }
-
+.nav-header a{
+    color: white;
+}
+.glyphicon-user:before{
+    color: white;
+}
+.glyphicon-log-out:before{
+    color:white;
+}
 #body-wrapper {
     margin-top: 10px;
     padding: 10px;
@@ -262,8 +270,12 @@ li>a:focus {
     padding-left: 15px;
     margin-bottom: 15px;
 }
+.editCard{
+    width: 100%;
+    margin-left: 33%;
+}
 .card1{
- width: 47%;
+ width:33%;
  height: 100%;
  float:left;
  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
@@ -271,6 +283,18 @@ li>a:focus {
  margin-left: 2%;
  text-align: auto;
  align-items: left;
+}
+.viewCard{
+ width: 22%;
+ height: 55px;
+ float:left;
+ box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+ margin-top: 1%;
+ margin-left: 2%;
+ text-align: auto;
+ align-items: left;
+ padding: .5%;
+ border-radius:5%;
 }
 .card-body{
     text-indent: 2%;
@@ -282,7 +306,7 @@ li>a:focus {
 #buttons{
     margin: auto;
     margin-top:5%;
-    width:50%;
+    width:100%;
     height: 10%;
     display: flex;
     align-items: center;
@@ -291,11 +315,23 @@ li>a:focus {
 button.btn.btn.success{
     padding: 6% 12%;
 }
-a.nav-link{
+.btn-margin{
+    margin-left: 0px;
+}
+.close{
+    position: relative;
+    margin-right: 3px;
+    top: 8px;
+    color: red;
+    display: block;
+    font-size: 35px;
+    line-height: 0px;
+    opacity: 1;
+}
+a{
     color: #337ab7;
     cursor: pointer;
 }
-
 .arrange-horizontally > * {
     display: inline-block;
 }
