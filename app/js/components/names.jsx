@@ -1,265 +1,265 @@
-/**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+/* * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
 import apiCall from '../utilities/apiHelper';
 
 class Name extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            display: 'view',
-            givenName: '',
-            middleName: '',
-            familyName: '',
-            voided: false,
-            preferred: true,
-            creator: '',
-            dateCreated: '',
-            res: '',
-        };
-        this.handleEdit = this.handleEdit.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.fetch = this.fetch.bind(this);
-    }
-
-    /**
-     *
-     * set to state patient attributes
-     *
-     * @memberOf Names
-     */
-    componentWillMount() {
-        this.fetch();
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: 'view',
+      givenName: '',
+      middleName: '',
+      familyName: '',
+      voided: false,
+      preferred: true,
+      creator: '',
+      dateCreated: '',
+      response: '',
+      errorGivenName: '',
+      errorFamilyName: ''
     };
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.fetchPatientInfo = this.fetchPatientInfo.bind(this);
+  }
 
-    /**
-     *
-     * make API call to get the values then set to state
-     *
-     * @memberOf Names
-     */
-    fetch(){
-        apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full').then((res) => {
-          this.setState({   res: res.person,
-              givenName: res.person.preferredName.givenName,
-              middleName: res.person.preferredName.middleName,
-              familyName: res.person.preferredName.familyName,
-              voided: res.person.preferredName.voided,
-              creator: res.person.auditInfo.creator.display,
-              dateCreated: res.person.auditInfo.dateCreated
-            });
-        });
-    };
+  componentDidMount() {
+    this.fetchPatientInfo();
+  };
 
-    /**
-     * handleEdit - changes display state to view to enable editing of input elements
-     *@param {object} event - event object
-     *
-     * @memberOf Name
-     */
-    handleEdit(){
-        this.setState({display: 'edit'});
-    }
+  fetchPatientInfo() {
+    apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full').
+    then((response) => {
+      const { givenName, middleName, familyName, voided } =
+      response.person.preferredName
+      const { creator, dateCreated } =
+      response.person.auditInfo
+      this.setState({
+        response: response.person,
+        givenName: givenName,
+        middleName: middleName,
+        familyName: familyName,
+        voided: voided,
+        creator: creator.display,
+        dateCreated: dateCreated
+      });
+    });
+  };
 
-    /**
-     * handleChange - handles changes on input elements
-     *@param {object} event - event object
-     *
-     * @memberOf Name
-     */
-    handleChange(event) {
-        const { name, value } = event.target
-        event.preventDefault();
-        this.setState({[name]: value});
-    }
+  handleEdit() {
+    this.setState({ display: 'edit' });
+  }
 
-    /**
-     * save - saves names to database and refreshes the page
-     *
-     *
-     * @memberOf Name
-     */
-    handleSave(){
-        this.setState((prevState) => (
-            {   display: 'view',
-                givenName: this.refs.givenname.value,
-                middleName: this.refs.middlename.value,
-                familyName: this.refs.familyname.value,
-                creator: prevState.creator,
-                dateCreated: prevState.dateCreated
-        }));
-        if ( this.state.givenName && this.state.familyName){
-            apiCall(
-              {
-                "givenName": this.state.givenName,
-                "middleName": this.state.middleName,
-                "familyName": this.state.familyName
-            },'post','/person/' + this.state.res.uuid + '/name/' + this.state.res.preferredName.uuid)
-            .then((res) => {
-            this.props.newName()});
-            toastr.success('Name updated sucessfully');
-            }
-
-        else{
-            this.fetch();
-            this.setState((prevState) => (
-                {   display: 'view',
-                    givenName: prevState.res.preferredName.givenName,
-                    middleName: prevState.middleName,
-                    familyName: prevState.res.preferredName.familyName,
-                    creator: prevState.creator,
-                    dateCreated: prevState.dateCreated
-            }));
-            toastr.error('Error: Please provide names for both Given Name and Family Name');
-            }
+  handleChange(event) {
+    const { name, value } = event.target
+    event.preventDefault();
+    this.setState({
+      [name]: value,
+      errorGivenName: '',
+      errorFamilyName: ''},
+      function () {
+        if(!this.state.givenName || (/\s/g.test(this.state.givenName))) {
+          this.setState(
+            { errorGivenName: 'Given Name can not be null or contain spaces'}
+          )
         }
+        if(!this.state.familyName || (/\s/g.test(this.state.familyName))) {
+          this.setState(
+            {errorFamilyName: 'Family Name can not be null or contain spaces' }
+          )
+        }
+      }
+    );
+  }
 
+  handleSave(event) {
+    event.preventDefault();
+    let requestBody = {'givenName': this.state.givenName,
+                       'middleName': this.state.middleName,
+                       'familyName': this.state.familyName}
+    let requestUrl = '/person/' + this.state.response.uuid +
+                      '/name/' + this.state.response.preferredName.uuid
+    if(!this.state.errorGivenName && !this.state.errorFamilyName) {
+      apiCall(requestBody, 'post', requestUrl).
+      then((response) => {this.props.newName()});
+      this.setState({ display: 'view' })
+      toastr.success('Name updated sucessfully');
+    }
+    else{
+      toastr.error('Fix errors on page');
+    }
+  }
 
-    /**
-     * handleCancel - resets info names field to state before start of edit
-     *
-     *
-     * @memberOf Name
-     */
-    handleCancel(){
-        this.fetch();
-        const given = this.state.res.preferredName.givenName;
-        const middle = this.state.res.preferredName.middleName;
-        const family = this.state.res.preferredName.familyName;
-        this.setState((prevState) => (
-            {   display: 'view',
-                givenName: given === null ? '' : prevState.givenName,
-                middleName: middle === null ? '' : prevState.middleName,
-                familyName: family === null ? '' : prevState.familyName,
-                voided: prevState.res.preferredName.voided,
-                preferred: prevState.preferred,
-                creator: prevState.res.auditInfo.creator.display,
-                dateCreated: prevState.res.auditInfo.dateCreated
-        }));
-    };
+  handleCancel() {
+    this.fetchPatientInfo();
+    const given = this.state.response.preferredName.givenName;
+    const middle = this.state.response.preferredName.middleName;
+    const family = this.state.response.preferredName.familyName;
+    this.setState((prevState) => ({
+      display: 'view',
+      givenName: given === null ? '' : prevState.givenName,
+      middleName: middle === null ? '' : prevState.middleName,
+      familyName: family === null ? '' : prevState.familyName,
+      voided: prevState.response.preferredName.voided,
+      preferred: prevState.preferred,
+      creator: prevState.response.auditInfo.creator.display,
+      dateCreated: prevState.response.auditInfo.dateCreated,
+      errorGivenName: '',
+      errorFamilyName: ''
+    }));
+  };
 
-    /**
-     * Renders the component
-     *
-     * @returns react element to be rendered.
-     *
-     * @memberOf Name
-     */
-    render() {
-        return (
-            <div>
-            <form className="form-horizontal">
-                {this.state.display === "view" &&
-                <div className="form-group">
-                    <div className="col-sm-2">
-                        <input className="btn btn-success form-control"
-                               name="edit"
-                               type="button"
-                               value="Edit Name"
-                               onClick={this.handleEdit}/>
-                    </div>
-                </div>
-                }
-
-                <div className="form-group ">
-                    <label className="control-label col-sm-2">Preferred</label>
-                    <div className="col-sm-2">
-                        <input
-                            name="username"
-                            type="checkbox"
-                            checked={this.state.preferred}
-                            disabled={this.state.display === 'view' ? 'disabled' : null}/>
-                    </div>
-                </div>
-
-                <div className="form-group ">
-                    <label className="control-label col-sm-2"> Given Name* </label>
-                    <div className="col-sm-5">
-                        <input  className="form-control"
-                                ref="givenname"
-                                name="givenName"
-                                type="text"
-                                value={this.state.givenName}
-                                onChange={this.handleChange}
-                                readOnly={this.state.display === 'view' ? 'readonly' : null}
-                                required
-                                 />
-                    </div>
-                </div>
-
-                <div className="form-group ">
-                    <label className="control-label col-sm-2">Middle Name  </label>
-                    <div className="col-sm-5">
-                        <input  className="form-control"
-                                ref="middlename"
-                                name="middleName"
-                                type="text"
-                                value={this.state.middleName}
-                                onChange={this.handleChange}
-                                readOnly={this.state.display === 'view' ? 'readonly' : null}
-                                />
-                    </div>
-                </div>
-
-                <div className="form-group ">
-                    <label className="control-label col-sm-2"> Family Name* </label>
-                    <div className="col-sm-5">
-                        <input  className="form-control"
-                                ref="familyname"
-                                name="familyName"
-                                type="text"
-                                value={this.state.familyName}
-                                onChange={this.handleChange}
-                                readOnly={this.state.display === 'view' ? 'readonly' : null}
-                                required />
-                    </div>
-                </div>
-
-                <div className="form-group ">
-                    <label className="control-label col-sm-2"> Created By: </label>
-                    <div className="col-sm-5">
-                        <input  className="form-control"
-                                name="createdby"
-                                type="text"
-                                size="50"
-                                value= {this.state.creator +'  ' + this.state.dateCreated}
-                                disabled />
-                    </div>
-                </div>
-                {this.state.display == "edit" &&
-                <div className="form-group">
-                    <div className="col-sm-2">
-                        <button type="submit"
-                             name="update"
-                             onClick={this.handleSave}
-                             className="btn btn-success form-control">
-                             Save</button>
-                    </div>
-                    <div className="col-sm-2">
-                        <button type="button"
-                             name="cancel"
-                             onClick={this.handleCancel}
-                             className="btn btn-default form-control cancelBtn">
-                             Cancel</button>
-                    </div>
-               </div>
-            }
-
-            </form>
+  render() {
+    let givenErrorClass = '';
+    let familyErrorClass = '';
+    if(this.state.errorGivenName && this.state.display === 'edit') {
+      givenErrorClass = 'has-error'
+    }
+    if(this.state.errorFamilyName && this.state.display === 'edit') {
+      familyErrorClass = 'has-error'
+    }
+    return(
+      <div>
+        <form className='form-horizontal'>
+          {this.state.display === 'view' &&
+            <div className='form-group'>
+              <div className='col-sm-2'>
+                  <input className='btn btn-success form-control'
+                         name='edit'
+                         type='button'
+                         value='Edit Name'
+                         onClick={ this.handleEdit }
+                  />
+              </div>
             </div>
-        );
-    };
+          }
+
+          <div className='form-group '>
+              <label className='control-label col-sm-2'> Preferred </label>
+              <div className='col-sm-2'>
+                  <input
+                      name='username'
+                      type='checkbox'
+                      checked={this.state.preferred}
+                      disabled={
+                                  this.state.display === 'view' ?
+                                   'disabled' : null
+                                }
+                  />
+              </div>
+          </div>
+
+          <div className={'form-group ' + givenErrorClass }>
+              <label className='control-label col-sm-2'> Given Name* </label>
+              <div className='col-sm-5'>
+                  <input  className='form-control'
+                          name='givenName'
+                          type='text'
+                          value={ this.state.givenName }
+                          onChange={ this.handleChange }
+                          readOnly={
+                                    this.state.display === 'view' ?
+                                    'readonly' : null
+                                    }
+                  />
+              </div>
+              {
+                this.state.errorGivenName &&
+                this.state.display === 'edit' &&
+                <div className='input'>
+                  { this.state.errorGivenName }
+                </div>
+              }
+          </div>
+
+          <div className='form-group '>
+              <label className='control-label col-sm-2'> Middle Name </label>
+              <div className='col-sm-5'>
+                  <input  className='form-control'
+                          name='middleName'
+                          type='text'
+                          value={ this.state.middleName }
+                          onChange={ this.handleChange }
+                          readOnly={
+                                      this.state.display === 'view' ?
+                                      'readonly' : null
+                                    }
+                  />
+              </div>
+          </div>
+
+          <div className={'form-group ' + familyErrorClass}>
+              <label className='control-label col-sm-2'> Family Name* </label>
+              <div className='col-sm-5'>
+                  <input  className='form-control'
+                          name='familyName'
+                          type='text'
+                          value={ this.state.familyName }
+                          onChange={ this.handleChange }
+                          readOnly={
+                                      this.state.display === 'view'?
+                                      'readonly' : null
+                                    }
+                  />
+              </div>
+              {
+                this.state.errorFamilyName &&
+                this.state.display === 'edit' &&
+                <div className='input'>
+                  {this.state.errorFamilyName}
+                </div>
+              }
+          </div>
+
+          <div className='form-group '>
+              <label className='control-label col-sm-2'> Created By </label>
+              <div className='col-sm-5'>
+                  <input  className='form-control'
+                          name='createdby'
+                          type='text'
+                          size='50'
+                          value= {
+                                    this.state.creator +'  ' +
+                                    this.state.dateCreated
+                                  }
+                          disabled
+                  />
+              </div>
+          </div>
+
+          {this.state.display == 'edit' &&
+          <div className='form-group'>
+              <div className='col-sm-2'>
+                  <button type='submit'
+                       name='update'
+                       onClick={this.handleSave}
+                       className='btn btn-success form-control'>
+                       Save
+                  </button>
+              </div>
+              <div className='col-sm-2'>
+                  <button type='button'
+                       name='cancel'
+                       onClick={this.handleCancel}
+                       className='btn btn-default form-control cancelBtn'>
+                       Cancel
+                  </button>
+              </div>
+          </div>
+          }
+        </form>
+      </div>
+    );
+  };
 };
 
 export default Name;
