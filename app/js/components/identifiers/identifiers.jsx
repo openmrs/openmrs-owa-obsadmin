@@ -267,7 +267,7 @@ export default class Identifiers extends React.Component {
                         <span
                           className="deleteIcon"
                           aria-hidden="true"
-                          onClick={() => this.handleDelete(id.uuid, id.voided)}
+                          onClick={this.callCancel}
                         >&times; </span>
                       </i>
                       <div className="card-header">
@@ -329,7 +329,7 @@ export default class Identifiers extends React.Component {
                             <h6><b>Created By </b></h6>
                             <h6 name="creator">
                               {id.auditInfo.creator.display} on
-                                                            {new Date(id.auditInfo.dateCreated).toString()}
+                              {new Date(id.auditInfo.dateCreated).toString()}
                             </h6>
                           </div>
                           <div className="arrange-horizontally">
@@ -350,9 +350,9 @@ export default class Identifiers extends React.Component {
                             >Save</button>
                             <button
                               type="button"
-                              className="btn btn-light"
-                              onClick={this.callCancel}
-                            >Cancel</button>
+                              className="btn btn-danger"
+                              onClick={() => this.handleDelete(id.uuid, id.voided)}
+                            >Delete</button>
                           </div>
                         </div>
                       </div>

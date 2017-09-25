@@ -23,7 +23,6 @@ const Observations = (props) => {
             <th>Question Concept</th>
             <th>Value</th>
             <th>Created</th>
-            <th>Deleted</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +41,6 @@ const Observations = (props) => {
                       </a>
                       <td>{observation.value.display}</td>
                       <td>{new Date(observation.obsDatetime).toString()}</td>
-                      <td>{(observation.voided) ? 'Deleted' : 'Not Deleted'}</td>
                     </tr>
                   )))
                 );
@@ -57,7 +55,6 @@ const Observations = (props) => {
                   </a>
                   <td>{ob.value}</td>
                   <td>{new Date(ob.obsDatetime).toString()}</td>
-                  <td>{(ob.voided) ? 'Deleted' : 'Not Deleted'}</td>
                 </tr>
               );
             })

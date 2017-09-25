@@ -45,7 +45,7 @@ const Providers = (props) => {
                 <td><input
                   name="voided"
                   className="form-check-input"
-                  type="checkbox"
+                  type="radio"
                   value={isChecked}
                   onChange={event => props.handleProviderChecked(event, provider.uuid)}
                 />
@@ -104,7 +104,10 @@ const Providers = (props) => {
             <div className="modal-body">
               <form>
                 <div className="form-group row">
-                  <label className="col-sm-6 col-form-label">Encounter Role </label>
+                  <label
+                    className="col-sm-6 col-form-label"
+                  >Encounter Role
+                  </label>
                   <div className="col-sm-6">
                     <select
                       className="form-control"
@@ -134,7 +137,11 @@ const Providers = (props) => {
                       <option value="" />
                       {
                         createProvidersArray.map(providerName => (
-                          <option key={providerName.uuid} value={providerName.uuid}>{providerName.display}</option>
+                          <option
+                            key={providerName.uuid}
+                            value={providerName.uuid}
+                          >{providerName.display}
+                          </option>
                         ))
                       }
                     </select>

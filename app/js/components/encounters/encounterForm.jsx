@@ -20,11 +20,19 @@ const Encounter = (props) => {
     searchedPatients,
     toDelete,
     editable,
-    visit_array,
-    location_array,
+    visitArray,
+    locationArray,
     encounterData,
     editValues,
+    editErrors,
   } = props.stateData;
+
+  let editErrorClass = '';
+  let editError = '';
+  if (editErrors.error.length > 0) {
+    editErrorClass = 'has-error';
+    editError = editErrors.error;
+  }
 
   const encounterType = encounterData.encounterType && encounterData.encounterType.display;
   const form = encounterData.form && encounterData.form.display;
@@ -34,6 +42,11 @@ const Encounter = (props) => {
 
   return (
     <div className="encounter">
+      {voided &&
+        <div id="background">
+          <p id="bg-text">DELETED</p>
+        </div>
+      }
       <form className="encounter-form">
         <div className="form-group row">
           <div className="col-sm-3">
@@ -61,32 +74,37 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label"> Patient</label>
-          <div className="col-sm-6">
-            <input
-              className="form-control"
-              name="patientName"
-              type="text"
-              value={editValues.patientName}
-              required
-              disabled={!moveEncounter}
-              onChange={props.handleSearchPatient}
-            />
-            {((editable || moveEncounter) && searchedPatients.length > 0) &&
-              <div className="dropdown-menu" id="selectedPatient">
-                {
-                  searchedPatients.map((patient, index) => (
-                    <li
-                      key={index}
-                      className="dropdown-item"
-                      value={patient.uuid}
-                      key={index}
-                      onClick={() => props.changeVisits(patient.uuid, patient.display)}
-                    >{patient.display}</li>
-                  ))
-                }
-              </div>
-            }
+          <div className={editError.includes('patient') ? editErrorClass : ''}
+          >
+            <label className="col-sm-4 col-form-label"> Patient</label>
+            <div className="col-sm-6">
+              <input
+                className="form-control"
+                name="patientName"
+                type="text"
+                value={editValues.patientName}
+                required
+                disabled={!moveEncounter}
+                onChange={props.handleSearchPatient}
+              />
+              {((moveEncounter) && searchedPatients.length > 0) &&
+                <div className="dropdown-menu" id="selectedPatient">
+                  {
+                    searchedPatients.map((patient, index) => (
+                      <li
+                        key={index}
+                        className="dropdown-item"
+                        value={patient.uuid}
+                        key={index}
+                        onClick={() => props.changeVisits(patient.uuid, patient.display)}
+                      >{patient.display}</li>
+                    ))
+                  }
+                </div>
+              }
+            </div>
+            {(editError.includes('patient')) &&
+              <div id="patientError" className="input">{editError}</div>}
           </div>
         </div>
 
@@ -101,7 +119,7 @@ const Encounter = (props) => {
               onChange={props.handleChange}
             >
               {
-                location_array.map(locations => (
+                locationArray.map(locations => (
                   <option key={locations.uuid} value={locations.uuid}>{locations.display}</option>
                 ))
               }
@@ -110,17 +128,22 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label"> Encounter Date </label>
-          <div className="col-sm-6">
-            <DateTimeField
-              className="form-control"
-              name="encounterDatetime"
-              format={format}
-              inputFormat={inputFormat}
-              dateTime={encounterDatetime}
-              disabled={!editable && !moveEncounter}
-              onChange={props.handleTimeChange('encounterDatetime')}
-            />
+          <div className={(editError.includes('datetime')) ? editErrorClass : ''}
+          >
+            <label className="col-sm-4 col-form-label"> Encounter Date </label>
+            <div className="col-sm-6">
+              <DateTimeField
+                className="form-control"
+                name="encounterDatetime"
+                format={format}
+                inputFormat={inputFormat}
+                dateTime={encounterDatetime}
+                inputProps={{ disabled: (!editable && !moveEncounter) }}
+                onChange={props.handleTimeChange('encounter')}
+              />
+            </div>
+            {editError.includes('datetime') &&
+              <div className="input">{editError}</div>}
           </div>
         </div>
 
@@ -137,8 +160,12 @@ const Encounter = (props) => {
             >
               <option value="" >none</option>
               {
-                visit_array.map((visit, index) => (
-                  <option key={index} value={visit.uuid}>{visit.display}</option>
+                visitArray.map((visit, index) => (
+                  <option
+                    key={index}
+                    value={visit.uuid}
+                  >{visit.display + ' to ' + moment(visit.stopDatetime).format('YYYY-MM-DD HH:mm')}
+                  </option>
                 ))
               }
             </select>
@@ -184,20 +211,6 @@ const Encounter = (props) => {
             />
           </div>
         </div>
-
-        <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Deleted</label>
-          <div className="col-sm-6">
-            <input
-              name="voided"
-              className="form-check-input"
-              type="checkbox"
-              checked={voided}
-              disabled
-            />
-          </div>
-        </div>
-
         {
           toDelete && !voided &&
           <div className="form-group row">

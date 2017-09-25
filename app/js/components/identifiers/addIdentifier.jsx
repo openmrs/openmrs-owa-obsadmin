@@ -89,7 +89,7 @@ class NewIdentifier extends React.Component {
         .catch(error => toastr.error(error));
     } else {
       apiCall(newAddIdentifiers, 'post',
-        `patient/${this.props.patientUuid}/identifier`)
+        `patient/${this.props.patientId}/identifier`)
         .then((response) => {
           if (response.error) {
             this.setState({ addErrors: { error: response.error.message } });
