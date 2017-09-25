@@ -39,9 +39,7 @@ export class ManageVisit extends React.Component {
       encounters: [],
       patients: [],
       searchTerm: 'm',
-
-
-
+      errorName: ''
     };
     this.handleEncounterClick = this.handleEncounterClick.bind(this);
     this.handleTimeChange = this.handleTimeChange.bind(this);
@@ -107,21 +105,35 @@ export class ManageVisit extends React.Component {
     event.preventDefault();
     this.setState({ [name]: value });
   }
-  handleSave() {
+  handleSave(event) {
+    event.preventDefault();
+    this.setState({
+      errorName: ''
+    })
+    let error = false
     const { startDatetime, stopDatetime, locationName, visitTypeName, finalStopDatetime, finalStartTime } = this.state;
-    apiCall(
-      {
-        "startDatetime": finalStartTime,
-        "stopDatetime": finalStopDatetime,
-        "location": locationName,
-        "visitType": visitTypeName
+    if (finalStopDatetime < finalStartTime) {
+      error = true
+      this.setState({
+        errorName: "Start date cannot be greater than Stop date"
+      })
 
-      }, 'post', `/visit/${this.state.visituuid}`,
+    }
+    if (!error) {
+      apiCall(
+        {
+          "startDatetime": finalStartTime,
+          "stopDatetime": finalStopDatetime,
+          "location": locationName,
+          "visitType": visitTypeName
 
-    ).then((res) => {
-      toastr.success('Saved!')
-    });
+        }, 'post', `/visit/${this.state.visituuid}`,
 
+      ).then((res) => {
+        toastr.success('Saved!')
+      });
+
+    }
   }
   handleDelete() {
     apiCall(null, 'delete', `/visit/${this.state.visituuid}`)
@@ -135,6 +147,12 @@ export class ManageVisit extends React.Component {
 
   render() {
     const { searchTerm, patients } = this.state;
+    let editErrorClass = '';
+    let editError = '';
+    if (this.state.errorName !== '') {
+      editErrorClass = 'has-error';
+      editError = this.state.errorName;
+    }
     return (
       <div className="section top">
         <span onClick={this.goHome} className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
@@ -186,15 +204,20 @@ export class ManageVisit extends React.Component {
             </div>
           </div>
           <div className="form-group ">
-            <label className="control-label col-sm-2"> Start Date </label>
-            <div className="col-sm-6">
-              <DateTimeField
-                className="form-control"
-                name="finalStartTime"
-                format={this.state.format}
-                inputFormat={this.state.inputFormat}
-                dateTime={this.state.startDatetime} onChange={this.handleTimeChange('finalStartTime')}
-              />
+            <div className={editError.includes('Start') ? editErrorClass : ''}>
+              <label className="control-label col-sm-2"> Start Date </label>
+              <div className="col-sm-6">
+                <DateTimeField
+                  inputProps={{ disabled: true }}
+                  className="form-control"
+                  name="finalStartTime"
+                  format={this.state.format}
+                  inputFormat={this.state.inputFormat}
+                  dateTime={this.state.startDatetime} onChange={this.handleTimeChange('finalStartTime')}
+                />
+                {(editError.includes("Start")) &&
+                  <div className="input">{editError}</div>}
+              </div>
             </div>
 
           </div>
@@ -203,6 +226,7 @@ export class ManageVisit extends React.Component {
             <div className="col-sm-6">
               <DateTimeField
                 className="form-control"
+                inputProps={{ disabled: true }}
                 name="finalStopDatetime"
                 format={this.state.format}
                 inputFormat={this.state.inputFormat}

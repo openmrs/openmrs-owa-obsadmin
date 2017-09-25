@@ -407,6 +407,10 @@ a{
     font-weight: bold;
     
 }
+#disable-manual-input .form-control[disabled]{
+    background-color: hsl(0, 0%, 100%);
+    opacity: 1;
+}
 li>a:hover {
     color: rgba(232, 140, 140, 0.96);
     cursor: pointer;
@@ -418,4 +422,12 @@ li>a:hover {
 }
 .has-error {
     color: #FF0000;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #eee; 
+    opacity: 1;
+}
+.input-group .form-control[disabled] {
+    background-color: transparent; 
+    opacity: 1
 }
