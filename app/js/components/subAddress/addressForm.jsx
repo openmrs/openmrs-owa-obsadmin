@@ -7,7 +7,6 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
-import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 import apiCall from '../../utilities/apiHelper';
 import AddressFormat from './addressFormat';
 
@@ -33,8 +32,6 @@ export default class AddressForm extends React.Component {
       activeButton: null,
       uuid: address.uuid,
       parentUuid: props.parentUuid,
-      isShowingModal: false,
-
     }
     this.defaultValues = {
       address1: address.address1,
@@ -60,23 +57,12 @@ export default class AddressForm extends React.Component {
     }
     this.editClick = this.editClick.bind(this);
     this.addClick = this.addClick.bind(this);
-    this.deleteClick = this.deleteClick.bind(this);
     this.delete = this.delete.bind(this);
     this.save = this.save.bind(this);
     this.update = this.update.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onChangeBox = this.onChangeBox.bind(this);
     this.cancelClick = this.cancelClick.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-  }
-
-  handleClick(){
-    this.setState({isShowingModal: true});
-  }
-
-  handleClose(){
-    this.setState({isShowingModal: false});
   }
 
   onChange(e) {
@@ -120,12 +106,7 @@ export default class AddressForm extends React.Component {
     this.setState(defaults);
   }
 
-  deleteClick(){
-    this.handleClick();
-  }
-
   delete(e,uuid){
-    this.setState({isShowingModal: false});
     apiCall(this.state.editValues, 'delete', `person/${this.state.parentUuid}/address/${this.state.uuid}`)
       .then((response) => {
         this.reload();
@@ -169,20 +150,37 @@ export default class AddressForm extends React.Component {
     return (
       <div>
         <div>
-          {
-            this.state.isShowingModal &&
-            <ModalContainer onClose={this.handleClose}>
-              <ModalDialog onClose={this.handleClose}>
-                <h1>Dialog Address</h1>
-                <p>Are you sure you want to delete? <br />
-                  Click yes to delete or close this modal to cancel</p>
-                <div>
-                  <button type="button" name="modalDelete" onClick={this.delete}
-                  className="btn btn-default form-control cancelBtn">Yes</button>
+          <div className="modal fade" id="myModal" role="dialog">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal">&times;</button>
+                  <h4 className="modal-title">Confirm Delete</h4>
                 </div>
-              </ModalDialog>
-            </ModalContainer>
-          }
+                <div className="modal-body">
+                  <p> Are you sure you want to delete this address?</p>
+                </div>
+                <div className="modal-footer">
+                  <div className="col-sm-6">
+                    <button
+                      type="button"
+                      className="btn btn-success form-control"
+                      onClick={this.delete}
+                      data-dismiss="modal"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                  <div className="col-sm-6">
+                    <button
+                      type="button"
+                      className="btn btn-danger form-control cancelBtn"
+                      data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         {(this.state.action === 'edit' || this.state.action === 'new')
           && this.state.activeCard === this.state.uuid?
@@ -293,8 +291,10 @@ export default class AddressForm extends React.Component {
               className="btn btn-success form-control">Edit</button>
           </div>
           <div className="col-sm-4">
-            <button type="button" name="delete" onClick={this.deleteClick}
-              className="btn btn-default form-control cancelBtn">Delete</button>
+            <button type="button" name="delete" data-toggle="modal" 
+              data-target="#myModal" className="btn btn-default form-control cancelBtn">
+              Delete
+            </button>
           </div>
         </div>
         : ''
