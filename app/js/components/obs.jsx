@@ -10,15 +10,7 @@ import React from 'react';
 import DatePicker from "react-bootstrap-date-picker";
 import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
 import apiCall from '../utilities/apiHelper';
-import {ModalContainer, ModalDialog} from 'react-modal-dialog';
 
-
-/**
- * Represents the Obs component which loads Obs for display and manipulation.
- * 
- * @class Obs
- * @extends {React.Component}
- */
 export default class Obs extends React.Component {
   constructor(props) {
     super(props);
@@ -44,7 +36,6 @@ export default class Obs extends React.Component {
       value: '',
       invalid: false,
       editValues: {},
-      isShowingModal: false,
     }
     this.getValue = this.getValue.bind(this);
     this.goToEncounter =  this.goToEncounter.bind(this);
@@ -58,12 +49,8 @@ export default class Obs extends React.Component {
     this.changeValue = this.changeValue.bind(this);
     this.delete = this.delete.bind(this);
     this.update = this.update.bind(this);
-    this.deleteClick = this.deleteClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
   }
-  /**
-   * On component mount, performs api calls.
-   */
+
   componentDidMount() {
     this.state.uuid = this.props.params.obsId;
     if (this.state.uuid ){
@@ -106,26 +93,9 @@ export default class Obs extends React.Component {
       this.props.router.push('/');
     }
   }
-  /**
-   * deleteClick - calls the delete operation on Observation
-   * by first asking user to confirm choice
-   * 
-   * 
-   * @memberOf Obs
-   */
-  deleteClick(){
-    this.setState({isShowingModal: true});
-  }
-  /**
-   * delete - Performs delete operation on Observation
-   * after getting confirmation from user
-   * 
-   * 
-   * @memberOf Obs
-   */
+
   delete(){
-    this.setState({isShowingModal: false});
-    apiCall(null, 'delete', `obs/${this.state.uuid}?!purge`)
+    apiCall(null, 'delete', `obs/${this.state.uuid}`)
       .then((result) => {
         toastr.options.closeButton = true;
         toastr.success('Deleted successfully');
@@ -133,15 +103,7 @@ export default class Obs extends React.Component {
       })
       .catch(error => toastr.error(error));
   }
-  /**
-   * getValue - Gets the react Element to be displayed
-   * when concept is selected
-   * 
-   * @param {object} value - from concept or api
-   * @returns 
-   * 
-   * @memberOf Obs
-   */
+
   getValue(value){
     if (value === null || undefined) return '';
     if (typeof value === 'string' || typeof value === 'number' ) return value;
@@ -155,22 +117,7 @@ export default class Obs extends React.Component {
     } 
     return '';
   }
-  /**
-   * handleClose - closes confirmation dialog for delete
-   * 
-   * 
-   * @memberOf Obs
-   */
-  handleClose(){
-    this.setState({isShowingModal: false});
-  }
-  /**
-   * changeValue - Handle changes from normal input elements
-   * 
-   * @param {object} event 
-   * 
-   * @memberOf Obs
-   */
+
   changeValue(event){
     const valueHolder = event.target.value;
     const value = valueHolder.substring(valueHolder.indexOf("///")+3);
@@ -179,13 +126,7 @@ export default class Obs extends React.Component {
     newEditValues.value = editValue;
     this.setState({value, editValues: newEditValues,});
   }
-/**
- * handleChange - Handle changes from select and date input elements
- * 
- * @param {object} event 
- * 
- * @memberOf Obs
- */
+
   handleChange(event){
     let name;
     let value;
@@ -209,31 +150,16 @@ export default class Obs extends React.Component {
       });
     }
   }
-  /**
-   * goToEncounter - push back to encounter component
-   * 
-   * 
-   * @memberOf Obs
-   */
+
   goToEncounter(){
     this.props.router
     .push(`/patient/${this.props.params.patentId}/encounter/${this.state.obs.encounterUuid}`);
   }
-  /**
-   * conceptOnChange - Handles changes from concept component
-   * 
-   * @param {object} selected 
-   * 
-   * @memberOf Obs
-   */
+
   conceptOnChange(selected){
-    
     if(selected.length > 0){
-      // if one, then this is the first time, load old value
-      // selectedConceptData includes answers and datatype
-      //let value = this.state.value;
       let filtteredConceptData = [];
-      if(selected[0].answers){ //Check if its rendering for the first time
+      if(selected[0].answers){ 
         let newEditValues = this.state.editValues;
         newEditValues.concept = selected[0].uuid;
         delete newEditValues.value;
@@ -252,33 +178,15 @@ export default class Obs extends React.Component {
       }
     }
   }
-  /**
-   * onSearch - Called when searching the concept component
-   * 
-   * @param {string} selected 
-   * 
-   * @memberOf Obs
-   */
+
   onSearch(selected){
     this.loadConcepts(selected);
   }
-  /**
-   * goHome - push back to search component
-   * 
-   * 
-   * @memberOf Obs
-   */
+
   goHome() {
     this.props.router.push('/');
   }
-  /**
-   * renderInput - Renders text input for value depending on the output of concept
-   * 
-   * @param {string} disabled 
-   * @returns react element
-   * 
-   * @memberOf Obs
-   */
+
   renderInput(disabled){
     return (<input type="text" name="value" disabled={disabled}
                 onChange={this.handleChange}
@@ -286,13 +194,7 @@ export default class Obs extends React.Component {
                 value={this.state.value}
               />);
   }
-  /**
-   * renderValue - renders OBS value element depending on concept value
-   * 
-   * @returns react element
-   * 
-   * @memberOf Obs
-   */
+
   renderValue(){
     let valueType =  this.state.selectedConceptData; 
     if (valueType !== undefined){
@@ -363,13 +265,7 @@ export default class Obs extends React.Component {
         }
     }
   }
-  /**
-   * loadConcepts - loads concept values
-   * 
-   * @param {string} searchValue 
-   * 
-   * @memberOf Obs
-   */
+
   loadConcepts(searchValue){
     let url = '/concept'
     url = searchValue ? `${url}?v=full&q=${searchValue}` 
@@ -412,12 +308,7 @@ export default class Obs extends React.Component {
         toastr.error(err);
       });
   }
-  /**
-   * update -Updates obs
-   * 
-   * 
-   * @memberOf Obs
-   */
+
   update(){
     if(Object.keys(this.state.editValues).length > 0){
       apiCall(this.state.editValues, 'post', `obs/${this.state.uuid}`)
@@ -446,29 +337,40 @@ export default class Obs extends React.Component {
         toastr.info('Nothing to update');
     }
   }
-  /**
-   * render - renders the component
-   * 
-   * @returns 
-   * 
-   * @memberOf Obs
-   */
+
   render() {
     return (
       <div>
         {
-          this.state.isShowingModal &&
-          <ModalContainer onClose={this.handleClose}>
-            <ModalDialog onClose={this.handleClose}>
-              <h1>Observation Dialog</h1>
-              <p>Are you sure you want to delete? <br />
-                Click yes to delete or close this modal to cancel</p>
-              <div>
-                <button type="button" name="modalDelete" onClick={this.delete}
-                className="btn btn-default form-control cancelBtn">Yes</button>
+          <div className="modal fade" id="myModal" role="dialog">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal">&times;</button>
+                <h4 className="modal-title">Confirm Delete</h4>
               </div>
-            </ModalDialog>
-          </ModalContainer>
+              <div className="modal-body">
+                <p> Are you sure you want to Delete this Observation?</p>
+              </div>
+              <div className="modal-footer">
+                <div className="col-sm-6">
+                  <button
+                    type="button" className="btn btn-success form-control"
+                    onClick={this.delete}
+                    data-dismiss="modal"
+                  >
+                    Confirm
+                  </button>
+                </div>
+                <div className="col-sm-6">
+                  <button
+                    type="button" className="btn btn-danger form-control cancelBtn"
+                    data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         }
         <div className="section top">
           <div className="col-sm-12 section search">  
@@ -585,8 +487,10 @@ export default class Obs extends React.Component {
                       className="btn btn-success form-control">Update</button>
                   </div>
                   <div className="col-sm-3">
-                    <button type="button" name="delete" onClick={this.deleteClick}
-                      className="btn btn-default form-control cancelBtn">Delete</button>
+                    <button type="button" name="delete" data-toggle="modal" 
+                      data-target="#myModal" className="btn btn-default form-control cancelBtn">
+                      Delete
+                    </button>
                   </div> 
                 </div>                                  
               </form>
