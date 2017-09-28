@@ -405,7 +405,7 @@ a{
     color: #054b63;
     cursor: pointer;
     font-weight: bold;
-    
+
 }
 #disable-manual-input .form-control[disabled]{
     background-color: hsl(0, 0%, 100%);
@@ -425,11 +425,11 @@ li>a:hover {
     color: #FF0000;
 }
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-    background-color: #eee; 
+    background-color: #eee;
     opacity: 1;
 }
 .input-group .form-control[disabled] {
-    background-color: transparent; 
+    background-color: transparent;
     opacity: 1
 }
 #patientError{
@@ -453,7 +453,7 @@ li>a:hover {
     z-index:1;
     background:transparent;
     display:block;
-    min-height:50%; 
+    min-height:50%;
     min-width:50%;
     color:yellow;
 }
@@ -463,4 +463,8 @@ li>a:hover {
     font-size:50px;
     transform:rotate(300deg);
     -webkit-transform:rotate(300deg);
+}
+.err-msg {
+    color: #FF0000;
+    margin-left: 180px;
 }
