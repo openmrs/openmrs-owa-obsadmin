@@ -249,14 +249,24 @@ export default class Identifiers extends React.Component {
             return (
               <div key={id.uuid}>
                 {!this.state.hideViewCard &&
-                  <div className="viewCard">
-                    {id.identifierType.display}{': '}
-                    {this.state.activeCard !== index ? id.identifier : editIdentifiers.identifier || id.identifier}
-                    {'   '}
-                    {this.state.editState === false &&
-                      <a onClick={() => this.callEdit(index, id.uuid)}>Edit
-											</a>
+                  <div>
+                    {
+                      id.preferred &&
+                      <div className="preffered">
+                        <span className="badge badge-info">Preferred</span>
+                      </div>
                     }
+
+                    <div className="viewCard">
+                      {id.identifierType.display}{': '}
+                      {this.state.activeCard !== index ? id.identifier : editIdentifiers.identifier || id.identifier}
+                      {'   '}
+                      {this.state.editState === false &&
+                        <a onClick={() => this.callEdit(index, id.uuid)}
+                        >Edit
+                        </a>
+                      }
+                    </div>
                   </div>
                 }
 
@@ -271,7 +281,13 @@ export default class Identifiers extends React.Component {
                         >&times; </span>
                       </i>
                       <div className="card-header">
-                        <h4>Identifier {id.identifier}</h4></div>
+                        {id.preferred &&
+                          <div className="preffered">
+                            <span className="badge badge-info">Preferred</span>
+                          </div>
+                        }
+                        <center><h4>Identifier {id.identifier}</h4></center>
+                      </div>
                       <div className="card-body">
                         <div className={this.state.editErrors.uuid === id.uuid ? editErrorClass : ''}>
                           <h6><b>Identifier</b></h6>
@@ -332,16 +348,18 @@ export default class Identifiers extends React.Component {
                               {new Date(id.auditInfo.dateCreated).toString()}
                             </h6>
                           </div>
-                          <div className="arrange-horizontally">
-                            <h6><b>Preferred  </b></h6> <t />
-                            <input
-                              className="form-check-input"
-                              type="Checkbox"
-                              name="preferred"
-                              defaultChecked={id.preferred}
-                              onChange={() => this.handlePreferred(id.preferred)}
-                            />
-                          </div>
+                          {!id.preferred &&
+                            <div className="arrange-horizontally">
+                              <h6><b>Preferred  </b></h6> <t />
+                              <input
+                                className="form-check-input"
+                                type="Checkbox"
+                                name="preferred"
+                                defaultChecked={id.preferred}
+                                onChange={() => this.handlePreferred(id.preferred)}
+                              />
+                            </div>
+                          }
                           <div id="buttons">
                             <button
                               type="button"

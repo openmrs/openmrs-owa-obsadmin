@@ -159,7 +159,12 @@ export class ManageVisit extends React.Component {
           aria-hidden="true">Back</span>
         <header className="patient-header">
           Manage Visit
-            </header>
+        </header>
+        {this.state.voided &&
+          <div id="background">
+            <p id="bg-text">SOFT DELETED</p>
+          </div>
+        }
         <form style={{ width: "" }} className="form-horizontal">
           <div className="form-group ">
           </div>
@@ -199,7 +204,6 @@ export class ManageVisit extends React.Component {
 
                   ))
                 }
-
               </select>
             </div>
           </div>
@@ -250,17 +254,6 @@ export class ManageVisit extends React.Component {
             </div>
           </div>
 
-          <div className="form-group ">
-            <label className="control-label col-sm-2"> Deleted ? </label>
-            <div className="col-sm-6">
-              <input className="form-control"
-                disabled={true}
-                name="voided"
-                type="text"
-                value={this.state.voided}
-              />
-            </div>
-          </div>
           <div className="form-group">
             <label className="control-label col-sm-2"></label>
             <div className="col-sm-2">
