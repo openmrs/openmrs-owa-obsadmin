@@ -7,12 +7,13 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import toastr from 'toastr';
 import apiCall from '../utilities/apiHelper';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col, Table } from 'reactstrap';
 import classnames from 'classnames';
 import { withRouter } from 'react-router'
 
-class VisitsAndEncounters extends React.Component {
+export class VisitsAndEncounters extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
