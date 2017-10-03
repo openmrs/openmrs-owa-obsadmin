@@ -407,21 +407,7 @@ export default class Encounters extends React.Component {
         <div className="section top">
           <div className="col-sm-12 section search">
             <div className="col-sm-1">
-              <span
-                onClick={this.goToPatient}
-                className="glyphicon glyphicon-step-backward glyphicon-updated breadcrumb-item pointer"
-                aria-hidden="true"
-              >
-                Back
-              </span>
             </div>
-            <span
-              onClick={this.goHome}
-              className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
-              aria-hidden="true"
-            >
-              Home
-            </span>
             <header className="encounter-header">
               Encounter on {this.state.encounterDatetime}
             </header>

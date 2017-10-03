@@ -24,7 +24,7 @@ export default class Obs extends React.Component {
         location: '',
         obsdate: '2017-01-01',
         concept: '',
-        comment : 'comment',
+        comment: 'comment',
         encounterUuid: '',
       },
       conceptOptions: [],
@@ -38,11 +38,11 @@ export default class Obs extends React.Component {
       editValues: {},
     }
     this.getValue = this.getValue.bind(this);
-    this.goToEncounter =  this.goToEncounter.bind(this);
-    this.conceptOnChange =  this.conceptOnChange.bind(this);
-    this.onSearch =  this.onSearch.bind(this);
-    this.loadConcepts =this.loadConcepts.bind(this);
-    this.handleChange =this.handleChange.bind(this);
+    this.goToEncounter = this.goToEncounter.bind(this);
+    this.conceptOnChange = this.conceptOnChange.bind(this);
+    this.onSearch = this.onSearch.bind(this);
+    this.loadConcepts = this.loadConcepts.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.goHome = this.goHome.bind(this);
     this.renderValue = this.renderValue.bind(this);
     this.renderInput = this.renderInput.bind(this);
@@ -53,31 +53,31 @@ export default class Obs extends React.Component {
 
   componentDidMount() {
     this.state.uuid = this.props.params.obsId;
-    if (this.state.uuid ){
+    if (this.state.uuid) {
       apiCall(null, 'get', '/location')
         .then((result) => {
           apiCall(null, 'get', `/obs/${this.state.uuid}`)
             .then((res) => {
-              if(res){
+              if (res) {
                 const obs = {
-                  person: res.person.display.substr(res.person.display.indexOf('-')+1).trim() || '',
+                  person: res.person.display.substr(res.person.display.indexOf('-') + 1).trim() || '',
                   encounter: res.encounter.display || '',
                   order: res.encounter.order || '',
                   location: res.location.display || '',
                   obsdate: res.obsDatetime || '',
                   concept: res.concept.display || '',
                   conceptUuid: res.concept.uuid || '',
-                  comment : res.comment || '',
+                  comment: res.comment || '',
                   encounterUuid: res.encounter.uuid,
                 }
                 this.setState({
                   obs,
-                  conceptOptions: [{name: res.concept.display}] || [],
+                  conceptOptions: [{ name: res.concept.display }] || [],
                   conceptSelected: [res.concept.display],
                   value: this.getValue(res.value) || '',
                   locations: result.results,
                 });
-                if(this.state.obs.conceptUuid){
+                if (this.state.obs.conceptUuid) {
                   this.loadConcepts();
                 }
               }
@@ -94,7 +94,7 @@ export default class Obs extends React.Component {
     }
   }
 
-  delete(){
+  delete() {
     apiCall(null, 'delete', `obs/${this.state.uuid}`)
       .then((result) => {
         toastr.options.closeButton = true;
@@ -104,33 +104,33 @@ export default class Obs extends React.Component {
       .catch(error => toastr.error(error));
   }
 
-  getValue(value){
+  getValue(value) {
     if (value === null || undefined) return '';
-    if (typeof value === 'string' || typeof value === 'number' ) return value;
-    if(typeof value === 'object'){
-      if (value.display){
+    if (typeof value === 'string' || typeof value === 'number') return value;
+    if (typeof value === 'object') {
+      if (value.display) {
         return value.display;
       }
       else {
         return '';
       }
-    } 
+    }
     return '';
   }
 
-  changeValue(event){
+  changeValue(event) {
     const valueHolder = event.target.value;
-    const value = valueHolder.substring(valueHolder.indexOf("///")+3);
-    const editValue =  valueHolder.substring(0,valueHolder.indexOf("///"));
+    const value = valueHolder.substring(valueHolder.indexOf("///") + 3);
+    const editValue = valueHolder.substring(0, valueHolder.indexOf("///"));
     const newEditValues = this.state.editValues;
     newEditValues.value = editValue;
-    this.setState({value, editValues: newEditValues,});
+    this.setState({ value, editValues: newEditValues, });
   }
 
-  handleChange(event){
+  handleChange(event) {
     let name;
     let value;
-    if(event.target){
+    if (event.target) {
       name = event.target.name;
       value = event.target.value;
     } else {
@@ -139,8 +139,8 @@ export default class Obs extends React.Component {
     }
     const newEditValues = this.state.editValues;
     newEditValues[name] = value;
-    if(name === "value"){
-      this.setState({value, editValues: newEditValues,});
+    if (name === "value") {
+      this.setState({ value, editValues: newEditValues, });
     } else {
       const newObs = this.state.obs;
       newObs[name] = value;
@@ -151,15 +151,15 @@ export default class Obs extends React.Component {
     }
   }
 
-  goToEncounter(){
+  goToEncounter() {
     this.props.router
-    .push(`/patient/${this.props.params.patentId}/encounter/${this.state.obs.encounterUuid}`);
+      .push(`/patient/${this.props.params.patentId}/encounter/${this.state.obs.encounterUuid}`);
   }
 
-  conceptOnChange(selected){
-    if(selected.length > 0){
+  conceptOnChange(selected) {
+    if (selected.length > 0) {
       let filtteredConceptData = [];
-      if(selected[0].answers){ 
+      if (selected[0].answers) {
         let newEditValues = this.state.editValues;
         newEditValues.concept = selected[0].uuid;
         delete newEditValues.value;
@@ -171,15 +171,15 @@ export default class Obs extends React.Component {
           return conceptData;
         });
         const newData = selected[0];
-        if(typeof newData === 'object'){
+        if (typeof newData === 'object') {
           newData.answers = filtteredConceptData;
         }
-        this.setState({selectedConceptData: newData, value: '', editValues: newEditValues})
+        this.setState({ selectedConceptData: newData, value: '', editValues: newEditValues })
       }
     }
   }
 
-  onSearch(selected){
+  onSearch(selected) {
     this.loadConcepts(selected);
   }
 
@@ -187,18 +187,18 @@ export default class Obs extends React.Component {
     this.props.router.push('/');
   }
 
-  renderInput(disabled){
+  renderInput(disabled) {
     return (<input type="text" name="value" disabled={disabled}
-                onChange={this.handleChange}
-                className="form-control bootstrap-typeahead-input-main"
-                value={this.state.value}
-              />);
+      onChange={this.handleChange}
+      className="form-control bootstrap-typeahead-input-main"
+      value={this.state.value}
+    />);
   }
 
-  renderValue(){
-    let valueType =  this.state.selectedConceptData; 
-    if (valueType !== undefined){
-      if(valueType.datatype !== undefined){
+  renderValue() {
+    let valueType = this.state.selectedConceptData;
+    if (valueType !== undefined) {
+      if (valueType.datatype !== undefined) {
         valueType = valueType.datatype;
         valueType = valueType.name ? valueType.name : null;
       } else {
@@ -207,7 +207,7 @@ export default class Obs extends React.Component {
     } else {
       valueType = null;
     }
-    switch(valueType){
+    switch (valueType) {
       case null:
         return this.renderInput(true)
       case "Text":
@@ -215,83 +215,83 @@ export default class Obs extends React.Component {
       case "Numeric":
         return this.renderInput(false);
       case "Datetime":
-      case "Date":  
+      case "Date":
       case "Time":
         return (<DatePicker
-                dateFormat="DD-MM-YYYY"
-                className="form-control"
-                showClearButton={false}
-                onChange={this.handleChange}
-                name="value"
-                value={this.state.value}
-                onInvalid={this.handleInvalidDate}
-               />);
+          dateFormat="DD-MM-YYYY"
+          className="form-control"
+          showClearButton={false}
+          onChange={this.handleChange}
+          name="value"
+          value={this.state.value}
+          onInvalid={this.handleInvalidDate}
+        />);
       case "Boolean":
         return (<select
-                className="form-control"
-                name="value"
-                value={this.value}
-                onChange={this.handleChange}
-               >
-                <option value="">Select option</option>
-                <option value="false">false</option>
-                <option value="true">true</option>
-              </select>);
+          className="form-control"
+          name="value"
+          value={this.value}
+          onChange={this.handleChange}
+        >
+          <option value="">Select option</option>
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>);
       default:
-        if(this.state.selectedConceptData.answers){
-          
-          if(this.state.selectedConceptData.answers.length > 0){
+        if (this.state.selectedConceptData.answers) {
+
+          if (this.state.selectedConceptData.answers.length > 0) {
             const values = this.state.selectedConceptData.answers;
-            values.push({display: 'Select option', uuid: ''});
-              return (<select
-                      className="form-control"
-                      name="value"
-                      onChange={this.changeValue}
-                    >
-                      { 
-                        values.map((option, key) => (
-                          <option  selected={option.display === this.state.value? true:false}
-                          value={`${option.uuid}///${option.display}`}>{option.display}</option>
-                        ))
-                      }
-                    </select>                  
-                  
-                  );
+            values.push({ display: 'Select option', uuid: '' });
+            return (<select
+              className="form-control"
+              name="value"
+              onChange={this.changeValue}
+            >
+              {
+                values.map((option, key) => (
+                  <option selected={option.display === this.state.value ? true : false}
+                    value={`${option.uuid}///${option.display}`}>{option.display}</option>
+                ))
+              }
+            </select>
+
+            );
           } else {
             return this.renderInput(false);;
-          } 
+          }
         } else {
-            return this.renderInput(false);;
+          return this.renderInput(false);;
         }
     }
   }
 
-  loadConcepts(searchValue){
+  loadConcepts(searchValue) {
     let url = '/concept'
-    url = searchValue ? `${url}?v=full&q=${searchValue}` 
+    url = searchValue ? `${url}?v=full&q=${searchValue}`
       : `${url}/${this.state.obs.conceptUuid}?v=full`;
     let allConcepts = [];
     apiCall(null, 'get', url)
       .then((res) => {
         if (res.results) {
-          if (res.results.length > 0 ) {
+          if (res.results.length > 0) {
             allConcepts = res.results.map(concept => {
-              const description= concept.descriptions.filter(des => des.locale == 'en' ? des.description: '');
+              const description = concept.descriptions.filter(des => des.locale == 'en' ? des.description : '');
               const conceptData = {
                 uuid: concept.uuid,
                 units: concept.units || '',
                 answers: concept.answers,
                 hl7Abbrev: concept.datatype.hl7Abbreviation,
                 name: concept.name.name,
-                description: description.length > 0? description[0].description : 'no description available',
+                description: description.length > 0 ? description[0].description : 'no description available',
                 datatype: concept.datatype
               };
               return conceptData;
-            }); 
+            });
           }
-          this.setState(Object.assign({}, this.state, {conceptOptions: allConcepts}));
+          this.setState(Object.assign({}, this.state, { conceptOptions: allConcepts }));
         } else {
-          if(res){
+          if (res) {
             const conceptData = {
               uuid: res.uuid,
               units: res.units || '',
@@ -300,7 +300,7 @@ export default class Obs extends React.Component {
               name: res.name.name,
               datatype: res.datatype
             };
-            this.setState(Object.assign({}, this.state, {selectedConceptData: conceptData}));
+            this.setState(Object.assign({}, this.state, { selectedConceptData: conceptData }));
           }
         }
       })
@@ -309,12 +309,12 @@ export default class Obs extends React.Component {
       });
   }
 
-  update(){
-    if(Object.keys(this.state.editValues).length > 0){
+  update() {
+    if (Object.keys(this.state.editValues).length > 0) {
       apiCall(this.state.editValues, 'post', `obs/${this.state.uuid}`)
         .then((response) => {
-          if(response.error){
-            const err = response.error.message ? response.error.message  : response.error;
+          if (response.error) {
+            const err = response.error.message ? response.error.message : response.error;
             toastr.error(err);
           } else {
             toastr.options.closeButton = true;
@@ -333,8 +333,8 @@ export default class Obs extends React.Component {
           toastr.error(error);
         });
     } else {
-        toastr.options.closeButton = true;
-        toastr.info('Nothing to update');
+      toastr.options.closeButton = true;
+      toastr.info('Nothing to update');
     }
   }
 
@@ -343,49 +343,41 @@ export default class Obs extends React.Component {
       <div>
         {
           <div className="modal fade" id="myModal" role="dialog">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <button type="button" className="close" data-dismiss="modal">&times;</button>
-                <h4 className="modal-title">Confirm Delete</h4>
-              </div>
-              <div className="modal-body">
-                <p> Are you sure you want to Delete this Observation?</p>
-              </div>
-              <div className="modal-footer">
-                <div className="col-sm-6">
-                  <button
-                    type="button" className="btn btn-success form-control"
-                    onClick={this.delete}
-                    data-dismiss="modal"
-                  >
-                    Confirm
-                  </button>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal">&times;</button>
+                  <h4 className="modal-title">Confirm Delete</h4>
                 </div>
-                <div className="col-sm-6">
-                  <button
-                    type="button" className="btn btn-danger form-control cancelBtn"
-                    data-dismiss="modal">Close</button>
+                <div className="modal-body">
+                  <p> Are you sure you want to Delete this Observation?</p>
+                </div>
+                <div className="modal-footer">
+                  <div className="col-sm-6">
+                    <button
+                      type="button" className="btn btn-success form-control"
+                      onClick={this.delete}
+                      data-dismiss="modal"
+                    >
+                      Confirm
+                  </button>
+                  </div>
+                  <div className="col-sm-6">
+                    <button
+                      type="button" className="btn btn-danger form-control cancelBtn"
+                      data-dismiss="modal">Close</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         }
         <div className="section top">
-          <div className="col-sm-12 section search">  
+          <div className="col-sm-12 section search">
             <div className="form-group">
-              <div className="col-sm-1">          
-                <span onClick={this.goHome} className="glyphicon glyphicon-home 
-                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
-                  Home
-                </span>
+              <div className="col-sm-1">
               </div>
               <div className="col-sm-1">
-                <span onClick={this.goToEncounter} className="glyphicon glyphicon-step-backward 
-                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
-                  Back
-                </span>
               </div>
             </div>
             <p />
@@ -428,8 +420,8 @@ export default class Obs extends React.Component {
                     >
                       {
                         this.state.locations.map((location, key) => (
-                          <option  selected={location.display === this.state.obs.location? true:false}
-                          value={location.uuid}>{location.display}</option>
+                          <option selected={location.display === this.state.obs.location ? true : false}
+                            value={location.uuid}>{location.display}</option>
                         ))
                       }
                     </select>
@@ -480,19 +472,19 @@ export default class Obs extends React.Component {
                       value={this.state.obs.comment}
                     />
                   </div>
-                </div>  
+                </div>
                 <div className="form-group">
                   <div className="col-sm-offset-3 col-sm-3">
                     <button type="button" name="update" onClick={this.update}
                       className="btn btn-success form-control">Update</button>
                   </div>
                   <div className="col-sm-3">
-                    <button type="button" name="delete" data-toggle="modal" 
+                    <button type="button" name="delete" data-toggle="modal"
                       data-target="#myModal" className="btn btn-default form-control cancelBtn">
                       Delete
                     </button>
-                  </div> 
-                </div>                                  
+                  </div>
+                </div>
               </form>
             </div>
           </div>

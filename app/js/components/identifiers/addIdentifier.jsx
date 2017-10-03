@@ -112,7 +112,6 @@ class NewIdentifier extends React.Component {
   }
 
   render() {
-    console.log('the state', this.state);
     const { editErrors, addErrors } = this.state;
     let editErrorClass = '';
     let addErrorClass = '';
