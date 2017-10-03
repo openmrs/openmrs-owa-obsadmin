@@ -1,0 +1,33 @@
+.fa {
+    font-size: 18px;
+    color: #555;
+    margin-right: 5px;
+}
+.fa-chevron-right {
+  font-size: 10px;
+}
+.breadcrumb > .active {
+    color: #363463;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.breadcrumb > li {
+    display: inline-block;
+    font-family: "OpenSans", Arial, sans-serif;
+    color: #555;
+    text-decoration: underline;
+    font-size: 0.9em;
+}
+#home .a {
+  color: #555;
+}
+.breadcrumb > li + li:before {
+    padding: 0px;
+    color: #eee;
+    content: "/\00a0";
+}
+#visited .breadcrumb > li {
+    color: #555;
+    text-decoration: underline;
+}

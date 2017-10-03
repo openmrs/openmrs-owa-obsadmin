@@ -8,6 +8,7 @@
  */
 import React, { PropTypes } from 'react';
 import Header from '../common/header';
+import BreadCrumb from './breadCrumbs/breadCrumb.js'
 
 /**
  * Main application component.
@@ -17,6 +18,7 @@ const App = (props) => {
     <div>
       <div id="tabbed-cohort" >
         <Header />
+        <BreadCrumb />
       </div>
       {props.children}
     </div>

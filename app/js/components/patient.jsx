@@ -59,10 +59,10 @@ export default class Patient extends React.Component {
    *
    * make API call to get the values then set to state
    */
-  reload(){
-      apiCall(null, 'get', `/patient/${this.state.uuid}?v=full`).then((response) => {
-        this.setState({ patient: response });
-      });
+  reload() {
+    apiCall(null, 'get', `/patient/${this.state.uuid}?v=full`).then((response) => {
+      this.setState({ patient: response });
+    });
   }
 
   /**
@@ -83,8 +83,6 @@ export default class Patient extends React.Component {
       <div>
         <div className="section top">
           <div className="col-sm-12 section search">
-            <span onClick={this.goHome} className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
-              aria-hidden="true">Back</span>
             <header className="patient-header">
               Patient: {this.state.patient.display}
             </header>
@@ -104,7 +102,7 @@ export default class Patient extends React.Component {
               <Demographics uuid={this.props.params.id} />
             </Collapsible>
             <Collapsible trigger="Visits & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
-             <VisitsAndEncounters uuid={this.props.params.id}/>
+              <VisitsAndEncounters uuid={this.props.params.id} />
             </Collapsible>
           </div>
         </div>

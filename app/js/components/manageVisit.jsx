@@ -155,8 +155,6 @@ export class ManageVisit extends React.Component {
     }
     return (
       <div className="section top">
-        <span onClick={this.goHome} className="glyphicon glyphicon-home glyphicon-updated breadcrumb-item"
-          aria-hidden="true">Back</span>
         <header className="patient-header">
           Manage Visit
         </header>
