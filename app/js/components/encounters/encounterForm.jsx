@@ -44,7 +44,7 @@ const Encounter = (props) => {
     <div className="encounter">
       {voided &&
         <div id="background">
-          <p id="bg-text">DELETED</p>
+          <p id="bg-text">SOFT DELETED</p>
         </div>
       }
       <form className="encounter-form">

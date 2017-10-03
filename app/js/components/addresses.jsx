@@ -8,8 +8,10 @@
  */
 import React from 'react';
 import { parseString } from 'xml2js';
-import { Card, Button, CardHeader, CardFooter, CardBlock,
-  CardTitle, CardText, Row, Col } from 'reactstrap';
+import {
+  Card, Button, CardHeader, CardFooter, CardBlock,
+  CardTitle, CardText, Row, Col
+} from 'reactstrap';
 
 import apiCall from '../utilities/apiHelper';
 import AddressForm from './subAddress/addressForm';
@@ -18,7 +20,7 @@ export default class Address extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addresses:[],
+      addresses: [],
       actionNew: false,
       parentUuid: props.uuid,
     }
@@ -41,28 +43,28 @@ export default class Address extends React.Component {
     this.parseAddressFormat = this.parseAddressFormat.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.reload();
   }
 
-  reload(){
+  reload() {
     apiCall(null, 'get', `/person/${this.props.uuid}/address?v=full`).then((response) => {
-      this.setState({addresses: response.results});
+      this.setState({ addresses: response.results });
     });
     apiCall(null, 'get', '/systemsetting/layout.address.format').then((response) => {
       this.parseAddressFormat(response)
     });
   }
 
-  parseAddressFormat(xmlString){
+  parseAddressFormat(xmlString) {
     let localAddressFormat = {};
-    if(xmlString.value){
+    if (xmlString.value) {
       parseString(xmlString.value, function (err, result) {
-        if(result){
-          if(result["org.openmrs.layout.address.AddressTemplate"] &&
+        if (result) {
+          if (result["org.openmrs.layout.address.AddressTemplate"] &&
             result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0] &&
-            result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0].string){
-              localAddressFormat = 
+            result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0].string) {
+            localAddressFormat =
               result["org.openmrs.layout.address.AddressTemplate"].lineByLineFormat[0].string;
           }
         }
@@ -78,30 +80,37 @@ export default class Address extends React.Component {
           <Col sm="6">
             <Card>
               <CardHeader>Add new address</CardHeader>
-                <CardBlock>
-                  <CardText>
-                    <AddressForm address={this.addNew} reload={this.reload}
+              <CardBlock>
+                <CardText>
+                  <AddressForm address={this.addNew} reload={this.reload}
                     addressFormat={this.addressFormat}
-                    action="display" parentUuid={this.state.parentUuid}/>
-                  </CardText>
-                </CardBlock>
+                    action="display" parentUuid={this.state.parentUuid} />
+                </CardText>
+              </CardBlock>
             </Card>
           </Col>
           {this.state.addresses.map(source => (
-          <Col key={source.uuid} sm="6">
-            <Card>
-              <CardHeader>{source.display}</CardHeader>
-              <CardBlock>
-                <CardText>
-                  <AddressForm address={source} reload={this.reload}
-                  addressFormat={this.addressFormat}
-                  parentUuid={this.state.parentUuid} action="display"/>
-                </CardText>
-              </CardBlock>
+            <Col key={source.uuid} sm="6">
+              <Card>
+                <CardHeader>
+                  {source.preferred &&
+                    <div className="preffered">
+                      <span className="badge badge-info">Preferred</span>
+                    </div>
+                  }
+                  <center>{source.display}</center>
+                </CardHeader>
+                <CardBlock>
+                  <CardText>
+                    <AddressForm address={source} reload={this.reload}
+                      addressFormat={this.addressFormat}
+                      parentUuid={this.state.parentUuid} action="display" />
+                  </CardText>
+                </CardBlock>
 
-              <CardFooter>Created by: {source.auditInfo.creator.display} {source.auditInfo.dateCreated}</CardFooter>
-            </Card>
-          </Col>
+                <CardFooter>Created by: {source.auditInfo.creator.display} {source.auditInfo.dateCreated}</CardFooter>
+              </Card>
+            </Col>
           ))}
         </Row>
       </div>

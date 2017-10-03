@@ -49,8 +49,7 @@ export class VisitsAndEncounters extends React.Component {
     if (this.state.uuid !== this.props.uuid) {
       this.setState({
         uuid: this.props.uuid
-      })
-
+      });
     }
   }
 
@@ -94,7 +93,7 @@ export class VisitsAndEncounters extends React.Component {
           expanded: !this.state.expanded
         }
       }),
-      
+
     })
     )
   }
@@ -126,6 +125,7 @@ export class VisitsAndEncounters extends React.Component {
   }
 
   render() {
+    
     return (
       <div>
         <Nav tabs >
@@ -171,18 +171,19 @@ export class VisitsAndEncounters extends React.Component {
                           <td>{new Date(visit.startDatetime).toString()}</td>
                           <td>{new Date(visit.stopDatetime).toString()}</td>
                           <a><td>{this.state.encounters[visit.uuid].slice(0, endIndex).map(encounter => (
-                            <li name="encounteruuid" onClick={() => this.handleEncounterClick(encounter.uuid)} value={encounter.uuid}>{encounter.display}</li>
-
+                            (encounter.voided) ?
+                              <del><li name="encounteruuid" onClick={() => this.handleEncounterClick(encounter.uuid)} value={encounter.uuid}>{encounter.display}</li></del>
+                              : <li name="encounteruuid" onClick={() => this.handleEncounterClick(encounter.uuid)} value={encounter.uuid}>{encounter.display}</li>
                           ))
                           }
                             {(this.state.encounters[visit.uuid].length > 3 && !showEncounter)
                               ? <a id="bolded-a-tag" onClick={() => this.handleShowMore(this.state.encounters[visit.uuid], visit.uuid)}>
                                 Show More!
                               </a>
-                              :(showEncounter) ? <a id="bolded-a-tag" onClick={() => this.handleShowLess(this.state.encounters[visit.uuid], visit.uuid)}>
+                              : (showEncounter) ? <a id="bolded-a-tag" onClick={() => this.handleShowLess(this.state.encounters[visit.uuid], visit.uuid)}>
                                 Show Less!
                               </a>
-                              : ''
+                                : ''
                             }
 
                           </td></a>
