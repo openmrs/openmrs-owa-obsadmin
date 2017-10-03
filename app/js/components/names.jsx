@@ -37,8 +37,8 @@ class Name extends React.Component {
   };
 
   fetchPatientInfo() {
-    apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full').
-      then((response) => {
+    apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full')
+    .then((response) => {
         const { givenName, middleName, familyName, voided } =
           response.person.preferredName
         const { creator, dateCreated } =
@@ -52,7 +52,8 @@ class Name extends React.Component {
           creator: creator.display,
           dateCreated: dateCreated
         });
-      });
+      })
+      .catch(error => (error));
   };
 
   handleEdit() {
@@ -92,8 +93,9 @@ class Name extends React.Component {
     let requestUrl = '/person/' + this.state.response.uuid +
       '/name/' + this.state.response.preferredName.uuid
     if (!this.state.errorGivenName && !this.state.errorFamilyName) {
-      apiCall(requestBody, 'post', requestUrl).
-        then((response) => { this.props.newName() });
+      apiCall(requestBody, 'post', requestUrl)
+      .then((response) => { this.props.newName() })
+      .catch(error => (error));
       this.setState({ display: 'view' })
       toastr.success('Name updated sucessfully');
     }
