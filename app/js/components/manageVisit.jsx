@@ -155,7 +155,7 @@ export class ManageVisit extends React.Component {
     }
     return (
       <div className="section top">
-        <header className="patient-header">
+        <header className="encounter-header">
           Manage Visit
         </header>
         {this.state.voided &&
@@ -270,7 +270,7 @@ export class ManageVisit extends React.Component {
             </div>
           </div>
         </form>
-        <header className="patient-header">
+        <header className="encounter-header">
           Encounters
             </header>
         <ListGroup id="custom-a-tag">

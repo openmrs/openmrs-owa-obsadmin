@@ -28,9 +28,8 @@ header {
     -khtml-border-radius: 5px;
     border-radius: 5px;
     display: block;
-    min-height: 48px;
+    min-height: 55px;
 }
-
 header .logo {
     float: left;
     margin: 4px;
@@ -40,15 +39,28 @@ header .logo {
 header .logo img {
     width: 120px;
 }
+
 .nav-header a{
     color: white;
 }
-.glyphicon-user:before{
-    color: white;
-}
+
 .glyphicon-log-out:before{
     color:white;
 }
+
+.fa-user:before, .fa-map-marker:before, .fa-sign-out:before {
+    color: white;
+    margin-right: 10px;
+    font-size:20px;
+}
+
+.fa-user:before, .fa-map-marker:before {
+    margin-right: 10px;
+}
+.fa-user:before{
+    color: lightgrey;
+}
+
 #body-wrapper {
     margin-top: 10px;
     padding: 10px;
@@ -79,10 +91,11 @@ header .logo img {
 }
 
 .nav-header li {
+    font-family: "OpenSans", Arial, sans-serif;
     color: #eeeeee;
-    font-size: 15px;
-    padding-right: 20px;
-    display: inline;
+    font-size: 16px;
+    padding-right: 30px;
+    display: inline-block;
     list-style: none;
 }
 
@@ -93,20 +106,130 @@ a {
     margin-top: 15px;
 }
 
-.glyphicon {
-    color: #eeeeee;
-    font-size: 12px;
+.nav-header .glyphicon{
+    font-size: 16px;
 }
 
 li>a:hover {
     color: #eeeeee;
     cursor: pointer;
     text-decoration: none;
-    border-bottom: 1px solid gold;
 }
 
-li>a:focus {
-    color: gold;
+li>.dropdown{
+    position: relative;
+    display: none;
+}
+
+.open > .dropdown-menu {
+    display:none;
+}
+#user-drop{
+    color:lightgray;
+}
+.nav-header a:hover {
+  color: white;
+  text-decoration: none;
+  border-bottom-color: transparent;
+}
+
+.nav-header .user a:hover{
+  text-decoration: underline; 
+}
+
+.nav-header .logout a:hover{
+  text-decoration: underline;
+}
+
+.nav-header .logout a:hover .fa-sign-out{
+  text-decoration: underline;
+  text-decoration-color:white;
+}
+
+.nav-header a:hover .user {
+    display: block;
+    background-color: #5b57a6;
+    padding: 6%;
+    text-align: center;
+    font-size: 16px;
+    line-height: 25px;
+    z-index: 1;
+}
+
+.nav-header a:hover .user a{
+ color: white;
+ background-color: transparent;
+}
+
+.account:hover {
+    border-color: white;
+}
+.col .col-4{
+    color: blue;
+}
+.nav-header a:hover .locations{
+    display: block;
+}
+
+.open > .dropdown-menu.locations {
+    display: block;
+}
+
+#locations-drop{
+    padding: 5px 4px 6px 7px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border: 1px solid #006056;
+}
+
+#locations-drop:hover{
+    background-color: #006056;
+    border: 1px dotted white;
+}
+
+#locations-drop a:active{
+    background-color: #006056;
+    border: 1px dotted white;
+}
+
+.nav-header ul.dropdown-menu.locations{
+    min-width: 50em;
+    top: 50px;
+    border: 2px solid #006056;
+}
+
+li#location{
+    margin: 0 10px;
+    text-align: left;
+    display: inline-block;
+    width:30%;
+    padding: 5px;
+    border-bottom: 1px solid #efefef;
+}
+
+li#location a{
+    color: #007fff;
+    font-size: 0.8em
+}
+
+li#location:hover {
+    background-color: #007fff;
+}
+
+li#location:hover a{
+    color: white;
+}
+
+li .selected{
+   background-color: #007fff;
+}
+
+li#location.selected a{
+    color: white;
+}
+
+.fa-sign-out{
+    margin-left: 10px;
 }
 
 .section {
@@ -219,7 +342,9 @@ li>a:focus {
 .collapsible-header-top {
     margin-top: 20px;
 }
-
+#deletePatient{
+    float: right;
+}
 .card-block {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
