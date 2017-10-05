@@ -134,7 +134,7 @@ li>.dropdown{
 }
 
 .nav-header .user a:hover{
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .nav-header .logout a:hover{
@@ -642,4 +642,10 @@ li>a:hover {
 .err-msg {
     color: #FF0000;
     margin-left: 180px;
+}
+
+.obs-err-msg {
+    color: #FF0000;
+    margin-bottom: 20px;
+    padding-left: 10px;
 }

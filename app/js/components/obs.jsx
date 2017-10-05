@@ -36,6 +36,8 @@ export default class Obs extends React.Component {
       value: '',
       invalid: false,
       editValues: {},
+      answerError: '',
+      questionError: ''
     }
     this.getValue = this.getValue.bind(this);
     this.goToEncounter = this.goToEncounter.bind(this);
@@ -53,31 +55,32 @@ export default class Obs extends React.Component {
 
   componentDidMount() {
     this.state.uuid = this.props.params.obsId;
-    if (this.state.uuid) {
+    if(this.state.uuid) {
       apiCall(null, 'get', '/location')
         .then((result) => {
           apiCall(null, 'get', `/obs/${this.state.uuid}`)
-            .then((res) => {
-              if (res) {
+            .then((response) => {
+              if(response) {
                 const obs = {
-                  person: res.person.display.substr(res.person.display.indexOf('-') + 1).trim() || '',
-                  encounter: res.encounter.display || '',
-                  order: res.encounter.order || '',
-                  location: res.location.display || '',
-                  obsdate: res.obsDatetime || '',
-                  concept: res.concept.display || '',
-                  conceptUuid: res.concept.uuid || '',
-                  comment: res.comment || '',
-                  encounterUuid: res.encounter.uuid,
+                  person: response.person.display
+                    .substr(response.person.display.indexOf('-') + 1).trim() || '',
+                  encounter: response.encounter.display || '',
+                  order: response.encounter.order || '',
+                  location: response.location.display || '',
+                  obsdate: response.obsDatetime || '',
+                  concept: response.concept.display || '',
+                  conceptUuid: response.concept.uuid || '',
+                  comment: response.comment || '',
+                  encounterUuid: response.encounter.uuid,
                 }
                 this.setState({
                   obs,
-                  conceptOptions: [{ name: res.concept.display }] || [],
-                  conceptSelected: [res.concept.display],
-                  value: this.getValue(res.value) || '',
+                  conceptOptions: [{ name: response.concept.display }] || [],
+                  conceptSelected: [response.concept.display],
+                  value: this.getValue(response.value) || '',
                   locations: result.results,
                 });
-                if (this.state.obs.conceptUuid) {
+                if(this.state.obs.conceptUuid) {
                   this.loadConcepts();
                 }
               }
@@ -105,13 +108,12 @@ export default class Obs extends React.Component {
   }
 
   getValue(value) {
-    if (value === null || undefined) return '';
-    if (typeof value === 'string' || typeof value === 'number') return value;
-    if (typeof value === 'object') {
-      if (value.display) {
+    if(value === null || undefined) return '';
+    if(typeof value === 'string' || typeof value === 'number') return value;
+    if(typeof value === 'object') {
+      if(value.display) {
         return value.display;
-      }
-      else {
+      } else {
         return '';
       }
     }
@@ -130,7 +132,7 @@ export default class Obs extends React.Component {
   handleChange(event) {
     let name;
     let value;
-    if (event.target) {
+    if(event.target) {
       name = event.target.name;
       value = event.target.value;
     } else {
@@ -139,7 +141,7 @@ export default class Obs extends React.Component {
     }
     const newEditValues = this.state.editValues;
     newEditValues[name] = value;
-    if (name === "value") {
+    if(name === "value") {
       this.setState({ value, editValues: newEditValues, });
     } else {
       const newObs = this.state.obs;
@@ -153,13 +155,14 @@ export default class Obs extends React.Component {
 
   goToEncounter() {
     this.props.router
-      .push(`/patient/${this.props.params.patentId}/encounter/${this.state.obs.encounterUuid}`);
+      .push(`/patient/${this.props.params.patentId}/encounter
+        /${this.state.obs.encounterUuid}`);
   }
 
   conceptOnChange(selected) {
-    if (selected.length > 0) {
+    if(selected.length > 0) {
       let filtteredConceptData = [];
-      if (selected[0].answers) {
+      if(selected[0].answers) {
         let newEditValues = this.state.editValues;
         newEditValues.concept = selected[0].uuid;
         delete newEditValues.value;
@@ -171,10 +174,14 @@ export default class Obs extends React.Component {
           return conceptData;
         });
         const newData = selected[0];
-        if (typeof newData === 'object') {
+        if(typeof newData === 'object') {
           newData.answers = filtteredConceptData;
         }
-        this.setState({ selectedConceptData: newData, value: '', editValues: newEditValues })
+        this.setState({
+          selectedConceptData: newData,
+          value: '',
+          editValues: newEditValues
+        })
       }
     }
   }
@@ -188,17 +195,17 @@ export default class Obs extends React.Component {
   }
 
   renderInput(disabled) {
-    return (<input type="text" name="value" disabled={disabled}
-      onChange={this.handleChange}
-      className="form-control bootstrap-typeahead-input-main"
-      value={this.state.value}
-    />);
+    return(<input type="text" name="value" disabled={disabled}
+                  onChange={this.handleChange}
+                  className="form-control bootstrap-typeahead-input-main"
+                  value={this.state.value}
+              />);
   }
 
   renderValue() {
     let valueType = this.state.selectedConceptData;
-    if (valueType !== undefined) {
-      if (valueType.datatype !== undefined) {
+    if(valueType !== undefined) {
+      if(valueType.datatype !== undefined) {
         valueType = valueType.datatype;
         valueType = valueType.name ? valueType.name : null;
       } else {
@@ -207,7 +214,7 @@ export default class Obs extends React.Component {
     } else {
       valueType = null;
     }
-    switch (valueType) {
+    switch(valueType) {
       case null:
         return this.renderInput(true)
       case "Text":
@@ -217,44 +224,44 @@ export default class Obs extends React.Component {
       case "Datetime":
       case "Date":
       case "Time":
-        return (<DatePicker
-          dateFormat="DD-MM-YYYY"
-          className="form-control"
-          showClearButton={false}
-          onChange={this.handleChange}
-          name="value"
-          value={this.state.value}
-          onInvalid={this.handleInvalidDate}
-        />);
+        return(<DatePicker
+                dateFormat="DD-MM-YYYY"
+                className="form-control"
+                showClearButton={false}
+                onChange={this.handleChange}
+                name="value"
+                value={this.state.value}
+                onInvalid={this.handleInvalidDate}
+               />);
       case "Boolean":
-        return (<select
-          className="form-control"
-          name="value"
-          value={this.value}
-          onChange={this.handleChange}
-        >
-          <option value="">Select option</option>
-          <option value="false">false</option>
-          <option value="true">true</option>
-        </select>);
+        return(<select
+                className="form-control"
+                name="value"
+                value={this.value}
+                onChange={this.handleChange}
+               >
+                <option value="">Select option</option>
+                <option value="false">false</option>
+                <option value="true">true</option>
+              </select>);
       default:
-        if (this.state.selectedConceptData.answers) {
+        if(this.state.selectedConceptData.answers) {
 
-          if (this.state.selectedConceptData.answers.length > 0) {
+          if(this.state.selectedConceptData.answers.length > 0) {
             const values = this.state.selectedConceptData.answers;
             values.push({ display: 'Select option', uuid: '' });
-            return (<select
-              className="form-control"
-              name="value"
-              onChange={this.changeValue}
-            >
-              {
-                values.map((option, key) => (
-                  <option selected={option.display === this.state.value ? true : false}
-                    value={`${option.uuid}///${option.display}`}>{option.display}</option>
-                ))
-              }
-            </select>
+            return(<select
+                      className="form-control"
+                      name="value"
+                      onChange={this.changeValue}
+                    >
+                      {
+                        values.map((option, key) => (
+                          <option  selected={option.display === this.state.value? true:false}
+                          value={`${option.uuid}///${option.display}`}>{option.display}</option>
+                        ))
+                      }
+                    </select>
 
             );
           } else {
@@ -268,22 +275,24 @@ export default class Obs extends React.Component {
 
   loadConcepts(searchValue) {
     let url = '/concept'
-    url = searchValue ? `${url}?v=full&q=${searchValue}`
-      : `${url}/${this.state.obs.conceptUuid}?v=full`;
+    url = searchValue ? `${url}?v=full&q=${searchValue}` :
+      `${url}/${this.state.obs.conceptUuid}?v=full`;
     let allConcepts = [];
     apiCall(null, 'get', url)
-      .then((res) => {
-        if (res.results) {
-          if (res.results.length > 0) {
-            allConcepts = res.results.map(concept => {
-              const description = concept.descriptions.filter(des => des.locale == 'en' ? des.description : '');
+      .then((response) => {
+        if(response.results) {
+          if(response.results.length > 0) {
+            allConcepts = response.results.map(concept => {
+              const description = concept.descriptions.filter(des =>
+                des.locale == 'en' ? des.description : '');
               const conceptData = {
                 uuid: concept.uuid,
                 units: concept.units || '',
                 answers: concept.answers,
                 hl7Abbrev: concept.datatype.hl7Abbreviation,
                 name: concept.name.name,
-                description: description.length > 0 ? description[0].description : 'no description available',
+                description: description.length > 0 ?
+                  description[0].description : 'no description available',
                 datatype: concept.datatype
               };
               return conceptData;
@@ -291,14 +300,14 @@ export default class Obs extends React.Component {
           }
           this.setState(Object.assign({}, this.state, { conceptOptions: allConcepts }));
         } else {
-          if (res) {
+          if(response) {
             const conceptData = {
-              uuid: res.uuid,
-              units: res.units || '',
-              answers: res.answers,
-              hl7Abbrev: res.datatype.hl7Abbreviation,
-              name: res.name.name,
-              datatype: res.datatype
+              uuid: response.uuid,
+              units: response.units || '',
+              answers: response.answers,
+              hl7Abbrev: response.datatype.hl7Abbreviation,
+              name: response.name.name,
+              datatype: response.datatype
             };
             this.setState(Object.assign({}, this.state, { selectedConceptData: conceptData }));
           }
@@ -310,36 +319,49 @@ export default class Obs extends React.Component {
   }
 
   update() {
-    if (Object.keys(this.state.editValues).length > 0) {
-      apiCall(this.state.editValues, 'post', `obs/${this.state.uuid}`)
-        .then((response) => {
-          if (response.error) {
-            const err = response.error.message ? response.error.message : response.error;
-            toastr.error(err);
-          } else {
-            toastr.options.closeButton = true;
-            toastr.success('Observation updated successfully');
-            let patientId = this.props.params.patentId;
-            let encounterId = this.props.params.encounterId;
-            let obsId = response.uuid
-            patientId = patientId.trim();
-            encounterId = encounterId.trim();
-            obsId = obsId.trim()
-            this.props.router.push(`/patient/${patientId}/encounter/${encounterId}/obs/${obsId}`);
-          }
+    this.setState({
+      answerError: '',
+      questionError: ''
+    })
+    if(!this.refs.typeahead.state.query) {
+      this.setState({ questionError: "Question can not be empty or null" })
+    }
+    if(!this.state.value) {
+      this.setState({ answerError: "Answer can not be empty or null" })
+    }
+    if(!this.state.answerError && !this.state.questionError) {
+      if(Object.keys(this.state.editValues).length > 0) {
+        apiCall(this.state.editValues, 'post', `obs/${this.state.uuid}`)
+          .then((response) => {
+            if(response.error) {
+              const err = response.error.message ?
+                response.error.message : response.error;
+            } else {
+              toastr.options.closeButton = true;
+              toastr.success('Observation updated successfully');
+              let patientId = this.props.params.patentId;
+              let encounterId = this.props.params.encounterId;
+              let obsId = response.uuid
+              patientId = patientId.trim();
+              encounterId = encounterId.trim();
+              obsId = obsId.trim()
+              this.props.router.push(`/patient/${patientId}/encounter/
+                ${encounterId}/obs/${obsId}`);
+            }
 
-        })
-        .catch((error) => {
-          toastr.error(error);
-        });
-    } else {
-      toastr.options.closeButton = true;
-      toastr.info('Nothing to update');
+          })
+          .catch((error) => {
+            toastr.error(error);
+          });
+      } else {
+        toastr.options.closeButton = true;
+        toastr.info('Nothing to update');
+      }
     }
   }
 
   render() {
-    return (
+    return(
       <div>
         {
           <div className="modal fade" id="myModal" role="dialog">
@@ -376,8 +398,16 @@ export default class Obs extends React.Component {
           <div className="col-sm-12 section search">
             <div className="form-group">
               <div className="col-sm-1">
+                <span onClick={this.goHome} className="glyphicon glyphicon-home
+                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
+                  Home
+                </span>
               </div>
               <div className="col-sm-1">
+                <span onClick={this.goToEncounter} className="glyphicon glyphicon-step-backward
+                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
+                  Back
+                </span>
               </div>
             </div>
             <p />
@@ -442,6 +472,7 @@ export default class Obs extends React.Component {
                   </div>
                 </div>
                 <div className="form-group ">
+                <div className={this.state.questionError ? 'has-error':''}>
                   <label className="control-label col-sm-3">Concept Question:</label>
                   <div className="col-sm-8">
                     <AsyncTypeahead
@@ -455,13 +486,28 @@ export default class Obs extends React.Component {
                       onChange={this.conceptOnChange}
                     />
                   </div>
+                  </div>
                 </div>
+                {
+                  this.state.questionError &&
+                  <div className='col-sm-offset-3 obs-err-msg'>
+                      { this.state.questionError }
+                  </div>
+                }
                 <div className="form-group ">
+                  <div className={this.state.answerError ? 'has-error':''}>
                   <label className="control-label col-sm-3">Answer Concept:</label>
                   <div className="col-sm-8">
                     {this.renderValue()}
                   </div>
                 </div>
+                </div>
+                {
+                  this.state.answerError &&
+                    <div className='col-sm-offset-3 obs-err-msg'>
+                      { this.state.answerError }
+                    </div>
+                }
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Comment:</label>
                   <div className="col-sm-8">
@@ -480,7 +526,8 @@ export default class Obs extends React.Component {
                   </div>
                   <div className="col-sm-3">
                     <button type="button" name="delete" data-toggle="modal"
-                      data-target="#myModal" className="btn btn-default form-control cancelBtn">
+                            data-target="#myModal"
+                            className="btn btn-default form-control cancelBtn">
                       Delete
                     </button>
                   </div>
