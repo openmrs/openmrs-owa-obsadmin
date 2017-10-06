@@ -29,7 +29,7 @@ const Encounter = (props) => {
 
   let editErrorClass = '';
   let editError = '';
-  if (editErrors.error.length > 0) {
+  if(editErrors.error.length > 0) {
     editErrorClass = 'has-error';
     editError = editErrors.error;
   }
@@ -40,13 +40,8 @@ const Encounter = (props) => {
   const encounterDatetime = moment(encounterData.encounterDatetime).format('YYYY-MM-DD HH:mm:ss');
   const voided = encounterData.voided;
 
-  return (
+  return(
     <div className="encounter">
-      {voided &&
-        <div id="background">
-          <p id="bg-text">SOFT DELETED</p>
-        </div>
-      }
       <form className="encounter-form">
         <div className="form-group row">
           <div className="col-sm-3">
@@ -56,7 +51,7 @@ const Encounter = (props) => {
                 name="update"
                 data-toggle="modal"
                 data-target="#myModal"
-                className="btn btn-success form-control"
+                className="btn btn-success btn-move form-control"
               >
                 Confirm Move</button>
             }
@@ -65,19 +60,23 @@ const Encounter = (props) => {
                 type="button"
                 name="moveEncounter"
                 onClick={props.handleFieldEdits}
-                className="btn btn-success form-control"
+                className="btn btn-success form-control btn-move"
                 disabled={voided || editable}
               >
                 Move Encounter</button>
             }
           </div>
+          {voided &&
+           <div className="deleted">
+             <span className="badge badge-error">Deleted</span>
+           </div>
+         }
         </div>
 
         <div className="form-group row">
-          <div className={editError.includes('patient') ? editErrorClass : ''}
-          >
-            <label className="col-sm-4 col-form-label"> Patient</label>
-            <div className="col-sm-6">
+          <div className={editError.includes('patient') ? editErrorClass : ''}>
+            <label className="col-sm-4 col-form-label"> Patient:</label>
+            <div className="col-sm-8">
               <input
                 className="form-control"
                 name="patientName"
@@ -109,8 +108,8 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Location </label>
-          <div className="col-sm-6">
+          <label className="col-sm-4 col-form-label">Location: </label>
+          <div className="col-sm-8">
             <select
               className="form-control"
               name="location"
@@ -130,8 +129,8 @@ const Encounter = (props) => {
         <div className="form-group row">
           <div className={(editError.includes('datetime')) ? editErrorClass : ''}
           >
-            <label className="col-sm-4 col-form-label"> Encounter Date </label>
-            <div className="col-sm-6">
+            <label className="col-sm-4 col-form-label"> Encounter Date: </label>
+            <div className="col-sm-8">
               <DateTimeField
                 className="form-control"
                 name="encounterDatetime"
@@ -148,8 +147,8 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Visit</label>
-          <div className="col-sm-6">
+          <label className="col-sm-4 col-form-label">Visit:</label>
+          <div className="col-sm-8">
             <select
               className="form-control"
               name="visit"
@@ -173,8 +172,8 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Encounter Type</label>
-          <div className="col-sm-6">
+          <label className="col-sm-4 col-form-label">Encounter Type:</label>
+          <div className="col-sm-8">
             <input
               className="form-control"
               name="encounterType"
@@ -187,8 +186,8 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Form</label>
-          <div className="col-sm-6">
+          <label className="col-sm-4 col-form-label">Form:</label>
+          <div className="col-sm-8">
             <input
               className="form-control"
               name="form"
@@ -201,7 +200,7 @@ const Encounter = (props) => {
 
         <div className="form-group row">
           <label className="col-sm-4 col-form-label">Created By:</label>
-          <div className="col-sm-6">
+          <div className="col-sm-8">
             <input
               className="form-control"
               name="creator"
@@ -214,8 +213,8 @@ const Encounter = (props) => {
         {
           toDelete && !voided &&
           <div className="form-group row">
-            <label className="col-sm-4 col-form-label">Reason for Deletion</label>
-            <div className="col-sm-6">
+            <label className="col-sm-4 col-form-label">Reason for Deletion:</label>
+            <div className="col-sm-7">
               <input
                 className="form-control"
                 name="voidReason"
@@ -319,4 +318,3 @@ Encounter.propTypes = {
   handleFieldEdits: PropTypes.func,
 };
 export default Encounter;
-

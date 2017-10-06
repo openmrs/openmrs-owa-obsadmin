@@ -125,7 +125,7 @@ export class VisitsAndEncounters extends React.Component {
   }
 
   render() {
-    
+
     return (
       <div>
         <Nav tabs >

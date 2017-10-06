@@ -109,6 +109,7 @@ export default class Identifiers extends React.Component {
   callSave(e) {
     e.preventDefault();
     this.setState({ editErrors: { uuid: '', error: '' } });
+    console.log("this", this.state.editIdentifiers)
     const keys = [];
     const values = [];
     const { editIdentifiers } = this.state;
@@ -345,7 +346,7 @@ export default class Identifiers extends React.Component {
                           }>
                           <h6><b>Identifier</b></h6>
                           <input
-                            className="form-control"
+                            className="form-control col-sm-8"
                             type="text"
                             name="identifier"
                             defaultValue={

@@ -32,7 +32,10 @@ class NewIdentifier extends React.Component {
   }
 
   handleAddNew() {
-    this.setState({ isNewIdentifier: true });
+    this.setState({
+      isNewIdentifier: true,
+      addErrors: { uuid: '', error: '' }
+    });
   }
 
   handleCreateChange(e) {
@@ -40,7 +43,7 @@ class NewIdentifier extends React.Component {
     const value = e.target.value;
     const { addIdentifiers } = this.state;
 
-    if (label === 'preferred') {
+    if(label === 'preferred') {
       addIdentifiers.preferred = e.target.checked;
     } else {
       addIdentifiers[label] = value;
@@ -57,23 +60,23 @@ class NewIdentifier extends React.Component {
     const values = [];
     const { addIdentifiers } = this.state;
     Object.keys(addIdentifiers).filter((key) => {
-      if (addIdentifiers[key] !== '') {
+      if(addIdentifiers[key] !== '') {
         keys.push(key);
         values.push(addIdentifiers[key]);
         return addIdentifiers[key];
       }
     });
     const newAddIdentifiers = values.reduce((acc, cur, i) => (acc[keys[i]] = cur, acc), {});
-    if (this.state.addIdentifiers.preferred === true) {
+    if(this.state.addIdentifiers.preferred === true) {
       apiCall(newAddIdentifiers,
-        'post', `patient/${this.props.patientId}/identifier`)
+          'post', `patient/${this.props.patientId}/identifier`)
         .then((response) => {
           apiCall({ preferred: false },
             'post',
             `patient/${this.props.patientId}/identifier/${this.props.stateData.preferredIdentifierUuid}`,
           )
             .then((response) => {
-              if (response.error) {
+              if(response.error) {
                 this.setState({
                   addErrors: {
                     error: response.error.message,
@@ -89,9 +92,9 @@ class NewIdentifier extends React.Component {
         .catch(error => toastr.error(error));
     } else {
       apiCall(newAddIdentifiers, 'post',
-        `patient/${this.props.patientId}/identifier`)
+          `patient/${this.props.patientId}/identifier`)
         .then((response) => {
-          if (response.error) {
+          if(response.error) {
             this.setState({ addErrors: { error: response.error.message } });
           } else {
             this.setState({ isNewIdentifier: false, addIdentifiers: {} });
@@ -103,12 +106,11 @@ class NewIdentifier extends React.Component {
   }
 
   handleCancelPromise() {
-    return (new Promise((resolve, reject) => {
+    return(new Promise((resolve, reject) => {
       resolve(this.setState({
         isNewIdentifier: false,
       }, () => { this.props.callCancel; }));
-    },
-    ));
+    }, ));
   }
 
   render() {
@@ -117,16 +119,16 @@ class NewIdentifier extends React.Component {
     let addErrorClass = '';
     let editError = '';
     let addError = '';
-    if (editErrors.error.length > 0) {
+    if(editErrors.error.length > 0) {
       editErrorClass = 'has-error';
       editError = editErrors.error;
     }
-    if (addErrors.error.length > 0) {
+    if(addErrors.error.length > 0) {
       addErrorClass = 'has-error';
       addError = addErrors.error;
     }
 
-    return (
+    return(
       <div>
         {!this.state.isNewIdentifier && !this.props.stateData.editState &&
           <div className="form-group">

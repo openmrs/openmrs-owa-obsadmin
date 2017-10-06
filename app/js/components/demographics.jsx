@@ -207,7 +207,7 @@ export default class Demographics extends React.Component {
             <div>
                 <form className='form-horizontal' onSubmit={this.handleSave}>
                     <div className='form-group'>
-                        <label className='control-label col-sm-2'>Gender</label>
+                        <label className='control-label col-sm-2'>Gender:</label>
                         <div className='col-sm-5'>
                             <label className='radio-inline'>
                                 <input type='radio' id='inlineRadio1'
@@ -234,7 +234,7 @@ export default class Demographics extends React.Component {
                     <div className='form-group'>
                         <div className={this.state.birthdateError ?
                             'has-error' : ''}>
-                            <label className='control-label col-sm-2'>Birth Date</label>
+                            <label className='control-label col-sm-2'>Birth Date:</label>
                             <div className='col-sm-5 '>
                                 <DateTimeField
                                     className='form-control'
@@ -248,7 +248,7 @@ export default class Demographics extends React.Component {
                                 />
                             </div>
                         </div>
-                        <label className='control-label col-sm-2'> Estimated </label>
+                        <label className='control-label col-sm-2'> Estimated: </label>
                         <div>
                             <input
                                 name='estimates'
@@ -268,7 +268,7 @@ export default class Demographics extends React.Component {
                     }
 
                     <div className='form-group'>
-                        <label className='control-label col-sm-2'> Deceased </label>
+                        <label className='control-label col-sm-2'> Deceased: </label>
                         <div className='col-sm-2'>
                             <input
                                 name='deceased'
@@ -284,7 +284,7 @@ export default class Demographics extends React.Component {
                             <div className='form-group'>
                                 <div className={this.state.deathDateError ?
                                     'has-error' : ''}>
-                                    <label className='control-label col-sm-2'> Death Date </label>
+                                    <label className='control-label col-sm-2'> Death Date: </label>
                                     <div className='col-sm-5'>
                                         <DateTimeField
                                             className='form-control'
@@ -302,8 +302,8 @@ export default class Demographics extends React.Component {
                                         />
                                     </div>
                                 </div>
-                                <label className='control-label col-sm-2'> Estimated </label>
-                                <div className='col-sm-2'>
+                                <label className='control-label col-sm-2'> Estimated: </label>
+                                <div>
                                     <input
                                         name='estimated'
                                         type='checkbox'
@@ -323,8 +323,8 @@ export default class Demographics extends React.Component {
                                 <div className={this.state.causeOfDeathError ?
                                     'has-error' : ''
                                 }>
-                                    <label className='control-label col-sm-2'>
-                                        Cause of death
+                                    <label className='control-label col-sm-2 no-wrap'>
+                                        Cause of death:
                       </label>
                                     <div className='col-sm-5'>
                                         <select className='form-control'
@@ -355,7 +355,7 @@ export default class Demographics extends React.Component {
                     }
 
                     <div className='form-group'>
-                        <label className='control-label col-sm-2'> Created By </label>
+                        <label className='control-label col-sm-2'> Created By: </label>
                         <div className='col-sm-5'>
                             <input
                                 className='form-control'

@@ -149,8 +149,8 @@ class Name extends React.Component {
           }
 
           <div className={'form-group ' + givenErrorClass}>
-            <label className='control-label col-sm-2'> Given Name* </label>
-            <div className='col-sm-5'>
+            <label className='control-label col-sm-2'> Given Name*: </label>
+            <div className='col-sm-7'>
               <input className='form-control'
                 name='givenName'
                 type='text'
@@ -172,8 +172,8 @@ class Name extends React.Component {
           </div>
 
           <div className='form-group '>
-            <label className='control-label col-sm-2'> Middle Name </label>
-            <div className='col-sm-5'>
+            <label className='control-label col-sm-2'> Middle Name: </label>
+            <div className='col-sm-7'>
               <input className='form-control'
                 name='middleName'
                 type='text'
@@ -188,8 +188,8 @@ class Name extends React.Component {
           </div>
 
           <div className={'form-group ' + familyErrorClass}>
-            <label className='control-label col-sm-2'> Family Name* </label>
-            <div className='col-sm-5'>
+            <label className='control-label col-sm-2'> Family Name*: </label>
+            <div className='col-sm-7'>
               <input className='form-control'
                 name='familyName'
                 type='text'
@@ -211,8 +211,8 @@ class Name extends React.Component {
           </div>
 
           <div className='form-group '>
-            <label className='control-label col-sm-2'> Created By </label>
-            <div className='col-sm-5'>
+            <label className='control-label col-sm-2'> Created By: </label>
+            <div className='col-sm-7'>
               <input className='form-control'
                 name='createdby'
                 type='text'
