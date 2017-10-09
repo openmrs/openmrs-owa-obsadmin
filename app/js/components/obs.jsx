@@ -324,10 +324,10 @@ export default class Obs extends React.Component {
       questionError: ''
     })
     if(!this.refs.typeahead.state.query) {
-      this.setState({ questionError: "Question can not be empty or null" })
+      this.setState({ questionError: "Question can not be empty" })
     }
     if(!this.state.value) {
-      this.setState({ answerError: "Answer can not be empty or null" })
+      this.setState({ answerError: "Answer can not be empty " })
     }
     if(!this.state.answerError && !this.state.questionError) {
       if(Object.keys(this.state.editValues).length > 0) {
