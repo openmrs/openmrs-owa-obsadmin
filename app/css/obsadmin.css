@@ -426,6 +426,11 @@ li#location.selected a{
   margin-top: -10px;
 }
 
+.badge-no-color {
+  background-color: #f7f7f9;
+  color: #f7f7f9;
+}
+
 .badge-error {
   background-color:red;
   margin-top: -10px;
