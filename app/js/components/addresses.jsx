@@ -77,28 +77,17 @@ export default class Address extends React.Component {
     return (
       <div>
         <Row>
-          <Col sm="6">
-            <Card>
-              <CardHeader>Add new address</CardHeader>
-              <CardBlock>
-                <CardText>
-                  <AddressForm address={this.addNew} reload={this.reload}
-                    addressFormat={this.addressFormat}
-                    action="display" parentUuid={this.state.parentUuid} />
-                </CardText>
-              </CardBlock>
-            </Card>
-          </Col>
           {this.state.addresses.map(source => (
             <Col key={source.uuid} sm="6">
               <Card>
                 <CardHeader>
-                  {source.preferred &&
-                    <div className="preffered">
-                      <span className="badge badge-info">Preferred</span>
-                    </div>
-                  }
-                  <center>{source.display}</center>
+                  <div className="preffered">
+                    {source.preferred ?
+                        <span className="badge badge-info">Preferred</span>
+                      :
+                      <span className="badge badge-no-color">&nbsp;</span>
+                    }
+                  </div>
                 </CardHeader>
                 <CardBlock>
                   <CardText>
@@ -107,11 +96,27 @@ export default class Address extends React.Component {
                       parentUuid={this.state.parentUuid} action="display" />
                   </CardText>
                 </CardBlock>
-
-                <CardFooter>Created by: {source.auditInfo.creator.display} {source.auditInfo.dateCreated}</CardFooter>
               </Card>
             </Col>
           ))}
+        </Row>
+        <Row>
+          <Col sm="12">
+            <Card>
+              <CardBlock>
+                <CardText>
+                  <Row>
+                    <Col sm="6">
+                      <AddressForm address={this.addNew} reload={this.reload}
+                        addressFormat={this.addressFormat}
+                        action="display" parentUuid={this.state.parentUuid} />
+                    </Col>
+                  </Row>
+
+                </CardText>
+              </CardBlock>
+            </Card>
+          </Col>
         </Row>
       </div>
     );
