@@ -87,6 +87,7 @@ export default class Demographics extends React.Component {
                     deathDateTime
                 })
             })
+            .catch(error => (error));
 
         apiCall(null, 'get', '/concept')
             .then((response) => {
@@ -94,6 +95,7 @@ export default class Demographics extends React.Component {
                     causeOfDeath: response.results
                 })
             })
+            .catch(error => (error));
     }
 
     handleChange(event) {
@@ -195,7 +197,8 @@ export default class Demographics extends React.Component {
                 } else {
                     toastr.success('Demographics Updated')
                 }
-            });
+            })
+            .catch(error => (error));
         }
     }
 
