@@ -20,7 +20,7 @@ export default class Identifiers extends React.Component {
       editable: false,
       voided: false,
       hideViewCard: false,
-      prefferedIdentifierUuid: '',
+      preferredIdentifierUuid: '',
       identifier: '',
       identifierType: '',
       location: '',
@@ -46,6 +46,7 @@ export default class Identifiers extends React.Component {
     this.handlePreferred = this.handlePreferred.bind(this);
     this.handleError = this.handleError.bind(this);
     this.fetchIdentifiers = this.fetchIdentifiers.bind(this);
+    this.handleUnDelete = this.handleUnDelete.bind(this);
   }
 
   componentDidMount() {
@@ -66,7 +67,7 @@ export default class Identifiers extends React.Component {
 
   fetchIdentifiers() {
     apiCall(null, 'get',
-      `patient/${this.props.uuid}/identifier?v=full`)
+      `patient/${this.props.uuid}/identifier?v=full&includeAll=true`)
       .then((res) => {
         this.setState(Object.assign({}, this.state, {
           identifiersArray: res.results,
@@ -122,7 +123,7 @@ export default class Identifiers extends React.Component {
       acc[keys[i]] = cur, acc), {});
 
     if ((this.state.identifierUuid !==
-      this.state.prefferedIdentifierUuid) &&
+      this.state.preferredIdentifierUuid) &&
       this.state.editIdentifiers.preferred) {
       apiCall(newEditIdentifiers,
         'post',
@@ -130,7 +131,7 @@ export default class Identifiers extends React.Component {
         .then((res) => {
           apiCall({ preferred: false },
             'post',
-            `patient/${this.props.uuid}/identifier/${this.state.prefferedIdentifierUuid}`)
+            `patient/${this.props.uuid}/identifier/${this.state.preferredIdentifierUuid}`)
             .then((res) => {
               toastr.success('Successfully Updated');
               this.fetchIdentifiers();
@@ -140,7 +141,7 @@ export default class Identifiers extends React.Component {
         })
         .catch(error => toastr.error(error));
     } else if (this.state.identifierUuid !==
-      this.state.prefferedIdentifierUuid) {
+      this.state.preferredIdentifierUuid) {
       apiCall(newEditIdentifiers,
         'post',
         `patient/${this.props.uuid}/identifier/${this.state.identifierUuid}`)
@@ -190,7 +191,7 @@ export default class Identifiers extends React.Component {
   }
 
   handleDelete(uuid, voided, preferred) {
-    if ((uuid !== this.state.prefferedIdentifierUuid) && voided === false) {
+    if ((uuid !== this.state.preferredIdentifierUuid) && voided === false) {
       apiCall(null, 'delete',
         `patient/${this.props.uuid}/identifier/${uuid}?!purge`)
         .then((res) => {
@@ -206,6 +207,15 @@ export default class Identifiers extends React.Component {
     } else {
       toastr.error('Can not delete Preferred Identifier');
     }
+  }
+
+  handleUnDelete(uuid) {
+    apiCall({ 'voided': 'false' },
+      'post',
+      `patient/${this.props.uuid}/identifier/${uuid}`)
+      .then((response) => {
+        toastr.error(response.error);
+      })
   }
 
   callCancel(e) {
@@ -244,27 +254,61 @@ export default class Identifiers extends React.Component {
     return (
       <div className="row">
         {
-          this.state.identifiersArray.map((id, index) => {
-            if (id.preferred) { this.state.prefferedIdentifierUuid = id.uuid; }
+          this.state.identifiersArray.sort((first, second) => {
+            if (
+              (!first.preferred && second.preferred) &&
+              (!first.voided && !second.voided) ||
+              (first.voided && !second.voided)) {
+              return 1;
+            } else if (
+              (!first.preferred && !second.preferred) &&
+              (first.voided && !second.voided)) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }).map((id, index) => {
+            if (id.preferred) {
+              this.state.preferredIdentifierUuid = id.uuid;
+            }
             return (
               <div key={id.uuid}>
                 {!this.state.hideViewCard &&
                   <div>
-                    {
-                      id.preferred &&
-                      <div className="preffered">
-                        <span className="badge badge-info">Preferred</span>
-                      </div>
-                    }
-
                     <div className="viewCard">
-                      {id.identifierType.display}{': '}
-                      {this.state.activeCard !== index ? id.identifier : editIdentifiers.identifier || id.identifier}
-                      {'   '}
-                      {this.state.editState === false &&
-                        <a onClick={() => this.callEdit(index, id.uuid)}
-                        >Edit
-                        </a>
+                      {
+                        id.preferred &&
+                        <div className="preferred">
+                          <span className="badge badge-info">Preferred</span>
+                        </div>
+                      }
+                      {(id.voided) ?
+                        <del>
+                          <p>
+                            {id.identifierType.display}{': '}
+                            {this.state.activeCard !== index
+                              ? id.identifier
+                              : editIdentifiers.identifier || id.identifier}
+                            {<br />}
+                            {this.state.editState === false &&
+                              <a onClick={() => this.callEdit(index, id.uuid)}
+                              >Edit
+                            </a>
+                            }
+                          </p>
+                        </del>
+                        : <p>
+                          {id.identifierType.display}{': '}
+                          {(this.state.activeCard !== index)
+                            ? id.identifier
+                            : editIdentifiers.identifier || id.identifier}
+                          {<br />}
+                          {this.state.editState === false &&
+                            <a onClick={() => this.callEdit(index, id.uuid)}
+                            >Edit
+                            </a>
+                          }
+                        </p>
                       }
                     </div>
                   </div>
@@ -281,26 +325,37 @@ export default class Identifiers extends React.Component {
                         >&times; </span>
                       </i>
                       <div className="card-header">
-                        {id.preferred &&
-                          <div className="preffered">
+                        {(id.preferred) ?
+                          (<div className="preferred">
                             <span className="badge badge-info">Preferred</span>
                           </div>
+                          ) : id.voided ?
+                            (<div className="preferred">
+                              <span className="badge badge-error">Deleted</span>
+                            </div>
+                            )
+                            : ''
                         }
-                        <center><h4>Identifier {id.identifier}</h4></center>
                       </div>
                       <div className="card-body">
-                        <div className={this.state.editErrors.uuid === id.uuid ? editErrorClass : ''}>
+                        <div
+                          className={
+                            this.state.editErrors.uuid === id.uuid ?
+                              editErrorClass : ''
+                          }>
                           <h6><b>Identifier</b></h6>
                           <input
                             className="form-control"
                             type="text"
                             name="identifier"
-                            defaultValue={this.state.activeCard !== index ?
-                              id.identifier : editIdentifiers.identifier ||
-                              id.identifier}
+                            defaultValue={
+                              this.state.activeCard !== index
+                                ? id.identifier
+                                : editIdentifiers.identifier ||
+                                id.identifier
+                            }
                             onChange={e => this.handleChange(e, index)}
-                            disabled={!this.editState && (
-                              this.state.activeCard !== index) ? 'disabled' : null}
+                            disabled={id.voided}
                           />
                           {this.state.editErrors.uuid === id.uuid &&
                             <div className="input">{editError}</div>}
@@ -313,15 +368,18 @@ export default class Identifiers extends React.Component {
                               name="identifierType"
                               value={editIdentifiers.identifierType ||
                                 id.identifierType.display}
+                              disabled={id.voided}
                               onChange={e => this.handleChange(e, index)}
                             >
                               {
                                 this.state.identifierstypesArray.map(idType => (
-                                  <option key={idType.uuid} value={idType.display} > {idType.display}
+                                  <option
+                                    key={idType.uuid}
+                                    value={idType.display}
+                                  > {idType.display}
                                   </option>
                                 ))
                               }
-                              disabled={!this.state.editState ? 'disabled' : null}
                             </select>
                           </div>
                           <div>
@@ -329,26 +387,31 @@ export default class Identifiers extends React.Component {
                             <select
                               className="form-control"
                               name="location"
-                              value={editIdentifiers.location || id.location.display}
+                              value={
+                                editIdentifiers.location || id.location.display
+                              }
+                              disabled={id.voided}
                               onChange={this.handleChange}
                             >
                               {
                                 this.state.locationArray.map(location => (
-                                  <option key={location.uuid} value={location.display}>{location.display}
+                                  <option
+                                    key={location.uuid}
+                                    value={location.display}
+                                  >{location.display}
                                   </option>
                                 ))
                               }
-                              disabled={!this.state.editState ? 'disabled' : null}
                             </select>
                           </div>
                           <div className="arrange-horizontally">
                             <h6><b>Created By </b></h6>
-                            <h6 name="creator">
-                              {id.auditInfo.creator.display} on
+                            <h5 name="creator">
+                              {id.auditInfo.creator.display} on {'  '}
                               {new Date(id.auditInfo.dateCreated).toString()}
-                            </h6>
+                            </h5>
                           </div>
-                          {!id.preferred &&
+                          {!id.preferred && !id.voided &&
                             <div className="arrange-horizontally">
                               <h6><b>Preferred  </b></h6> <t />
                               <input
@@ -356,6 +419,7 @@ export default class Identifiers extends React.Component {
                                 type="Checkbox"
                                 name="preferred"
                                 defaultChecked={id.preferred}
+                                disabled={id.voided}
                                 onChange={() => this.handlePreferred(id.preferred)}
                               />
                             </div>
@@ -365,12 +429,16 @@ export default class Identifiers extends React.Component {
                               type="button"
                               className="btn btn-success"
                               onClick={this.callSave}
+                              disabled={id.voided}
                             >Save</button>
                             <button
                               type="button"
                               className="btn btn-danger"
-                              onClick={() => this.handleDelete(id.uuid, id.voided)}
-                            >Delete</button>
+                              onClick={
+                                (!id.voided)
+                                  ? () => this.handleDelete(id.uuid, id.voided)
+                                  : () => this.handleUnDelete(id.uuid)}
+                            >{(!id.voided) ? 'Delete' : 'Restore'}</button>
                           </div>
                         </div>
                       </div>

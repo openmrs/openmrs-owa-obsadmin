@@ -70,7 +70,7 @@ class NewIdentifier extends React.Component {
         .then((response) => {
           apiCall({ preferred: false },
             'post',
-            `patient/${this.props.patientId}/identifier/${this.props.stateData.prefferedIdentifierUuid}`,
+            `patient/${this.props.patientId}/identifier/${this.props.stateData.preferredIdentifierUuid}`,
           )
             .then((response) => {
               if (response.error) {

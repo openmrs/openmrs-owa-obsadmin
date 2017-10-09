@@ -7,45 +7,49 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 body {
-    font-family: "OpenSans", Arial, sans-serif;
-    -webkit-font-smoothing: subpixel-antialiased;
-    max-width: 1000px;
-    margin: 10px auto;
-    background: #eeeeee;
-    color: #363463;
-    font-size: 16px;
+  font-family: "OpenSans", Arial, sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased;
+  max-width: 1000px;
+  margin: 10px auto;
+  background: #eeeeee;
+  color: #363463;
+  font-size: 16px;
 }
 
 header {
-    position: relative;
-    background-color: #00463f;
-    color: #CCC;
-    line-height: 1em;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    display: block;
-    min-height: 55px;
+  position: relative;
+  background-color: #00463f;
+  color: #CCC;
+  line-height: 1em;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  display: block;
+  min-height: 48px;
 }
 header .logo {
-    float: left;
-    margin: 4px;
-    display: block;
+  float: left;
+  margin: 4px;
+  display: block;
 }
 
 header .logo img {
-    width: 120px;
+  width: 120px;
 }
 
 .nav-header a{
-    color: white;
+  color: white;
+}
+
+.glyphicon-user:before{
+  color: white;
 }
 
 .glyphicon-log-out:before{
-    color:white;
+  color:white;
 }
 
 .fa-user:before, .fa-map-marker:before, .fa-sign-out:before {
@@ -62,48 +66,47 @@ header .logo img {
 }
 
 #body-wrapper {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: white;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -o-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    min-height: 500px;
-    justify-content: center;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  min-height: 500px;
+  justify-content: center;
 }
 
 .app-title {
-    display: block;
-    float: right;
-    color: #eeeeee;
-    font-size: 32px;
-    margin: 4px;
-    height: 100%;
-    padding-top: 12px;
-    padding-right: 5px;
+  display: block;
+  float: right;
+  color: #eeeeee;
+  font-size: 32px;
+  margin: 4px;
+  height: 100%;
+  padding-top: 12px;
+  padding-right: 5px;
 }
 
 .instructions {
-    align-self: center;
+  align-self: center;
 }
 
 .nav-header li {
-    font-family: "OpenSans", Arial, sans-serif;
-    color: #eeeeee;
-    font-size: 16px;
-    padding-right: 30px;
-    display: inline-block;
-    list-style: none;
+  color: #eeeeee;
+  font-size: 15px;
+  padding-right: 20px;
+  display: inline;
+  list-style: none;
 }
 
 header>ul,
 a {
-    color: #eeeeee;
-    padding-right: 2px;
-    margin-top: 15px;
+  color: #eeeeee;
+  padding-right: 2px;
+  margin-top: 15px;
 }
 
 .nav-header .glyphicon{
@@ -149,7 +152,9 @@ li>.dropdown{
 .nav-header a:hover .user {
     display: block;
     background-color: #5b57a6;
-    padding: 6%;
+    padding: 2%;
+    padding-left: 0px;
+    padding-right: 0px;
     text-align: center;
     font-size: 16px;
     line-height: 25px;
@@ -233,79 +238,86 @@ li#location.selected a{
 }
 
 .section {
-    background-color: #fff;
-    margin-bottom: 15px;
+  background-color: #fff;
+  margin-bottom: 15px;
 }
 
 .top {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .search {
-    padding-top: 20px;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .ReactTable {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .rt-resizable-header-content {
-    font-weight: bold
+  font-weight: bold;
 }
 
 .spanable {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .rt-thead {
-    background: #00463f;
-    color: #fff;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  background: #00463f;
+  color: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .glyphicon-updated {
-    color: #000;
-    font-size: 15px;
+  color: #000;
+  font-size: 15px;
 }
 
 .rt-td {
-    text-align: center;
+  text-align: center;
 }
 
 .patient-header {
-    text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    font-size: 24px;
-    color: #fff;
-    background: #363463;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 24px;
+  color: #fff;
+  background: #363463;
 }
 
 .collapsible-header {
-    text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    font-size: 24px;
-    color: #fff;
-    background: #363463;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 24px;
+  color: #fff;
+  background: #363463;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
+
 .Collapsible {
-  background-color: white; }
+  background-color: white; 
+  }
 
 .Collapsible__contentInner {
   padding: 10px;
   border: 1px solid #ebebeb;
-  border-top: 0; }
-  .Collapsible__contentInner p {
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 20px; }
-    .Collapsible__contentInner p:last-child {
-      margin-bottom: 0; }
+  border-top: 0; 
+  }
+
+.Collapsible__contentInner p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px; 
+}
+
+.Collapsible__contentInner p:last-child {
+  margin-bottom: 0; 
+}
 
 .Collapsible__trigger {
   display: block;
@@ -316,327 +328,358 @@ li#location.selected a{
   border: 1px solid white;
   padding: 10px;
   background: #D3D3D3;
-  color: white; }
-  .Collapsible__trigger:after {
-    font-family: 'Glyphicons Halflings';
-    content: '\e252';
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    display: block;
-    transition: transform 300ms; }
-  .Collapsible__trigger.is-open:after {
-    transform: rotateZ(180deg); }
-  .Collapsible__trigger.is-disabled {
-    opacity: 0.5;
-    background-color: grey; }
+  color: white; 
+  }
+
+.Collapsible__trigger:after {
+  font-family: 'Glyphicons Halflings';
+  content: '\e252';
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: block;
+  transition: transform 300ms; 
+  }
+
+.Collapsible__trigger.is-open:after {
+  transform: rotateZ(180deg); 
+  }
+
+.Collapsible__trigger.is-disabled {
+  opacity: 0.5;
+  background-color: grey;
+  }
 
 .CustomTriggerCSS {
   background-color: lightcoral;
-  transition: background-color 200ms ease; }
+  transition: background-color 200ms ease; 
+  }
 
 .CustomTriggerCSS--open {
   background-color: #363463 ;
-  color: #FFF !important; }
+  color: #FFF !important; 
+  }
 
 .collapsible-header-top {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 #deletePatient{
     float: right;
 }
 .card-block {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    padding: 1.25rem;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1.25rem;
 }
+
 .card {
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    background-color: #fff;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
 }
 
 .card-footer:last-child {
-    border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+  border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
 }
 
 .text-muted {
-    color: #636c72!important;
+  color: #636c72!important;
 }
 
 .card-footer {
-    padding: .75rem 1.25rem;
-    background-color: #f7f7f9;
-    border-top: 1px solid rgba(0,0,0,.125);
+  padding: .75rem 1.25rem;
+  background-color: #f7f7f9;
+  border-top: 1px solid rgba(0,0,0,.125);
 }
 
 .card-header:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+  border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
 }
 
 .card-header {
-    padding: .75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: #f7f7f9;
-    border-bottom: 1px solid rgba(0,0,0,.125);
+  padding: .75em 1.25rem;
+  margin-bottom: 0;
+  background-color: #f7f7f9;
+  border-bottom: 1px solid rgba(0,0,0,.125);
 }
 
-.preffered{
-    display: block;
-    margin-left: 2%;
+.preferred{
+  display: block;
+  margin-left: 2%;
+}
+.deleted{
+  width: 50%;
+  float: right;
 }
 
 .badge-info {
   background-color: #5cb85c;
+  margin-top: -10px;
 }
 
+.badge-error {
+  background-color:red;
+  margin-top: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.deleted .badge-error {
+  background-color:red;
+  margin-top: -10px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
 .card-plain {
-    padding-left: 15px;
-    margin-bottom: 15px;
+  padding-left: 15px;
+  margin-bottom: 15px;
 }
 
 .editCard{
-    width: 100%;
-    margin-left: 33%;
+  width: 100%;
+  margin-left: 33%;
 }
 
 .card1{
- width:33%;
- height: 100%;
- float:left;
- box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
- margin-top: 1%;
- margin-left: 2%;
- text-align: auto;
- align-items: left;
+  width:33%;
+  height: 100%;
+  float:left;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+  margin-top: 1%;
+  margin-left: 2%;
+  text-align: auto;
+  align-items: left;
 }
 
 .viewCard{
- width: 22%;
- height: 4em;
- max-height: 40%;
- float:left;
- box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
- margin-top: 1%;
- margin-left: 2%;
- text-align: auto;
- align-items: left;
- padding: .5%;
- border-radius:5%;
+  width: 22%;
+  height: 5.5em;
+  max-height: 40%;
+  float:left;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+  margin-top: 1%;
+  margin-left: 2%;
+  text-align: auto;
+  align-items: left;
+  padding: .5%;
+  border-radius:5%;
 }
 
 .card-body{
-    text-indent: 2%;
-    justify-content: space-around;
-    margin: auto;
-    width: 90%;
-    margin-bottom: 5%;
+  text-indent: 2%;
+  justify-content: space-around;
+  margin: auto;
+  width: 90%;
+  margin-bottom: 5%;
 }
 
 #buttons{
-    margin: auto;
-    margin-top:5%;
-    width:100%;
-    height: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  margin: auto;
+  margin-top:5%;
+  width:100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 button.btn.btn.success{
-    padding: 6% 12%;
+  padding: 6% 12%;
 }
 
 .btn-margin{
-    margin-left: 0px;
+  margin-left: 0px;
 }
 
 .close{
-    position: relative;
-    margin-right: 3px;
-    top: 18px;
-    right:2%;
-    color: red;
-    display: block;
-    font-size: 35px;
-    line-height: 0px;
-    opacity: 1;
+  position: relative;
+  margin-right: 3px;
+  top: 13px;
+  right:2%;
+  color: red;
+  display: block;
+  font-size: 35px;
+  line-height: 0px;
+  opacity: 1;
 }
 
 a{
-    color: #337ab7;
-    cursor: pointer;
+  color: #337ab7;
+  cursor: pointer;
 }
 
 .arrange-horizontally > * {
-    display: inline-block;
+  display: inline-block;
 }
 
 .btn-margin {
-    margin-bottom: 15px;
-    margin-top: 25px;
+  margin-bottom: 15px;
+  margin-top: 25px;
 }
 
 .glyphicon {
-    color: black;
-    font-size: 12px;
+  color: black;
+  font-size: 12px;
 }
 
 .encounter{
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .provider{
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .encounter-header {
-    text-align: center;
-    color: #fff;
-    background: #363463;
-    min-height: 35px;
-    padding-top: 1%;
+  text-align: center;
+  color: #fff;
+  background: #363463;
+  min-height: 35px;
+  padding-top: 1%;
 }
 
 .form-horizontal{
-    margin-left: 14%;
+  margin-left: 14%;
 }
 .encounter-form{
-    width: 70%;
-    height: 80%;
-    margin: auto;
-    margin-top: 3%;
+  width: 70%;
+  height: 80%;
+  margin: auto;
+  margin-top: 3%;
 }
 
 #selectedPatient{
-    display: block;
+  display: block;
 }
 
 .glyphicon {
-    color: black;
-    font-size: 12px;
+  color: black;
+  font-size: 12px;
 }
 
 .modal-dialog{
-    width: 35%;
+  width: 35%;
 }
 
 .modal-header{
-    background-color: #D3D3D3;
-    color: black;
+  background-color: #D3D3D3;
+  color: black;
 }
 
 #button{
-    margin-left: 20%;
+  margin-left: 20%;
 }
 .custom-label{
-    text-align: left !important;
+  text-align: left !important;
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .nav-tabs .nav-link.active {
-    color:#00688B;
-    text-decoration: underline;
-    background-color: #a6c;
-    font-weight: bold;
-    background-color: #fff;
-    border-color: #ddd #ddd #fff;
+  color:#00688B;
+  text-decoration: underline;
+  background-color: #a6c;
+  font-weight: bold;
+  background-color: #fff;
+  border-color: #ddd #ddd #fff;
 }
 
 #custom-a-tag a {
-    color: #337ab7;
-    cursor: pointer;
-
+  color: #337ab7;
+  cursor: pointer;
 }
 
 #bolded-a-tag {
-    color: #054b63;
-    cursor: pointer;
-    font-weight: bold;
+  color: #054b63;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 #disable-manual-input .form-control[disabled]{
-    background-color: hsl(0, 0%, 100%);
-    opacity: 1;
+  background-color: hsl(0, 0%, 100%);
+  opacity: 1;
 }
 
 li>a:hover {
-    color: rgba(232, 140, 140, 0.96);
-    cursor: pointer;
-    text-decoration: none;
-    border-bottom: 1px solid gold;
+  color: rgba(232, 140, 140, 0.96);
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid gold;
 }
 
 .input {
-    float:left;
-    color: #FF0000;
+  float:left;
+  color: #FF0000;
 }
 
 .has-error {
-    color: #FF0000;
+  color: #FF0000;
 }
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-    background-color: #eee;
-    opacity: 1;
+  background-color: #eee;
+  opacity: 1;
 }
 
 .input-group .form-control[disabled] {
-    background-color: transparent;
-    opacity: 1
+  background-color: transparent;
+  opacity: 1
 }
 
 #patientError{
-    margin-left: 45%;
+  margin-left: 45%;
 }
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-    background-color: #eee;
-    opacity: 1;
+  background-color: #eee;
+  opacity: 1;
 }
 
 .btn-success[disabled] {
-    background-color: green;
-    opacity: 0.4;
+  background-color: green;
+  opacity: 0.4;
 }
 
 .btn-danger[disabled]{
-     background-color: red;
-    opacity: 0.4;
+  background-color: red;
+  opacity: 0.4;
+}
+#background{
+  align-content: center;
+  box-sizing: border-box;
 }
 
 #background{
-    padding-top: 40px;
-    position:absolute;
-    z-index:1;
-    background:transparent;
-    display:block;
-    min-height:50%;
-    min-width:50%;
-    text-align: center;
+  padding-top: 40px;
+  position:absolute;
+  z-index:1;
+  background:transparent;
+  display:block;
+  min-height:50%;
+  min-width:50%;
+  text-align: center;
 }
 
 #bg-text
 {
-   margin-top: 25%;
-   font-size:40px;
-   font-style: bold;
-    color:darkgray;
-    transform:rotate(300deg);
-    -webkit-transform:rotate(300deg);
-    margin-left: 90%;
+  margin-top: 25%;
+  font-size:40px;
+  font-style: bold;
+  color:darkgray;
+  transform:rotate(300deg);
+  -webkit-transform:rotate(300deg);
+  margin-left: 90%;
 }
 
 .err-msg {
