@@ -411,12 +411,14 @@ export default class Obs extends React.Component {
               </div>
             </div>
             <p />
+            <header className="encounter-header">
+              Observation
+            </header>
             <div>
-              <h3>Observation</h3>
               <form className="form-horizontal">
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Person:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <input type="text" disabled
                       className="form-control bootstrap-typeahead-input-main"
                       value={this.state.obs.person}
@@ -425,14 +427,14 @@ export default class Obs extends React.Component {
                 </div>
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Encounter:</label>
-                  <label className="control-label col-sm-8 custom-label encounter-label pointer"
+                  <label className="control-label col-sm-6 custom-label encounter-label pointer"
                     onClick={this.goToEncounter}>
                     {this.state.obs.encounter}
                   </label>
                 </div>
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Order:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <input type="text" disabled={true}
                       name="order"
                       className="form-control bootstrap-typeahead-input-main"
@@ -442,7 +444,7 @@ export default class Obs extends React.Component {
                 </div>
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Location:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <select
                       className="form-control"
                       name="location"
@@ -459,7 +461,7 @@ export default class Obs extends React.Component {
                 </div>
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Observation Date:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <DatePicker
                       dateFormat="DD-MM-YYYY"
                       disabled
@@ -474,7 +476,7 @@ export default class Obs extends React.Component {
                 <div className="form-group ">
                 <div className={this.state.questionError ? 'has-error':''}>
                   <label className="control-label col-sm-3">Concept Question:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <AsyncTypeahead
                       ref="typeahead"
                       name="concept"
@@ -497,7 +499,7 @@ export default class Obs extends React.Component {
                 <div className="form-group ">
                   <div className={this.state.answerError ? 'has-error':''}>
                   <label className="control-label col-sm-3">Answer Concept:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     {this.renderValue()}
                   </div>
                 </div>
@@ -510,7 +512,7 @@ export default class Obs extends React.Component {
                 }
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Comment:</label>
-                  <div className="col-sm-8">
+                  <div className="col-sm-7">
                     <textarea type="text"
                       onChange={this.handleChange}
                       name="comment"
