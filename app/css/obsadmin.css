@@ -411,7 +411,10 @@ li#location.selected a{
   background-color: #f7f7f9;
   border-bottom: 1px solid rgba(0,0,0,.125);
 }
-
+.card-header.transparent{
+  background-color: transparent;
+  border-bottom: none;
+}
 .preferred{
   display: block;
   margin-left: 2%;
@@ -451,7 +454,6 @@ li#location.selected a{
 
 .editCard{
   width: 100%;
-  margin-left: 33%;
 }
 
 .card1{
@@ -464,6 +466,13 @@ li#location.selected a{
   text-align: auto;
   align-items: left;
 }
+
+.card1.full-width{
+  width: 100%;
+  float: none;
+  box-shadow: none;
+}
+
 
 .viewCard{
   width: 22%;

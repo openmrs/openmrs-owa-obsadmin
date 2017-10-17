@@ -8,6 +8,7 @@
  */
 import React from 'react';
 import PropTypes from 'react-proptypes';
+import {Modal} from 'react-bootstrap';
 import apiCall from '../../utilities/apiHelper';
 
 class NewIdentifier extends React.Component {
@@ -15,6 +16,7 @@ class NewIdentifier extends React.Component {
     super(props);
     this.state = {
       isNewIdentifier: false,
+      showModal: false,
       addIdentifiers: {},
       editErrors: {
         uuid: '',
@@ -34,6 +36,7 @@ class NewIdentifier extends React.Component {
   handleAddNew() {
     this.setState({
       isNewIdentifier: true,
+      showModal: true,
       addErrors: { uuid: '', error: '' }
     });
   }
@@ -83,7 +86,11 @@ class NewIdentifier extends React.Component {
                   },
                 });
               } else {
-                this.setState({ isNewIdentifier: false, addIdentifiers: {} });
+                this.setState({
+                  isNewIdentifier: false,
+                  showModal: false,
+                  addIdentifiers: {}
+                });
                 this.props.fetchIdentifiers();
               }
             })
@@ -97,7 +104,11 @@ class NewIdentifier extends React.Component {
           if(response.error) {
             this.setState({ addErrors: { error: response.error.message } });
           } else {
-            this.setState({ isNewIdentifier: false, addIdentifiers: {} });
+            this.setState({
+              isNewIdentifier: false,
+              addIdentifiers: {},
+              showModal: false
+            });
             this.props.fetchIdentifiers();
           }
         })
@@ -109,6 +120,7 @@ class NewIdentifier extends React.Component {
     return(new Promise((resolve, reject) => {
       resolve(this.setState({
         isNewIdentifier: false,
+        showModal: false,
       }, () => { this.props.callCancel; }));
     }, ));
   }
@@ -144,91 +156,101 @@ class NewIdentifier extends React.Component {
         }
         {
           this.state.isNewIdentifier && !this.props.stateData.editState &&
-          <div className="card1" id="add-card">
-            <div className="card-body">
-              <div>
-                <div className={addError.includes('identifier,') ||
-                  !(addError.includes('identifierType') ||
-                    addError.includes('Location')) ? addErrorClass : ''}
-                >
-                  <h6><b>Identifier</b></h6>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="identifier"
-                    defaultValue={this.state.addIdentifiers.id}
-                    onChange={this.handleCreateChange}
-                  />
-                  {(addError.includes('identifier,') ||
-                    !(addError.includes('identifierType') ||
-                      addError.includes('Location'))) &&
-                    <div className="input">{addError}</div>}
-                </div>
-                <div className={addError.includes(
-                  'identifierType') ? addErrorClass : ''}
-                >
-                  <h6><b>Identifier Type</b></h6>
-                  <select
-                    className="form-control"
-                    name="identifierType"
-                    defaultValue={this.state.addIdentifiers.type}
-                    onChange={this.handleCreateChange}
-                  >
-                    <option value="">Choose type</option>
-                    {
-                      this.props.stateData.identifierstypesArray.map(idType => (
-                        <option key={idType.uuid} value={idType.display}>{idType.display}</option>
-                      ))
-                    }
-                  </select>
+            <Modal show={this.state.showModal} onHide={this.handleCancelPromise}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Identifier</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="card1 full-width" id="add-card">
+                  <div className="card-body">
+                    <div>
+                      <div className={addError.includes('identifier,') ||
+                        !(addError.includes('identifierType') ||
+                          addError.includes('Location')) ? addErrorClass : ''}
+                      >
+                        <h6><b>Identifier</b></h6>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="identifier"
+                          defaultValue={this.state.addIdentifiers.id}
+                          onChange={this.handleCreateChange}
+                        />
+                        {(addError.includes('identifier,') ||
+                          !(addError.includes('identifierType') ||
+                            addError.includes('Location'))) &&
+                          <div className="input">{addError}</div>}
+                      </div>
+                      <div className={addError.includes(
+                        'identifierType') ? addErrorClass : ''}
+                      >
+                        <h6><b>Identifier Type</b></h6>
+                        <select
+                          className="form-control"
+                          name="identifierType"
+                          defaultValue={this.state.addIdentifiers.type}
+                          onChange={this.handleCreateChange}
+                        >
+                          <option value="">Choose type</option>
+                          {
+                            this.props.stateData.identifierstypesArray.map(idType => (
+                              <option key={idType.uuid} value={idType.display}>{idType.display}</option>
+                            ))
+                          }
+                        </select>
 
-                  {addError.includes('identifierType') &&
-                    <div className="input">{addError}</div>}
+                        {addError.includes('identifierType') &&
+                          <div className="input">{addError}</div>}
+                      </div>
+                      <div className={addError.includes('Location') ? addErrorClass : ''}>
+                        <h6><b>Location</b></h6>
+                        <select
+                          className="form-control"
+                          name="location"
+                          defaultValue={this.state.addIdentifiers.location}
+                          onChange={this.handleCreateChange}
+                        >
+                          <option value="">Choose location</option>
+                          {
+                            this.props.stateData.locationArray.map(location => (
+                              <option key={location.uuid} value={location.display}>{location.display}
+                              </option>
+                            ))
+                          }
+                        </select>
+                        {addError.includes('Location') &&
+                          <div className="input">{addError}</div>}
+                      </div>
+                      <div className="arrange-horizontally">
+                        <h6><b>Preferred  :</b></h6> <t />
+                        <input
+                          className="form-check-input"
+                          type="Checkbox"
+                          name="preferred"
+                          defaultChecked={this.state.addIdentifiers.preferred}
+                          onChange={this.handleCreateChange}
+                        />
+                      </div>
+
+                      <div id="buttons">
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={this.handleCancelPromise}
+                        >Cancel</button>
+
+                        <button
+                          type="button"
+                          className="btn btn-success"
+                          onClick={this.callCreate}
+                        >Create</button>
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className={addError.includes('Location') ? addErrorClass : ''}>
-                  <h6><b>Location</b></h6>
-                  <select
-                    className="form-control"
-                    name="location"
-                    defaultValue={this.state.addIdentifiers.location}
-                    onChange={this.handleCreateChange}
-                  >
-                    <option value="">Choose location</option>
-                    {
-                      this.props.stateData.locationArray.map(location => (
-                        <option key={location.uuid} value={location.display}>{location.display}
-                        </option>
-                      ))
-                    }
-                  </select>
-                  {addError.includes('Location') &&
-                    <div className="input">{addError}</div>}
-                </div>
-                <div className="arrange-horizontally">
-                  <h6><b>Preferred  :</b></h6> <t />
-                  <input
-                    className="form-check-input"
-                    type="Checkbox"
-                    name="preferred"
-                    defaultChecked={this.state.addIdentifiers.preferred}
-                    onChange={this.handleCreateChange}
-                  />
-                </div>
-                <div id="buttons">
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={this.callCreate}
-                  >Create</button>
-                  <button
-                    type="button"
-                    className="btn btn-light"
-                    onClick={this.handleCancelPromise}
-                  > Cancel</button>
-                </div>
-              </div>
-            </div>
-          </div>
+              </Modal.Body>
+            </Modal>
         }
       </div>
     );
