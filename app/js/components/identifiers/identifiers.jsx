@@ -7,6 +7,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import {Modal} from 'react-bootstrap';
 import apiCall from '../../utilities/apiHelper';
 import NewIdentifier from './addIdentifier';
 
@@ -18,6 +19,7 @@ export default class Identifiers extends React.Component {
       activeCard: '',
       editState: false,
       editable: false,
+      showModal: false,
       voided: false,
       hideViewCard: false,
       preferredIdentifierUuid: '',
@@ -96,6 +98,7 @@ export default class Identifiers extends React.Component {
   callEdit(id, uuid) {
     this.setState({
       editState: true,
+      showModal: true,
       activeCard: id,
       identifierUuid: uuid,
       hideViewCard: true,
@@ -185,6 +188,7 @@ export default class Identifiers extends React.Component {
   handleError() {
     this.setState({
       editState: false,
+      showModal: false,
       activeCard: '',
       hideViewCard: false,
       editIdentifiers: {},
@@ -204,6 +208,7 @@ export default class Identifiers extends React.Component {
         voided: !voided,
         hideViewCard: false,
         editState: false,
+        showModal: false,
       });
     } else {
       toastr.error('Can not delete Preferred Identifier');
@@ -224,6 +229,7 @@ export default class Identifiers extends React.Component {
     this.setState(prevState => ({
       editState: false,
       activeCard: '',
+      showModal: false,
       identifier: prevState.identifier,
       identifierType: prevState.identifierType,
       hideViewCard: false,
@@ -316,135 +322,135 @@ export default class Identifiers extends React.Component {
                 }
 
                 {this.state.editState && this.state.activeCard == index &&
-                  <div className="editCard">
-                    <div className="card1" id={index} key={index}>
-                      <i className="close" aria-label="Close">
-                        <span
-                          className="deleteIcon"
-                          aria-hidden="true"
-                          onClick={this.callCancel}
-                        >&times; </span>
-                      </i>
-                      <div className="card-header">
-                        {(id.preferred) ?
-                          (<div className="preferred">
-                            <span className="badge badge-info">Preferred</span>
-                          </div>
-                          ) : id.voided ?
-                            (<div className="preferred">
-                              <span className="badge badge-error">Deleted</span>
-                            </div>
-                            )
-                            : ''
-                        }
-                      </div>
-                      <div className="card-body">
-                        <div
-                          className={
-                            this.state.editErrors.uuid === id.uuid ?
-                              editErrorClass : ''
-                          }>
-                          <h6><b>Identifier</b></h6>
-                          <input
-                            className="form-control col-sm-8"
-                            type="text"
-                            name="identifier"
-                            defaultValue={
-                              this.state.activeCard !== index
-                                ? id.identifier
-                                : editIdentifiers.identifier ||
-                                id.identifier
+                  <Modal show={this.state.showModal} onHide={this.callCancel}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Edit Identifier</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <div className="editCard">
+                        <div className="card1 full-width" id={index} key={index}>
+                          <div className="card-header transparent">
+                            {(id.preferred) ?
+                              (<div className="preferred">
+                                <span className="badge badge-info">Preferred</span>
+                              </div>
+                              ) : id.voided ?
+                                (<div className="preferred">
+                                  <span className="badge badge-error">Deleted</span>
+                                </div>
+                                )
+                                : ''
                             }
-                            onChange={e => this.handleChange(e, index)}
-                            disabled={id.voided}
-                          />
-                          {this.state.editErrors.uuid === id.uuid &&
-                            <div className="input">{editError}</div>}
-                        </div>
-                        <div>
-                          <div>
-                            <h6><b>Identifier Type</b></h6>
-                            <select
-                              className="form-control"
-                              name="identifierType"
-                              value={editIdentifiers.identifierType ||
-                                id.identifierType.display}
-                              disabled={id.voided}
-                              onChange={e => this.handleChange(e, index)}
-                            >
-                              {
-                                this.state.identifierstypesArray.map(idType => (
-                                  <option
-                                    key={idType.uuid}
-                                    value={idType.display}
-                                  > {idType.display}
-                                  </option>
-                                ))
-                              }
-                            </select>
                           </div>
-                          <div>
-                            <h6><b>Location</b></h6>
-                            <select
-                              className="form-control"
-                              name="location"
-                              value={
-                                editIdentifiers.location || id.location.display
-                              }
-                              disabled={id.voided}
-                              onChange={this.handleChange}
-                            >
-                              {
-                                this.state.locationArray.map(location => (
-                                  <option
-                                    key={location.uuid}
-                                    value={location.display}
-                                  >{location.display}
-                                  </option>
-                                ))
-                              }
-                            </select>
-                          </div>
-                          <div className="arrange-horizontally">
-                            <h6><b>Created By </b></h6>
-                            <h5 name="creator">
-                              {id.auditInfo.creator.display} on {'  '}
-                              {new Date(id.auditInfo.dateCreated).toString()}
-                            </h5>
-                          </div>
-                          {!id.preferred && !id.voided &&
-                            <div className="arrange-horizontally">
-                              <h6><b>Preferred  </b></h6> <t />
+                          <div className="card-body">
+                            <div
+                              className={
+                                this.state.editErrors.uuid === id.uuid ?
+                                  editErrorClass : ''
+                              }>
+                              <h6><b>Identifier</b></h6>
                               <input
-                                className="form-check-input"
-                                type="Checkbox"
-                                name="preferred"
-                                defaultChecked={id.preferred}
+                                className="form-control col-sm-8"
+                                type="text"
+                                name="identifier"
+                                defaultValue={
+                                  this.state.activeCard !== index
+                                    ? id.identifier
+                                    : editIdentifiers.identifier ||
+                                    id.identifier
+                                }
+                                onChange={e => this.handleChange(e, index)}
                                 disabled={id.voided}
-                                onChange={() => this.handlePreferred(id.preferred)}
                               />
+                              {this.state.editErrors.uuid === id.uuid &&
+                                <div className="input">{editError}</div>}
                             </div>
-                          }
-                          <div id="buttons">
-                            <button
-                              type="button"
-                              className="btn btn-success"
-                              onClick={this.callSave}
-                              disabled={id.voided}
-                            >Save</button>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={
-                                (!id.voided)
-                                  ? () => this.handleDelete(id.uuid, id.voided)
-                                  : () => this.handleUnDelete(id.uuid)}
-                            >{(!id.voided) ? 'Delete' : 'Restore'}</button>
+                            <div>
+                              <div>
+                                <h6><b>Identifier Type</b></h6>
+                                <select
+                                  className="form-control"
+                                  name="identifierType"
+                                  value={editIdentifiers.identifierType ||
+                                    id.identifierType.display}
+                                  disabled={id.voided}
+                                  onChange={e => this.handleChange(e, index)}
+                                >
+                                  {
+                                    this.state.identifierstypesArray.map(idType => (
+                                      <option
+                                        key={idType.uuid}
+                                        value={idType.display}
+                                      > {idType.display}
+                                      </option>
+                                    ))
+                                  }
+                                </select>
+                              </div>
+                              <div>
+                                <h6><b>Location</b></h6>
+                                <select
+                                  className="form-control"
+                                  name="location"
+                                  value={
+                                    editIdentifiers.location || id.location.display
+                                  }
+                                  disabled={id.voided}
+                                  onChange={this.handleChange}
+                                >
+                                  {
+                                    this.state.locationArray.map(location => (
+                                      <option
+                                        key={location.uuid}
+                                        value={location.display}
+                                      >{location.display}
+                                      </option>
+                                    ))
+                                  }
+                                </select>
+                              </div>
+                              <div className="arrange-horizontally">
+                                <h6><b>Created By </b></h6>
+                                <h5 name="creator">
+                                  {id.auditInfo.creator.display} on {'  '}
+                                  {new Date(id.auditInfo.dateCreated).toString()}
+                                </h5>
+                              </div>
+                              {!id.preferred && !id.voided &&
+                                <div className="arrange-horizontally">
+                                  <h6><b>Preferred  </b></h6> <t />
+                                  <input
+                                    className="form-check-input"
+                                    type="Checkbox"
+                                    name="preferred"
+                                    defaultChecked={id.preferred}
+                                    disabled={id.voided}
+                                    onChange={() => this.handlePreferred(id.preferred)}
+                                  />
+                                </div>
+                              }
+                              <div id="buttons">
+                                <button
+                                  type="button"
+                                  className="btn btn-success"
+                                  onClick={this.callSave}
+                                  disabled={id.voided}
+                                >Save</button>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={
+                                    (!id.voided)
+                                      ? () => this.handleDelete(id.uuid, id.voided)
+                                      : () => this.handleUnDelete(id.uuid)}
+                                >{(!id.voided) ? 'Delete' : 'Restore'}</button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </Modal.Body>
+                  </Modal>
                 }
               </div>
             );
