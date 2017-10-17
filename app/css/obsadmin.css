@@ -717,3 +717,14 @@ li>a:hover {
   width: 50%;
   float: right;
 }
+
+.rt-thead {
+    background: white;
+    color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.thead{
+  text-align: center;
+}
