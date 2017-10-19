@@ -545,11 +545,12 @@ a{
 }
 
 .encounter-header {
-    text-align: center;
+    text-align: left;
     color: #fff;
-    background: #363463;
+    background-color: #00463f;
     min-height: 35px;
     padding-top: 1%;
+   text-indent: 50px;
     margin-bottom: 3%
 }
 
@@ -727,4 +728,25 @@ li>a:hover {
 
 .thead{
   text-align: center;
+}
+#move-encounter{
+  width: fit-content;
+}
+
+input[type="radio"]{
+  margin: 4px 30px 0;
+}
+
+#accordion{
+  width: 100%;
+}
+
+.table-striped{
+  margin-left: 2%;
+}
+
+#show-deleted{
+  margin-left:80%;
+  justify-content: space-between;
+  font-size: 600;
 }

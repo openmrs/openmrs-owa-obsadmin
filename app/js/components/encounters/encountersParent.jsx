@@ -147,8 +147,10 @@ export default class Encounters extends React.Component {
       }),
     }, function () {
       this.setState({ editErrors: { error: '' } });
-      if (((this.state.prevPatient === this.state.editValues.patientName) ||
-        this.state.prevPatient === null || this.state.editValues.patientName === '') || (/\s/g.test(searchValue))) {
+      if (((this.state.prevPatient === this.state.editValues.patientName)
+        || this.state.prevPatient === null
+        || this.state.editValues.patientName === '')
+        || (/\s/g.test(searchValue))) {
         this.setState({ editErrors: { error: 'No new patient detected' } });
       }
     });
@@ -186,8 +188,8 @@ export default class Encounters extends React.Component {
   }
 
   handleFieldEdits(event) {
-    event.preventDefault();
     const eventTargetName = event.target.name;
+    const eventTargetId = event.target.id;
     const providers = this.state.encounterData.encounterProviders;
     const patientName = this.state.encounterData.patient && this.state.encounterData.patient.display.split('-')[1];
     if (providers.length > 0) {
@@ -196,10 +198,16 @@ export default class Encounters extends React.Component {
           editable: true,
           prevPatient: patientName,
         })
-        : this.setState({
-          moveEncounter: true,
-          prevPatient: patientName,
-        });
+        : (eventTargetId === 'yes') ?
+          this.setState({
+            moveEncounter: true,
+            prevPatient: patientName,
+          })
+          :
+          this.setState({
+            moveEncounter: false,
+            prevPatient: patientName,
+          })
     } else {
       toastr.error('At least one provider is required');
     }
@@ -243,7 +251,7 @@ export default class Encounters extends React.Component {
       .catch(error => toastr.error(error));
   }
 
-  handleUpdateNewPatient(event) {
+  handleUpdateNewPatient() {
     event.preventDefault();
     this.setState({ editErrors: { error: '' } });
     if ((this.state.prevPatient === this.state.editValues.patientName) ||
@@ -409,7 +417,7 @@ export default class Encounters extends React.Component {
             <div className="col-sm-1">
             </div>
             <header className="encounter-header">
-              Encounter on {this.state.encounterDatetime}
+              Encounter
             </header>
             <div className="display">
               <Encounter
