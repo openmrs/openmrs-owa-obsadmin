@@ -8,10 +8,9 @@
  */
 import React from 'react';
 import PropTypes from 'react-proptypes';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import classnames from 'classnames';
+import { Collapse, Button } from 'reactstrap';
 
-class Observations extends React.Component {
+export default class Observations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,16 +18,17 @@ class Observations extends React.Component {
       voidedObs: [],
       unVoidedObs: [],
       observations: [],
+      encounterType: undefined,
     };
-    this.toggle = this.toggle.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { obs } = nextProps.stateData.encounterData;
+    const { obs, encounterType } = nextProps.stateData.encounterData;
     const voidedObs = [];
     const unVoidedObs = [];
     this.setState({
       observations: nextProps.stateData.encounterData.obs,
+      encounterType
     }, () => {
       this.state.observations && this.state.observations.map(observation => (
         (observation.voided) ? voidedObs.push(observation)
@@ -41,136 +41,120 @@ class Observations extends React.Component {
     });
   }
 
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab
-      });
-    }
-  }
-
   render() {
-    const { voidedObs, unVoidedObs } = this.state;
+    const { voidedObs, unVoidedObs, encounterType } = this.state;
     return (
       <div className="observation">
         <header className="encounter-header">
           Observations
-      </header>
-        <Nav tabs>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: this.state.activeTab === '1' })}
-              onClick={() => { this.toggle('1'); }}
-            >
-              Observations
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: this.state.activeTab === '2' })}
-              onClick={() => { this.toggle('2'); }}
-            >
-              Deleted Observations
-            </NavLink>
-          </NavItem>
-        </Nav>
-        <TabContent activeTab={this.state.activeTab}>
-          <TabPane tabId="1">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Question Concept</th>
-                  <th>Value</th>
-                  <th>Created</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  unVoidedObs && unVoidedObs.length > 0 &&
-                  unVoidedObs.map((ob) => {
-                    if (ob.groupMembers !== null) {
-                      return (
-                        (ob.groupMembers.map(observation => (
-                          <tr key={observation.uuid}>
-                            <a>
-                              <td
-                                onClick={() => { this.props.handleObservationClick(observation.uuid); }}
-                              >{observation.concept.display}
-                              </td>
-                            </a>
-                            <td>{observation.value.display}</td>
-                            <td>{new Date(observation.obsDatetime).toString()}</td>
+        </header>
+
+        <span id="show-deleted">
+          <input
+            name="voided"
+            className="form-check-input"
+            type="checkbox"
+          /> Show Deleted
+        </span>
+
+        {(encounterType && encounterType.display !== "Visit Note") ?
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Question Concept</th>
+                <th>Value</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                unVoidedObs && unVoidedObs.length > 0 &&
+                unVoidedObs.map((ob) => (
+                  <tr>
+                    <a>
+                      <td
+                        onClick={
+                          () => {
+                            this.props.handleObservationClick(ob.uuid);
+                          }}
+                      >{ob.concept.display}
+                      </td>
+                    </a>
+                    <td>{ob.value}</td>
+                    <td>{new Date(ob.obsDatetime).toString()}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+          :
+          <div id="accordion" role="tablist" aria-multiselectable="true">
+            {
+              unVoidedObs && unVoidedObs.length > 0 &&
+              unVoidedObs.map((ob, index) => (
+                ob.groupMembers !== null &&
+                <div className="card">
+                  <div
+                    className="card-header"
+                    role="tab"
+                    id={`heading${index}`}
+                  >
+                    <h5 className="mb-0">
+                      <a
+                        data-toggle="collapse"
+                        data-parent="#accordion"
+                        href={`#collapse${index}`}
+                        aria-expanded="true"
+                        aria-controls={`collapse${index}`} >
+                        {ob.display}{' '}
+                      </a>
+                      {new Date(ob.obsDatetime).toString()}
+                    </h5>
+                  </div>
+
+                  <div
+                    id={`collapse${index}`}
+                    className="collapse"
+                    role="tabpanel"
+                    aria-labelledby={`heading${index}`}
+                    data-parent="#accordion"
+                  >
+                    <div className="card-block">
+                      <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Question Concept</th>
+                            <th>Value</th>
+                            <th>Created</th>
                           </tr>
-                        )))
-                      );
-                    }
-                    return (
-                      <tr>
-                        <a>
-                          <td
-                            onClick={() => { this.props.handleObservationClick(ob.uuid); }}
-                          >{ob.concept.display}
-                          </td>
-                        </a>
-                        <td>{ob.value}</td>
-                        <td>{new Date(ob.obsDatetime).toString()}</td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-          </TabPane>
-          <TabPane tabId="2">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Question Concept</th>
-                  <th>Value</th>
-                  <th>Created</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  voidedObs && voidedObs.length > 0 &&
-                  voidedObs.map((ob) => {
-                    if (ob.groupMembers !== null) {
-                      return (
-                        (ob.groupMembers.map(observation => (
-                          <tr key={observation.uuid}>
-                            <a>
-                              <td
-                                onClick={() => { this.props.handleObservationClick(observation.uuid); }}
-                              >{observation.concept.display}
-                              </td>
-                            </a>
-                            <td>{observation.value.display}</td>
-                            <td>{new Date(observation.obsDatetime).toString()}</td>
-                          </tr>
-                        )))
-                      );
-                    }
-                    return (
-                      <tr>
-                        <a>
-                          <td
-                            onClick={() => { this.props.handleObservationClick(ob.uuid); }}
-                          >{ob.concept.display}
-                          </td>
-                        </a>
-                        <td>{ob.value}</td>
-                        <td>{new Date(ob.obsDatetime).toString()}</td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-          </TabPane>
-        </TabContent>
+                        </thead>
+                        <tbody>
+                          {(ob.groupMembers.map(observation => (
+                            <tr key={observation.uuid}>
+                              <a>
+                                <td
+                                  onClick={
+                                    () => {
+                                      this.props.handleObservationClick(observation.uuid);
+                                    }}
+                                >{observation.concept.display}
+                                </td>
+                              </a>
+                              <td>{observation.value.display}</td>
+                              <td>{new Date(observation.obsDatetime).toString()}</td>
+                            </tr>
+                          )))
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        }
       </div>
-    )
+    );
   }
 }
-
-export default Observations;

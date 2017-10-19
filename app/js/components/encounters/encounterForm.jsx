@@ -25,11 +25,12 @@ const Encounter = (props) => {
     encounterData,
     editValues,
     editErrors,
+    moveChecked
   } = props.stateData;
 
   let editErrorClass = '';
   let editError = '';
-  if(editErrors.error.length > 0) {
+  if (editErrors.error.length > 0) {
     editErrorClass = 'has-error';
     editError = editErrors.error;
   }
@@ -40,37 +41,17 @@ const Encounter = (props) => {
   const encounterDatetime = moment(encounterData.encounterDatetime).format('YYYY-MM-DD HH:mm:ss');
   const voided = encounterData.voided;
 
-  return(
+  return (
     <div className="encounter">
       <form className="encounter-form">
         <div className="form-group row">
           <div className="col-sm-3">
-            {moveEncounter &&
-              <button
-                type="button"
-                name="update"
-                data-toggle="modal"
-                data-target="#myModal"
-                className="btn btn-success btn-move form-control"
-              >
-                Confirm Move</button>
-            }
-            {!moveEncounter &&
-              <button
-                type="button"
-                name="moveEncounter"
-                onClick={props.handleFieldEdits}
-                className="btn btn-success form-control btn-move"
-                disabled={voided || editable}
-              >
-                Move Encounter</button>
-            }
           </div>
           {voided &&
-           <div className="deleted">
-             <span className="badge badge-error">Deleted</span>
-           </div>
-         }
+            <div className="deleted">
+              <span className="badge badge-error">Deleted</span>
+            </div>
+          }
         </div>
 
         <div className="form-group row">
@@ -86,7 +67,7 @@ const Encounter = (props) => {
                 disabled={!moveEncounter}
                 onChange={props.handleSearchPatient}
               />
-              {((moveEncounter) && searchedPatients.length > 0) &&
+              {(moveEncounter && searchedPatients.length > 0) &&
                 <div className="dropdown-menu" id="selectedPatient">
                   {
                     searchedPatients.map((patient, index) => (
@@ -118,8 +99,13 @@ const Encounter = (props) => {
               onChange={props.handleChange}
             >
               {
-                locationArray.map(locations => (
-                  <option key={locations.uuid} value={locations.uuid}>{locations.display}</option>
+                locationArray.map(location => (
+                  <option
+                    key={location.uuid}
+                    value={location.uuid}
+                  >
+                    {location.display}
+                  </option>
                 ))
               }
             </select>
@@ -199,7 +185,7 @@ const Encounter = (props) => {
         </div>
 
         <div className="form-group row">
-          <label className="col-sm-4 col-form-label">Created By:</label>
+          <label className="col-sm-4 col-form-label">Created By: </label>
           <div className="col-sm-8">
             <input
               className="form-control"
@@ -208,6 +194,33 @@ const Encounter = (props) => {
               value={creator}
               disabled
             />
+          </div>
+        </div>
+
+        <div className="form-group row">
+          <label className="col-sm-4 col-form-label"> Move Encounter: </label>
+          <div id="move-encounter" className="col-sm-4">
+            <input
+              name="move"
+              className="form-check-input"
+              type="radio"
+              id="no"
+              checked={!moveEncounter}
+              onChange={props.handleFieldEdits}
+              disabled={voided}
+            />
+            <label for="no">NO</label>
+
+            <input
+              name="move"
+              className="form-check-input"
+              type="radio"
+              id="yes"
+              checked={moveEncounter}
+              onChange={props.handleFieldEdits}
+              disabled={voided}
+            />
+            <label for="yes">YES</label>
           </div>
         </div>
         {
@@ -229,7 +242,18 @@ const Encounter = (props) => {
 
         <div id="button" className="form-group row">
           <div className="col-sm-3">
-            {editable &&
+            {moveEncounter &&
+              <button
+                type="button"
+                name="update"
+                data-toggle="modal"
+                data-target="#myModal"
+                className="btn btn-success form-control"
+              >
+                Confirm Move</button>
+            }
+
+            {editable && !moveEncounter &&
               <button
                 type="button"
                 name="update"
@@ -240,7 +264,7 @@ const Encounter = (props) => {
                 Update</button>
             }
 
-            {!editable &&
+            {!editable && !moveEncounter &&
               <button
                 type="submit"
                 name="edit"
@@ -256,11 +280,15 @@ const Encounter = (props) => {
             <button
               type="button"
               name="cancel"
-              onClick={(editable || voided || moveEncounter) ? props.handleCancel : props.handleDelete}
+              onClick={
+                (editable || voided || moveEncounter)
+                  ? props.handleCancel
+                  : props.handleDelete}
               className="btn btn-danger form-control cancelBtn"
               disabled={(voided === true)}
             >
-              {(editable || voided || moveEncounter) ? 'Cancel' : 'Delete'}</button>
+              {(editable || voided || moveEncounter) ? 'Cancel' : 'Delete'}
+            </button>
           </div>
         </div>
       </form>
@@ -269,15 +297,20 @@ const Encounter = (props) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal">&times;</button>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+              >
+                &times;
+              </button>
               <h4 className="modal-title">Confirm Edit</h4>
             </div>
             <div className="modal-body">
-              {(prevPatient === null || prevPatient === editValues.patientName) &&
-                <p> Are you sure want to edit this encounter?</p>
-              }
-              {(prevPatient !== editValues.patientName && prevPatient !== null) &&
-                <p> Are you sure want to move encounter from {prevPatient} to {editValues.patientName} </p>
+              {(moveEncounter) ?
+                <p> Are you sure you want to move encounter from {prevPatient} </p>
+                :
+                <p> Are you sure you want to edit this encounter?</p>
               }
             </div>
             <div className="modal-footer">
@@ -285,7 +318,10 @@ const Encounter = (props) => {
                 <button
                   type="button"
                   className="btn btn-success form-control"
-                  onClick={moveEncounter ? (e => props.handleUpdateNewPatient(e)) : (e => props.handleUpdateCurrentPatient(e))}
+                  onClick={
+                    moveEncounter ?
+                      (e => props.handleUpdateNewPatient(e))
+                      : (e => props.handleUpdateCurrentPatient(e))}
                   data-dismiss="modal"
                 >Confirm
                 </button>
@@ -317,4 +353,5 @@ Encounter.propTypes = {
   handleDelete: PropTypes.func,
   handleFieldEdits: PropTypes.func,
 };
+
 export default Encounter;
