@@ -478,6 +478,21 @@ li#location.selected a{
   padding: .5%;
   border-radius:5%;
 }
+.demographicsCard {
+   width: 23%;
+   height: 8.5em;
+   max-height: 40%;
+   float:left;
+   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+   margin-top: 2%;
+   margin-left: 2%;
+   margin-right: 2%;
+   margin-bottom: 5%;
+   text-align: auto;
+   align-items: left;
+   padding: .4%;
+   border-radius:5%;
+}
 
 .card-body{
   text-indent: 2%;

@@ -38,7 +38,7 @@ class Name extends React.Component {
 
   fetchPatientInfo() {
     apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full')
-    .then((response) => {
+      .then((response) => {
         const { givenName, middleName, familyName, voided } =
           response.person.preferredName
         const { creator, dateCreated } =
@@ -94,8 +94,8 @@ class Name extends React.Component {
       '/name/' + this.state.response.preferredName.uuid
     if (!this.state.errorGivenName && !this.state.errorFamilyName) {
       apiCall(requestBody, 'post', requestUrl)
-      .then((response) => { this.props.newName() })
-      .catch(error => (error));
+        .then((response) => { this.props.newName() })
+        .catch(error => (error));
       this.setState({ display: 'view' })
       toastr.success('Name updated sucessfully');
     }
@@ -134,6 +134,14 @@ class Name extends React.Component {
     }
     return (
       <div>
+        <h3
+        > {this.state.givenName} {' '} {this.state.middleName} {''} {this.state.familyName}</h3>
+        <a> Edit </a>
+        { /* 
+
+        // this needed for the edit functionality when PDMO_73 is merged
+
+        
         <form className='form-horizontal'>
           {this.state.display === 'view' &&
             <div className='form-group'>
@@ -246,7 +254,7 @@ class Name extends React.Component {
               </div>
             </div>
           }
-        </form>
+        </form>*/ }
       </div>
     );
   };
