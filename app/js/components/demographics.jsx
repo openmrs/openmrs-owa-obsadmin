@@ -198,14 +198,44 @@ export default class Demographics extends React.Component {
                     toastr.success('Demographics Updated')
                 }
             })
-            .catch(error => (error));
+                .catch(error => (error));
         }
     }
 
     render() {
         return (
             <div>
-                <form className='form-horizontal' onSubmit={this.handleSave}>
+                <div className="demographicsCard">
+                    <form className='form-horizontal'>
+                        <div className='form-group '>
+                            <label className='control-label col-sm-3'> DOB: </label>
+                            <div className='col-sm-9'>
+                                <DateTimeField
+                                    className='form-control'
+                                    name='birthdate'
+                                    inputProps={{ disabled: true }}
+                                    format={this.state.format}
+                                    viewMode={this.state.mode}
+                                    inputFormat={this.state.inputFormat}
+                                    dateTime={this.state.birthdate}
+                                    onChange={this.handleTimeChange('birthdate')}
+                                />
+                            </div>
+                        </div>
+                        <div className='form-group '>
+                            <label className='control-label col-sm-4'> Gender: </label>
+                            <div className='col-sm-8'>
+                                <input className='col-sm-12' value={this.state.gender}/>
+                            </div>
+                        </div>
+                        <a> Edit </a>
+                    </form>
+                </div>
+                    {/* 
+
+                    // this needed for the edit functionality when PDMO_73 is merged
+                    
+                    <form className='form-horizontal' onSubmit={this.handleSave}>
                     <div className='form-group'>
                         <label className='control-label col-sm-2'>Gender:</label>
                         <div className='col-sm-5'>
@@ -379,6 +409,7 @@ export default class Demographics extends React.Component {
                         </div>
                     </div>
                 </form>
+                    */}
             </div>
         )
     }
