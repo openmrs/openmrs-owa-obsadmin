@@ -7,6 +7,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
+import {Modal} from 'react-bootstrap';
 import apiCall from '../../utilities/apiHelper';
 import AddressFormat from './addressFormat';
 import FontAwesome from'react-fontawesome';
@@ -34,6 +35,7 @@ export default class AddressForm extends React.Component {
       activeButton: null,
       uuid: address.uuid,
       parentUuid: props.parentUuid,
+      showModal: false,
     }
     this.defaultValues = {
       address1: address.address1,
@@ -46,7 +48,8 @@ export default class AddressForm extends React.Component {
       action: 'display',
       activeCard: '',
       uuid: '1990',
-      activeButton: null
+      activeButton: null,
+      showModal: false
     }
     this.emptyValues = {
       address1: '',
@@ -87,7 +90,8 @@ export default class AddressForm extends React.Component {
     this.setState({
       action: 'edit',
       activeCard: uuid,
-      activeButton: e.target
+      activeButton: e.target,
+      showModal: true
     });
   }
 
@@ -96,6 +100,7 @@ export default class AddressForm extends React.Component {
       const newValues = this.defaultValues;
       newValues.action = 'new';
       newValues.activeCard = uuid;
+      newValues.showModal = true;
       this.setState(newValues);
     } else {
 
@@ -105,6 +110,8 @@ export default class AddressForm extends React.Component {
   cancelClick() {
     const defaults = this.defaultValues;
     defaults.action = "display";
+    defaults.showModal = false;
+
     this.setState(defaults);
   }
 
@@ -192,89 +199,122 @@ export default class AddressForm extends React.Component {
                         :
                         <span className="badge badge-no-color">&nbsp;</span>
                       }
-                      {(this.state.action === "display" && this.state.secondryAction === "") ?       
-                                <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)} 
-                                             className="fa fa-pencil-square-o"/>        
+                      {(this.state.action === "display" && this.state.secondryAction === "") ?
+                                <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
+                                             className="fa fa-pencil-square-o"/>
                               : ''
-                     }          
-       </div>    
+                     }
+       </div>
         {(this.state.action === 'edit' || this.state.action === 'new')
           && this.state.activeCard === this.state.uuid ?
-          <form className="form-horizontal">
-            {!this.props.address.preferred &&
-              <div className="form-group ">
-                <label className="control-label col-sm-4">Preferred:</label>
-                <div className="col-sm-8">
-                  <input name="preferred"
-                    checked={this.state.preferred} type="checkbox"
-                    onChange={this.onChangeBox}
-                    disabled={this.state.action === 'display'}
-                  />
-                </div>
-              </div>
-            }
-            <div className="form-group ">
-              <label className="control-label col-sm-4">Address:</label>
-              <div className="col-sm-8">
-                <input type="text" name="address1"
-                  value={this.state.address1}
-                  className="form-control"
-                  onChange={this.onChange}
-                  placeholder={this.state.action === 'display' ? "" : "Enter Address"}
-                  disabled={this.state.action === 'display'} />
-              </div>
-            </div>
-            <div className="form-group ">
-              <label className="control-label col-sm-4">Address 2:</label>
-              <div className="col-sm-8">
-                <input type="text" value={this.state.address2} name="address2" className="form-control"
-                  onChange={this.onChange}
-                  disabled={this.state.action === 'display'}
-                  placeholder={this.state.action === 'display' ? "" : "Enter Address 2"} />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-4 control-label">City/Village:</label>
-              <div className="col-sm-8">
-                <input type="text" name="cityVillage" value={this.state.cityVillage}
-                  className="form-control" disabled={this.state.action === 'display'}
-                  onChange={this.onChange}
-                  placeholder={this.state.action === 'display' ? "" : "Enter City/Village"} />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-4 control-label">State/Province:</label>
-              <div className="col-sm-8">
-                <input type="text" value={this.state.stateProvince}
-                  onChange={this.onChange}
-                  name="stateProvince" className="form-control"
-                  placeholder={this.state.action === 'display' ? "" : "Enter State/Province"}
-                  disabled={this.state.action === 'display'}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-4 control-label">Country:</label>
-              <div className="col-sm-8">
-                <input name="country" type="text" value={this.state.country} className="form-control"
-                  placeholder={this.state.action === 'display' ? "" : "Enter Country"}
-                  onChange={this.onChange}
-                  disabled={this.state.action === 'display'}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-4 control-label">Postal Code:</label>
-              <div className="col-sm-8">
-                <input type="text" name="postalCode" value={this.state.postalCode}
-                  className="form-control"
-                  placeholder={this.state.action === 'display' ? "" : "Enter Postal Code"}
-                  onChange={this.onChange}
-                  disabled={this.state.action === 'display'}
-                />
-              </div>
-            </div>
-          </form>
+            <Modal show={this.state.showModal} onHide={this.cancelClick}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add new Address</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form className="form-horizontal">
+                  {!this.props.address.preferred &&
+                    <div className="form-group ">
+                      <label className="control-label col-sm-4">Preferred:</label>
+                      <div className="col-sm-8">
+                        <input name="preferred"
+                          checked={this.state.preferred} type="checkbox"
+                          onChange={this.onChangeBox}
+                          disabled={this.state.action === 'display'}
+                        />
+                      </div>
+                    </div>
+                  }
+                  <div className="form-group ">
+                    <label className="control-label col-sm-4">Address:</label>
+                    <div className="col-sm-8">
+                      <input type="text" name="address1"
+                        value={this.state.address1}
+                        className="form-control"
+                        onChange={this.onChange}
+                        placeholder={this.state.action === 'display' ? "" : "Enter Address"}
+                        disabled={this.state.action === 'display'} />
+                    </div>
+                  </div>
+                  <div className="form-group ">
+                    <label className="control-label col-sm-4">Address 2:</label>
+                    <div className="col-sm-8">
+                      <input type="text" value={this.state.address2} name="address2" className="form-control"
+                        onChange={this.onChange}
+                        disabled={this.state.action === 'display'}
+                        placeholder={this.state.action === 'display' ? "" : "Enter Address 2"} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-4 control-label">City/Village:</label>
+                    <div className="col-sm-8">
+                      <input type="text" name="cityVillage" value={this.state.cityVillage}
+                        className="form-control" disabled={this.state.action === 'display'}
+                        onChange={this.onChange}
+                        placeholder={this.state.action === 'display' ? "" : "Enter City/Village"} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-4 control-label">State/Province:</label>
+                    <div className="col-sm-8">
+                      <input type="text" value={this.state.stateProvince}
+                        onChange={this.onChange}
+                        name="stateProvince" className="form-control"
+                        placeholder={this.state.action === 'display' ? "" : "Enter State/Province"}
+                        disabled={this.state.action === 'display'}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-4 control-label">Country:</label>
+                    <div className="col-sm-8">
+                      <input name="country" type="text" value={this.state.country} className="form-control"
+                        placeholder={this.state.action === 'display' ? "" : "Enter Country"}
+                        onChange={this.onChange}
+                        disabled={this.state.action === 'display'}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-4 control-label">Postal Code:</label>
+                    <div className="col-sm-8">
+                      <input type="text" name="postalCode" value={this.state.postalCode}
+                        className="form-control"
+                        placeholder={this.state.action === 'display' ? "" : "Enter Postal Code"}
+                        onChange={this.onChange}
+                        disabled={this.state.action === 'display'}
+                      />
+                    </div>
+                  </div>
+                  {this.state.action === "edit" ?
+                    <div className="form-group">
+                      <div className="col-sm-4">
+                        <button type="button" name="cancel" onClick={this.cancelClick}
+                          className="btn btn-danger form-control cancelBtn">Cancel</button>
+                      </div>
+                      <div className="col-sm-4">
+                        <button type="button" name="update" onClick={(e) => this.update(e, this.state.uuid)}
+                          className="btn btn-success form-control">Update</button>
+                      </div>
+                    </div>
+                    : ''
+                  }
+                  {this.state.action === "new" ?
+                    <div className="form-group">
+                      <div className="col-sm-4">
+                        <button type="button" name="reset" onClick={this.cancelClick}
+                          className="btn btn-danger form-control cancelBtn">Cancel</button>
+                      </div>
+                      <div className="col-sm-4">
+                        <button type="button" name="save" onClick={this.save}
+                          className="btn btn-success form-control">Save</button>
+                      </div>
+                    </div>
+                    : ''
+                  }
+                </form>
+              </Modal.Body>
+            </Modal>
           :
           <div>
             {this.state.secondryAction === 'new' ?
@@ -289,33 +329,23 @@ export default class AddressForm extends React.Component {
             }
           </div>
         }
-        {this.state.action === "new" ?
+
+        {(this.state.action === "display" && this.state.secondryAction === "") ?
           <div className="form-group">
             <div className="col-sm-3">
-              <button type="button" name="save" onClick={this.save}
-                className="btn btn-success form-control">Save</button>
+              <button type="button" name="edit" onClick={(e) => this.editClick(e, this.state.uuid)}
+                className="btn btn-success form-control">Edit</button>
             </div>
             <div className="col-sm-4">
-              <button type="button" name="reset" onClick={this.cancelClick}
-                className="btn btn-default form-control cancelBtn">Cancel</button>
+              <button type="button" name="delete" data-toggle="modal"
+                data-target="#myModal" className="btn btn-default form-control cancelBtn">
+                Delete
+            </button>
             </div>
           </div>
           : ''
         }
-        
-        {this.state.action === "edit" ?
-          <div className="form-group">
-            <div className="col-sm-4">
-              <button type="button" name="update" onClick={(e) => this.update(e, this.state.uuid)}
-                className="btn btn-success form-control">Update</button>
-            </div>
-            <div className="col-sm-4">
-              <button type="button" name="cancel" onClick={this.cancelClick}
-                className="btn btn-default form-control cancelBtn">Cancel</button>
-            </div>
-          </div>
-          : ''
-        }
+
       </div>
     );
   }
