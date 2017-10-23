@@ -86,24 +86,19 @@ export default class Patient extends React.Component {
             <header className="patient-header">
               Patient: {this.state.patient.display}
             </header>
-            <div className="collapsible-header-top"></div>
-            <Collapsible open={true} trigger="Identifiers" triggerOpenedClassName="CustomTriggerCSS--open">
-              <Identifiers uuid={this.props.params.id} />
-            </Collapsible>
-            <Collapsible triggerOpenedClassName="CustomTriggerCSS--open"
-              trigger="Names">
-              <Name uuid={this.props.params.id} newName={this.updateName} />
-            </Collapsible>
-            <Collapsible trigger="Addresses" triggerOpenedClassName="CustomTriggerCSS--open">
-              <Addresses patient={this.state.patient}
-                uuid={this.state.uuid || this.props.params.id} />
-            </Collapsible>
-            <Collapsible trigger="Demographics" triggerOpenedClassName="CustomTriggerCSS--open">
-              <Demographics uuid={this.props.params.id} />
-            </Collapsible>
-            <Collapsible trigger="Visits & Encounters" triggerOpenedClassName="CustomTriggerCSS--open">
-              <VisitsAndEncounters uuid={this.props.params.id} />
-            </Collapsible>
+            <div className="collapsible-header-top"></div>           
+            <div className="modal-body row"> 
+              <div className="col-md-6">
+                <Name uuid={this.props.params.id} newName={this.updateName} /> 
+              </div>
+              <div className="col-md-6">
+                <Demographics uuid={this.props.params.id} />   
+              </div>
+            </div>
+            <Identifiers uuid={this.props.params.id} />        
+            <Addresses patient={this.state.patient}
+              uuid={this.state.uuid || this.props.params.id} />             
+            <VisitsAndEncounters uuid={this.props.params.id} />              
           </div>
         </div>
       </div>

@@ -80,17 +80,8 @@ export default class Address extends React.Component {
           {this.state.addresses.map(source => (
             <Col key={source.uuid} sm="6">
               <Card>
-                <CardHeader>
-                  <div className="preffered">
-                    {source.preferred ?
-                        <span className="badge badge-info">Preferred</span>
-                      :
-                      <span className="badge badge-no-color">&nbsp;</span>
-                    }
-                  </div>
-                </CardHeader>
                 <CardBlock>
-                  <CardText>
+                  <CardText>                    
                     <AddressForm address={source} reload={this.reload}
                       addressFormat={this.addressFormat}
                       parentUuid={this.state.parentUuid} action="display" />
@@ -98,26 +89,20 @@ export default class Address extends React.Component {
                 </CardBlock>
               </Card>
             </Col>
-          ))}
-        </Row>
-        <Row>
-          <Col sm="12">
-            <Card>
+          ))}     
+          <Col sm="6"> 
+              <div className="preffered">
               <CardBlock>
-                <CardText>
-                  <Row>
-                    <Col sm="6">
-                      <AddressForm address={this.addNew} reload={this.reload}
-                        addressFormat={this.addressFormat}
-                        action="display" parentUuid={this.state.parentUuid} />
-                    </Col>
-                  </Row>
-
-                </CardText>
+                  <CardText>
+             <AddressForm address={this.addNew} reload={this.reload}
+                            addressFormat={this.addressFormat}
+                            action="display" parentUuid={this.state.parentUuid} 
+                 />
+                  </CardText>
               </CardBlock>
-            </Card>
+              </div>
           </Col>
-        </Row>
+        </Row> 
       </div>
     );
   }
