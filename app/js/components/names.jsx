@@ -8,6 +8,7 @@
  */
 import React from 'react';
 import apiCall from '../utilities/apiHelper';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'react-bootstrap';
 
 class Name extends React.Component {
   constructor(props) {
@@ -23,13 +24,15 @@ class Name extends React.Component {
       dateCreated: '',
       response: '',
       errorGivenName: '',
-      errorFamilyName: ''
+      errorFamilyName: '',
+      showModal: false
     };
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.fetchPatientInfo = this.fetchPatientInfo.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   componentDidMount() {
@@ -38,7 +41,7 @@ class Name extends React.Component {
 
   fetchPatientInfo() {
     apiCall(null, 'get', 'patient/' + this.props.uuid + '?v=full')
-    .then((response) => {
+      .then((response) => {
         const { givenName, middleName, familyName, voided } =
           response.person.preferredName
         const { creator, dateCreated } =
@@ -57,8 +60,18 @@ class Name extends React.Component {
   };
 
   handleEdit() {
-    this.setState({ display: 'edit' });
+    this.setState({
+      display: 'edit',
+      showModal: true
+    });
+
   }
+  toggle() {
+    this.setState({
+      showModal: !this.state.showModal
+    });
+  }
+
 
   handleChange(event) {
     const { name, value } = event.target
@@ -94,9 +107,9 @@ class Name extends React.Component {
       '/name/' + this.state.response.preferredName.uuid
     if (!this.state.errorGivenName && !this.state.errorFamilyName) {
       apiCall(requestBody, 'post', requestUrl)
-      .then((response) => { this.props.newName() })
-      .catch(error => (error));
-      this.setState({ display: 'view' })
+        .then((response) => { this.props.newName() })
+        .catch(error => (error));
+      this.setState({ display: 'view', showModal: false })
       toastr.success('Name updated sucessfully');
     }
     else {
@@ -119,7 +132,9 @@ class Name extends React.Component {
       creator: prevState.response.auditInfo.creator.display,
       dateCreated: prevState.response.auditInfo.dateCreated,
       errorGivenName: '',
-      errorFamilyName: ''
+      errorFamilyName: '',
+      showModal: false
+
     }));
   };
 
@@ -133,120 +148,107 @@ class Name extends React.Component {
       familyErrorClass = 'has-error'
     }
     return (
-      <div>
-        <form className='form-horizontal'>
-          {this.state.display === 'view' &&
-            <div className='form-group'>
-              <div className='col-sm-2'>
-                <input className='btn btn-success form-control'
-                  name='edit'
-                  type='button'
-                  value='Edit Name'
-                  onClick={this.handleEdit}
-                />
-              </div>
-            </div>
-          }
-
-          <div className={'form-group ' + givenErrorClass}>
-            <label className='control-label col-sm-2'> Given Name*: </label>
-            <div className='col-sm-7'>
-              <input className='form-control'
-                name='givenName'
-                type='text'
-                value={this.state.givenName}
-                onChange={this.handleChange}
-                readOnly={
-                  this.state.display === 'view' ?
-                    'readonly' : null
+      <div >
+        <h4
+        > {this.state.givenName} {' '} {this.state.middleName} {''} {this.state.familyName}</h4>
+        <a onClick={this.handleEdit}> Edit </a>
+        <Modal show={this.state.showModal} toggle={this.toggle} className={this.props.className}>
+          <ModalHeader toggle={this.toggle}>Edit Names</ModalHeader>
+          <ModalBody>
+            <form className='form-horizontal' id="names">
+              <div className={'form-group ' + givenErrorClass}>
+                <label className='control-label col-sm-5'> Given Name*: </label>
+                <div className='col-sm-7'>
+                  <input className='form-control'
+                    name='givenName'
+                    type='text'
+                    value={this.state.givenName}
+                    onChange={this.handleChange}
+                    readOnly={
+                      this.state.display === 'view' ?
+                        'readonly' : null
+                    }
+                  />
+                </div>
+                {
+                  this.state.errorGivenName &&
+                  this.state.display === 'edit' &&
+                  <div className='input'>
+                    {this.state.errorGivenName}
+                  </div>
                 }
-              />
-            </div>
-            {
-              this.state.errorGivenName &&
-              this.state.display === 'edit' &&
-              <div className='input'>
-                {this.state.errorGivenName}
               </div>
-            }
-          </div>
 
-          <div className='form-group '>
-            <label className='control-label col-sm-2'> Middle Name: </label>
-            <div className='col-sm-7'>
-              <input className='form-control'
-                name='middleName'
-                type='text'
-                value={this.state.middleName}
-                onChange={this.handleChange}
-                readOnly={
-                  this.state.display === 'view' ?
-                    'readonly' : null
+              <div className='form-group '>
+                <label className='control-label col-sm-5'> Middle Name: </label>
+                <div className='col-sm-7'>
+                  <input className='form-control'
+                    name='middleName'
+                    type='text'
+                    value={this.state.middleName}
+                    onChange={this.handleChange}
+                    readOnly={
+                      this.state.display === 'view' ?
+                        'readonly' : null
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className={'form-group ' + familyErrorClass}>
+                <label className='control-label col-sm-5'> Family Name*: </label>
+                <div className='col-sm-7'>
+                  <input className='form-control'
+                    name='familyName'
+                    type='text'
+                    value={this.state.familyName}
+                    onChange={this.handleChange}
+                    readOnly={
+                      this.state.display === 'view' ?
+                        'readonly' : null
+                    }
+                  />
+                </div>
+                {
+                  this.state.errorFamilyName &&
+                  this.state.display === 'edit' &&
+                  <div className='input'>
+                    {this.state.errorFamilyName}
+                  </div>
                 }
-              />
-            </div>
-          </div>
-
-          <div className={'form-group ' + familyErrorClass}>
-            <label className='control-label col-sm-2'> Family Name*: </label>
-            <div className='col-sm-7'>
-              <input className='form-control'
-                name='familyName'
-                type='text'
-                value={this.state.familyName}
-                onChange={this.handleChange}
-                readOnly={
-                  this.state.display === 'view' ?
-                    'readonly' : null
-                }
-              />
-            </div>
-            {
-              this.state.errorFamilyName &&
-              this.state.display === 'edit' &&
-              <div className='input'>
-                {this.state.errorFamilyName}
               </div>
-            }
-          </div>
 
-          <div className='form-group '>
-            <label className='control-label col-sm-2'> Created By: </label>
-            <div className='col-sm-7'>
-              <input className='form-control'
-                name='createdby'
-                type='text'
-                size='50'
-                value={
-                  this.state.creator + '  ' +
-                  this.state.dateCreated
-                }
-                disabled
-              />
-            </div>
-          </div>
-
-          {this.state.display == 'edit' &&
-            <div className='form-group'>
-              <div className='col-sm-2'>
-                <button type='submit'
-                  name='update'
-                  onClick={this.handleSave}
-                  className='btn btn-success form-control'>
-                  Save
-                  </button>
+              <div className='form-group '>
+                <label className='control-label col-sm-5'> Created By: </label>
+                <div className='col-sm-7'>
+                  <input className='form-control'
+                    name='createdby'
+                    type='text'
+                    size='50'
+                    value={
+                      this.state.creator + '  ' +
+                      this.state.dateCreated
+                    }
+                    disabled
+                  />
+                </div>
               </div>
-              <div className='col-sm-2'>
-                <button type='button'
-                  name='cancel'
-                  onClick={this.handleCancel}
-                  className='btn btn-default form-control cancelBtn'>
-                  Cancel
-                  </button>
-              </div>
-            </div>
-          }
-        </form>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary"
+              type='submit'
+              name='update'
+              className='btn-success'
+              onClick={this.handleSave}
+            >Save</Button>{' '}
+            <Button color="secondary"
+              type='button'
+              name='cancel'
+              onClick={this.handleCancel}
+            >Cancel</Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   };

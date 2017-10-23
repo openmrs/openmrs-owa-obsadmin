@@ -86,15 +86,16 @@ export default class Patient extends React.Component {
             <header className="patient-header">
               Patient: {this.state.patient.display}
             </header>
-            <div className="collapsible-header-top"></div>           
-            <div className="modal-body row"> 
-              <div className="col-md-6">
+            <form className="form-horizontal">          
+              <div className="form-group">
+                <div className="control-label col-sm-2">
                 <Name uuid={this.props.params.id} newName={this.updateName} /> 
-              </div>
-              <div className="col-md-6">
+                </div>
+              <div className="control-label">
                 <Demographics uuid={this.props.params.id} />   
               </div>
-            </div>
+              </div>
+            </form>
             <Identifiers uuid={this.props.params.id} />        
             <Addresses patient={this.state.patient}
               uuid={this.state.uuid || this.props.params.id} />             

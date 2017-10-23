@@ -492,6 +492,20 @@ li#location.selected a{
   padding: .5%;
   border-radius:5%;
 }
+.demographicsCard {
+   width: 23%;
+   height: 6em;
+   max-height: 40%;
+   float:left;
+   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+   margin-left: 3%;
+   margin-right: 2%;
+   margin-bottom: 5%;
+   text-align: auto;
+   align-items: left;
+   padding: .4%;
+   border-radius:5%;
+}
 
 .card-body{
   text-indent: 0%;
@@ -569,7 +583,7 @@ a{
 }
 
 .form-horizontal{
-  margin-left: 0%;
+  margin-left: 2%;
 }
 
 .encounter-form{
@@ -777,4 +791,13 @@ input[type="radio"]{
   margin-left:80%;
   justify-content: space-between;
   font-size: 600;
+}
+
+.form-group.demo{
+  margin-bottom: 0.3%;
+}
+.form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: left;
 }
