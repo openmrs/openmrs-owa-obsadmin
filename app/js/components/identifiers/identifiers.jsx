@@ -85,9 +85,9 @@ export default class Identifiers extends React.Component {
     }
   }
 
-  handleChange(e, index) {
-    e.preventDefault();
-    const { name, value } = e.target;
+  handleChange(event, index) {
+    event.preventDefault();
+    const { name, value } = event.target;
     this.setState({
       editIdentifiers: Object.assign({}, this.state.editIdentifiers, {
         [name]: value,
@@ -109,8 +109,8 @@ export default class Identifiers extends React.Component {
     });
   }
 
-  callSave(e) {
-    e.preventDefault();
+  callSave(event) {
+    event.preventDefault();
     this.setState({ editErrors: { uuid: '', error: '' } });
     console.log("this", this.state.editIdentifiers)
     const keys = [];
@@ -224,8 +224,8 @@ export default class Identifiers extends React.Component {
       })
   }
 
-  callCancel(e) {
-    e.preventDefault();
+  callCancel(event) {
+    event.preventDefault();
     this.setState(prevState => ({
       editState: false,
       activeCard: '',
