@@ -19,7 +19,7 @@ class BreadCrumbComponent extends React.Component {
               href="https://modules-refapp.openmrs.org/openmrs/index.htm">
               <FontAwesome className='fa fa-home' name='home' /></a>
               < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
-              Patient Search</BreadcrumbItem>
+               Search</BreadcrumbItem>
           </Breadcrumb>
           : (location.pathname.includes('/patient/') && location.pathname.includes('/visit/')) ?
             <Breadcrumb>
@@ -27,7 +27,7 @@ class BreadCrumbComponent extends React.Component {
                 href="https://modules-refapp.openmrs.org/openmrs/index.htm">
                 <FontAwesome className='fa fa-home' name='home' /></a>
                 < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
-                Patient Search</BreadcrumbItem>
+                 Search</BreadcrumbItem>
               <BreadcrumbItem id="visited" onClick={router.goBack}>
                 <FontAwesome name='chevron-right' className='fa fa-chevron-right' />
                 Patient Data</BreadcrumbItem>
@@ -42,7 +42,7 @@ class BreadCrumbComponent extends React.Component {
                   <a id="home" href="https://modules-refapp.openmrs.org/openmrs/index.htm">
                     <FontAwesome className='fa fa-home' name='home' /></a>
                   < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
-                  Patient Search</BreadcrumbItem>
+                   Search</BreadcrumbItem>
                 <BreadcrumbItem onClick={router.goBack}>
                   <FontAwesome name='chevron-right' className='fa fa-chevron-right' />Patient Data</BreadcrumbItem>
                 <BreadcrumbItem onClick={router.goBack}>
@@ -56,7 +56,7 @@ class BreadCrumbComponent extends React.Component {
                     <a id="home" href="https://modules-refapp.openmrs.org/openmrs/index.htm">
                       <FontAwesome className='fa fa-home' name='home' /></a>
                     < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
-                    Patient Search</BreadcrumbItem>
+                     Search</BreadcrumbItem>
                   <BreadcrumbItem onClick={router.goBack}>
                     <FontAwesome name='chevron-right' className='fa fa-chevron-right' />
                     Patient Data</BreadcrumbItem>
@@ -70,7 +70,7 @@ class BreadCrumbComponent extends React.Component {
                     <a id="home" href="https://modules-refapp.openmrs.org/openmrs/index.htm">
                       <FontAwesome className='fa fa-home' name='home' /></a>
                     < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
-                    Patient Search</BreadcrumbItem>
+                     Search</BreadcrumbItem>
                   <BreadcrumbItem active >
                     < FontAwesome name='chevron-right' className='fa fa-chevron-right' />
                     Patient Data</BreadcrumbItem>

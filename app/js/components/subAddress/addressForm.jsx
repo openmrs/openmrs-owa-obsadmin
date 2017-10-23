@@ -9,6 +9,7 @@
 import React from 'react';
 import apiCall from '../../utilities/apiHelper';
 import AddressFormat from './addressFormat';
+import FontAwesome from'react-fontawesome';
 
 export default class AddressForm extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class AddressForm extends React.Component {
     const action = this.props.action;
     this.reload = props.reload;
     this.state = {
+      address : address,
       editValues: {},
       address1: address.address1 || null,
       address2: address.address2 || null,
@@ -184,6 +186,18 @@ export default class AddressForm extends React.Component {
             </div>
           </div>
         </div>
+        <div className="preffered">
+                      {this.state.address.preferred ?
+                          <span className="badge badge-info">Preferred</span>
+                        :
+                        <span className="badge badge-no-color">&nbsp;</span>
+                      }
+                      {(this.state.action === "display" && this.state.secondryAction === "") ?       
+                                <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)} 
+                                             className="fa fa-pencil-square-o"/>        
+                              : ''
+                     }          
+       </div>    
         {(this.state.action === 'edit' || this.state.action === 'new')
           && this.state.activeCard === this.state.uuid ?
           <form className="form-horizontal">
@@ -265,9 +279,9 @@ export default class AddressForm extends React.Component {
           <div>
             {this.state.secondryAction === 'new' ?
               <div className="form-group">
-                <div className="col-sm-offset-4 col-sm-4">
-                  <button type="button" name="add" onClick={(e) => this.addClick(e, this.state.uuid)}
-                    className="btn btn-success form-control">Add</button>
+                <div >
+                  <FontAwesome className="fa fa-plus-square-o add-btn"
+                               onClick={(event) => this.addClick(event, this.state.uuid)}/>
                 </div>
               </div>
               :
@@ -288,21 +302,7 @@ export default class AddressForm extends React.Component {
           </div>
           : ''
         }
-        {(this.state.action === "display" && this.state.secondryAction === "") ?
-          <div className="form-group">
-            <div className="col-sm-3">
-              <button type="button" name="edit" onClick={(e) => this.editClick(e, this.state.uuid)}
-                className="btn btn-success form-control">Edit</button>
-            </div>
-            <div className="col-sm-4">
-              <button type="button" name="delete" data-toggle="modal"
-                data-target="#myModal" className="btn btn-default form-control cancelBtn">
-                Delete
-            </button>
-            </div>
-          </div>
-          : ''
-        }
+        
         {this.state.action === "edit" ?
           <div className="form-group">
             <div className="col-sm-4">
