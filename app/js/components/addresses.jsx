@@ -16,6 +16,7 @@ import {
 import apiCall from '../utilities/apiHelper';
 import AddressForm from './subAddress/addressForm';
 
+
 export default class Address extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +73,7 @@ export default class Address extends React.Component {
     }
     this.addressFormat = localAddressFormat;
   }
-
+  
   render() {
     return (
       <div>
@@ -81,7 +82,7 @@ export default class Address extends React.Component {
             <Col key={source.uuid} sm="6">
               <Card>
                 <CardBlock>
-                  <CardText>                    
+                  <CardText>
                     <AddressForm address={source} reload={this.reload}
                       addressFormat={this.addressFormat}
                       parentUuid={this.state.parentUuid} action="display" />
@@ -89,7 +90,7 @@ export default class Address extends React.Component {
                 </CardBlock>
               </Card>
             </Col>
-          ))}     
+          ))}
           <Col sm="6"> 
               <div className="preffered">
               <CardBlock>

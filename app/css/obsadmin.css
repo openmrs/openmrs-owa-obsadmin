@@ -394,6 +394,9 @@ li#location.selected a{
   border: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
 }
+.borderless{
+    border: none !important;
+}
 
 .borderless{
     border: none !important;
@@ -809,4 +812,27 @@ input[type="radio"]{
     padding-top: 7px;
     margin-bottom: 0;
     text-align: left;
+}
+.fa-pencil-square-o{
+
+ float: right;
+}
+
+.add-btn {
+  font-size: 3rem !important;
+}
+
+.visitTable {
+  color: blue;
+  cursor:pointer;
+}
+
+.columnVisit{
+  color: blue;
+  cursor:pointer;
+}
+
+.columnType{
+  color: blue;
+  cursor:pointer;
 }

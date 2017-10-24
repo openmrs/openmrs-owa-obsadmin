@@ -21,11 +21,13 @@ import {
   CardText,
   Row,
   Col,
-  Table
+
 } from 'reactstrap';
 import classnames from 'classnames';
 import { withRouter } from 'react-router';
 import ReactTable from 'react-table';
+import matchSorter from 'match-sorter';
+
 
 export class VisitsAndEncounters extends React.Component {
   constructor(props) {
@@ -173,30 +175,85 @@ export class VisitsAndEncounters extends React.Component {
   return output.sort(compareEncountersByDate)
 }
 
-render() {
-  const columns = [{
-      id: 'type',
-      Header: 'Type',
-      accessor: rowProps => <a>{rowProps.encounter.slice(0, -10)}</a>,
+  getAllVisits() {
+    let data = {}
+    let output = []
+    this.state.visits.map((visit) => {
+        data["date"] = visit.startDatetime.split("T")[0]
+        data["visit"] = visit['display'].split("@")[0]
+        data["location"] = visit.location.display
+        data["visitUuid"] = visit.uuid
+        output.push(data)
+        data = []
+      })
+    return output
+  }
+  
+  render() {
+    const columns = [{
+        className:'columnType',
+        id: 'type',
+        Header: 'Type',
+        accessor: rowProps => rowProps.encounter.slice(0, -10),
+        filterMethod: (filter, rows) =>
+        matchSorter(rows, filter.value, { keys: ["type"] }),
+        filterAll: true
+      },
+      {
+        id: 'location',
+        Header: 'Location',
+        accessor: rowProps => rowProps.location,
+        filterMethod: (filter, rows) =>
+        matchSorter(rows, filter.value, { keys: ["location"] }),
+        filterAll: true
+      },
+      {
+        id: 'date',
+        Header: 'Date',
+        accessor: rowProps => rowProps.date.split("T")[0],
+        filterMethod: (filter, rows) =>
+        matchSorter(rows, filter.value, { keys: ["date"] }),
+        filterAll: true
+      },
+      {
+        className:'columnVisit',
+        id: 'visit',
+        Header: 'Visit',
+        accessor: rowProps => rowProps.visit,
+        filterMethod: (filter, rows) =>
+        matchSorter(rows, filter.value, { keys: ["visit"]}),
+        filterAll: true
+      }
+    ];
+
+    const columnsvisit = [{
+      id: 'date',
+      Header: 'Date',
+      accessor: rowProps => rowProps.date,
+      filterMethod: (filter, rows) =>
+      matchSorter(rows, filter.value, { keys: ["date"] }),
+      filterAll: true
+    },
+    {
+      className:"visitTable",
+      id: 'visit',
+      Header: 'Visit',
+      accessor: rowProps => rowProps.visit,
+      filterMethod: (filter, rows) =>
+      matchSorter(rows, filter.value, { keys: ["visit"] }),
+      filterAll: true
     },
     {
       id: 'location',
       Header: 'Location',
       accessor: rowProps => rowProps.location,
+      filterMethod: (filter, rows) =>
+      matchSorter(rows, filter.value, { keys: ["location"] }),
+      filterAll: true
     },
-    {
-      id: 'date',
-      Header: 'Date',
-      accessor: rowProps => rowProps.date.split("T")[0],
-    },
-    {
-      id: 'visit',
-      Header: 'Visit',
-      accessor: rowProps => <a>{rowProps.visit}</a>,
-    }
   ];
-  return(
-    <div>
+    return(
+      <div>
         <Nav tabs >
           <NavItem>
             <NavLink
@@ -217,39 +274,32 @@ render() {
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
+
             <Row>
               <Col sm="12">
-                <Table hover striped>
-                  <thead>
-                    <tr>
-                      <th className="thead">Date</th>
-                      <th className="thead">Visit</th>
-                      <th className="thead">Location</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.visits.map((visit) => {
-                      const showEncounter = this.state.showEncounters[visit.uuid]
-                      const endIndex = showEncounter ? showEncounter.length : 3;
-                      return (
-                        <tr id="custom-a-tag" key={visit.uuid} className="thead">
-                          <td className="thead">
-                            {visit.startDatetime.split("T")[0]}
-                          </td>
-                          <td className="thead"
-                              name="visituuid"
-                              onClick={() => this.handleVisitClick(visit.uuid)}
-                              value={visit.uuid}>
-                              <a>{visit.display.split("@")[0]}</a>
-                          </td>
-                          <td className="thead">{visit.location.display}</td>
-
-                        </tr>
-                      )
+              <ReactTable
+              className="-striped -highlight"
+              data={this.getAllVisits()}
+              filterable
+              defaultFilterMethod={(filter, coloums) =>
+                String(row[filter.id]) === filter.value}
+              pageSize= {this.getAllVisits().length}
+              columns={columnsvisit}
+              showPageSizeOptions={false}
+              getTdProps={(state, rowInfo, column, instance) => {
+                return {
+                  onClick: (e, handleOriginal) => {
+                    if(column.Header === "Visit"){
+                      this.handleVisitClick(rowInfo.original.visitUuid)
+                      if (handleOriginal) {
+                        handleOriginal()
+                      }
                     }
-                    )}
-                  </tbody>
-                </Table>
+
+                  }
+                }
+              }}
+            />
               </Col>
             </Row>
           </TabPane>
@@ -259,6 +309,9 @@ render() {
               <ReactTable
                 className="-striped -highlight"
                 data={this.getAllEncounters()}
+                filterable
+                defaultFilterMethod={(filter, coloums) =>
+                  String(row[filter.id]) === filter.value}
                 pageSize= {this.getAllEncounters().length}
                 columns={columns}
                 showPageSizeOptions={false}
