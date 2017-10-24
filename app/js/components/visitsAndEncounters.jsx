@@ -80,6 +80,7 @@ export class VisitsAndEncounters extends React.Component {
           .catch(error => toastr.error(error));
       })
       .catch(error => toastr.error(error));
+    this.handleEncountersWithNoVisits()
   }
 
   handleData(data) {
@@ -151,34 +152,51 @@ export class VisitsAndEncounters extends React.Component {
         output.push(data)
         data = []
       })
+    });
+    this.state.encountersWithNoVisits.map((encounter) => {
+      data["location"] = encounter.location.display
+      data["date"] = encounter.encounterDatetime
+      data["encounter"] = encounter.display
+      data["encounterUuid"] = encounter.uuid
+      output.push(data)
+      data = []
     })
-    return output
-  }
 
-  render() {
-    const columns = [{
-        id: 'type',
-        Header: 'Type',
-        accessor: rowProps => <a>{rowProps.encounter.slice(0, -10)}</a>,
-      },
-      {
-        id: 'location',
-        Header: 'Location',
-        accessor: rowProps => rowProps.location,
-      },
-      {
-        id: 'date',
-        Header: 'Date',
-        accessor: rowProps => rowProps.date.split("T")[0],
-      },
-      {
-        id: 'visit',
-        Header: 'Visit',
-        accessor: rowProps => <a>{rowProps.visit}</a>,
-      }
-    ];
-    return(
-      <div>
+    function compareEncountersByDate(firstEncounter, secondEncounter) {
+      if(secondEncounter.date > firstEncounter.date)
+        return 1;
+      if(secondEncounter.date < firstEncounter.date)
+        return -1;
+      return 0;
+    }
+
+  return output.sort(compareEncountersByDate)
+}
+
+render() {
+  const columns = [{
+      id: 'type',
+      Header: 'Type',
+      accessor: rowProps => <a>{rowProps.encounter.slice(0, -10)}</a>,
+    },
+    {
+      id: 'location',
+      Header: 'Location',
+      accessor: rowProps => rowProps.location,
+    },
+    {
+      id: 'date',
+      Header: 'Date',
+      accessor: rowProps => rowProps.date.split("T")[0],
+    },
+    {
+      id: 'visit',
+      Header: 'Visit',
+      accessor: rowProps => <a>{rowProps.visit}</a>,
+    }
+  ];
+  return(
+    <div>
         <Nav tabs >
           <NavItem>
             <NavLink
@@ -246,8 +264,8 @@ export class VisitsAndEncounters extends React.Component {
                 showPageSizeOptions={false}
                 getTdProps={(state, rowInfo, column, instance) => {
                   return {
-                    onClick: (e, handleOriginal) => {
-                      if(column.Header === "Visit"){
+                    onClick: (event, handleOriginal) => {
+                      if(column.Header === "Visit" && row.original.visit){
                         this.handleVisitClick(rowInfo.original.visitUuid)
                         if (handleOriginal) {
                           handleOriginal()
@@ -269,8 +287,8 @@ export class VisitsAndEncounters extends React.Component {
 
         </TabContent>
       </div>
-    )
-  }
+  )
+}
 }
 
 export default withRouter(VisitsAndEncounters);
