@@ -233,21 +233,22 @@ class Name extends React.Component {
                   />
                 </div>
               </div>
+              <div id="buttons">
+                <Button
+                  type='button'
+                  name='cancel'
+                  className="btn-danger"
+                  onClick={this.handleCancel}
+                >Cancel</Button>
+                <Button color="primary"
+                  type='submit'
+                  name='update'
+                  className='btn-success'
+                  onClick={this.handleSave}
+                >Save</Button>{' '}
+              </div>
             </form>
           </ModalBody>
-          <ModalFooter>
-            <Button color="primary"
-              type='submit'
-              name='update'
-              className='btn-success'
-              onClick={this.handleSave}
-            >Save</Button>{' '}
-            <Button color="secondary"
-              type='button'
-              name='cancel'
-              onClick={this.handleCancel}
-            >Cancel</Button>
-          </ModalFooter>
         </Modal>
       </div>
     );

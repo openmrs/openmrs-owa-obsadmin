@@ -490,15 +490,18 @@ li#location.selected a{
   box-shadow: none;
 }
 
+.full-size{
+  width: 100%;
+}
+
 
 .viewCard{
   width: 22%;
   height: 5.5em;
   max-height: 40%;
   float:left;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-  margin-top: 1%;
-  margin-left: 2%;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  margin: 10px 15px 10px 15px;
   text-align: auto;
   align-items: left;
   padding: .5%;
@@ -836,4 +839,3 @@ input[type="radio"]{
   color: blue;
   cursor:pointer;
 }
-

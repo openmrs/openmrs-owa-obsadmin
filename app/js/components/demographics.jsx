@@ -399,18 +399,21 @@ export default class Demographics extends React.Component {
                       />
                     </div>
                   </div>
+                  <div className="footer-buttons">
+                    <div id="buttons">
+                      <Button
+                        className="btn-danger"
+                        onClick={this.toggle}>Cancel
+                      </Button>
+                      <Button color="primary"
+                        type='submit'
+                        className='btn-success'
+                        onClick={this.handleSave}
+                      >Save</Button>{' '}
+                    </div>
+                  </div>
                 </form>
               </ModalBody>
-              <ModalFooter>
-                <Button color="primary"
-                  type='submit'
-                  className='btn-success'
-                  onClick={this.handleSave}
-                >Save</Button>{' '}
-                <Button color="secondary"
-                  onClick={this.toggle}>Cancel
-                </Button>
-              </ModalFooter>
             </Modal>
           </form>
         </div>
