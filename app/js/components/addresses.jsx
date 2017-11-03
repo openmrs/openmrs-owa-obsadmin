@@ -16,7 +16,6 @@ import {
 import apiCall from '../utilities/apiHelper';
 import AddressForm from './subAddress/addressForm';
 
-
 export default class Address extends React.Component {
   constructor(props) {
     super(props);

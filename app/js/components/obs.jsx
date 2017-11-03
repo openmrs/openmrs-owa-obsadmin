@@ -396,20 +396,6 @@ export default class Obs extends React.Component {
         }
         <div className="section top">
           <div className="col-sm-12 section search">
-            <div className="form-group">
-              <div className="col-sm-1">
-                <span onClick={this.goHome} className="glyphicon glyphicon-home
-                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
-                  Home
-                </span>
-              </div>
-              <div className="col-sm-1">
-                <span onClick={this.goToEncounter} className="glyphicon glyphicon-step-backward
-                  glyphicon-updated breadcrumb-item pointer" aria-hidden="true">
-                  Back
-                </span>
-              </div>
-            </div>
             <p />
             <header className="encounter-header">
               Observation
