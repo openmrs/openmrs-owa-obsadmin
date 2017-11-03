@@ -16,7 +16,6 @@ import Name from './components/names'
 import ManageVisit from './components/manageVisit'
 import Encounters from './components/encounters/encountersParent';
 import Observations from './components/obs';
-
 export default () => {
   return (
     <Route path="/" component={App}>
