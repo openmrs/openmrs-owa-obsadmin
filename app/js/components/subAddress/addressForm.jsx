@@ -288,26 +288,30 @@ export default class AddressForm extends React.Component {
                   </div>
                   {this.state.action === "edit" ?
                     <div className="form-group">
-                      <div className="col-sm-4">
-                        <button type="button" name="cancel" onClick={this.cancelClick}
-                          className="btn btn-danger form-control cancelBtn">Cancel</button>
-                      </div>
-                      <div className="col-sm-4">
-                        <button type="button" name="update" onClick={(e) => this.update(e, this.state.uuid)}
-                          className="btn btn-success form-control">Update</button>
+                      <div id="buttons">
+                        <div className="col-sm-4">
+                          <button type="button" name="cancel" onClick={this.cancelClick}
+                            className="btn btn-danger form-control cancelBtn">Cancel</button>
+                        </div>
+                        <div className="col-sm-4">
+                          <button type="button" name="update" onClick={(e) => this.update(e, this.state.uuid)}
+                            className="btn btn-success form-control">Update</button>
+                        </div>
                       </div>
                     </div>
                     : ''
                   }
                   {this.state.action === "new" ?
                     <div className="form-group">
-                      <div className="col-sm-4">
-                        <button type="button" name="reset" onClick={this.cancelClick}
-                          className="btn btn-danger form-control cancelBtn">Cancel</button>
-                      </div>
-                      <div className="col-sm-4">
-                        <button type="button" name="save" onClick={this.save}
-                          className="btn btn-success form-control">Save</button>
+                      <div id="buttons">
+                          <div className="col-sm-4">
+                            <button type="button" name="reset" onClick={this.cancelClick}
+                              className="btn btn-danger form-control cancelBtn">Cancel</button>
+                          </div>
+                          <div className="col-sm-4">
+                            <button type="button" name="save" onClick={this.save}
+                              className="btn btn-success form-control">Save</button>
+                          </div>
                       </div>
                     </div>
                     : ''
@@ -339,8 +343,8 @@ export default class AddressForm extends React.Component {
             <div className="col-sm-4">
               <button type="button" name="delete" data-toggle="modal"
                 data-target="#myModal" className="btn btn-default form-control cancelBtn">
-                Delete
-            </button>
+                  Delete
+              </button>
             </div>
           </div>
           : ''
