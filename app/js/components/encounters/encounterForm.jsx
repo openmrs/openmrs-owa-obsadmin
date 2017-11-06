@@ -239,9 +239,24 @@ const Encounter = (props) => {
             </div>
           </div>
         }
+        </form>
+        <div className="form-group row">
+         <div id="button" className="col-sm-2">
+            <button
+              type="button"
+              name="cancel"
+              onClick={
+                (editable || voided || moveEncounter)
+                  ? props.handleCancel
+                  : props.handleDelete}
+              className="btn btn-danger form-control cancelBtn"
+              disabled={(voided === true)}
+            >
+              {(editable || voided || moveEncounter) ? 'Cancel' : 'Delete'}
+            </button>
+          </div>
 
-        <div id="button" className="form-group row">
-          <div className="col-sm-3">
+          <div id="button" className="col-sm-2">
             {moveEncounter &&
               <button
                 type="button"
@@ -275,23 +290,7 @@ const Encounter = (props) => {
                 Edit</button>
             }
           </div>
-
-          <div id="button" className="col-sm-3">
-            <button
-              type="button"
-              name="cancel"
-              onClick={
-                (editable || voided || moveEncounter)
-                  ? props.handleCancel
-                  : props.handleDelete}
-              className="btn btn-danger form-control cancelBtn"
-              disabled={(voided === true)}
-            >
-              {(editable || voided || moveEncounter) ? 'Cancel' : 'Delete'}
-            </button>
-          </div>
         </div>
-      </form>
 
       <div className="modal fade" id="myModal" role="dialog">
         <div className="modal-dialog">
@@ -314,7 +313,15 @@ const Encounter = (props) => {
               }
             </div>
             <div className="modal-footer">
-              <div className="col-sm-4">
+              <div id="button" className="col-sm-3">
+                <button
+                  type="button"
+                  className="btn btn-danger form-control cancelBtn"
+                  data-dismiss="modal"
+                >Close
+                </button>
+              </div>
+              <div id="button" className="col-sm-3">
                 <button
                   type="button"
                   className="btn btn-success form-control"
@@ -324,14 +331,6 @@ const Encounter = (props) => {
                       : (e => props.handleUpdateCurrentPatient(e))}
                   data-dismiss="modal"
                 >Confirm
-                </button>
-              </div>
-              <div className="col-sm-4">
-                <button
-                  type="button"
-                  className="btn btn-danger form-control cancelBtn"
-                  data-dismiss="modal"
-                >Close
                 </button>
               </div>
             </div>

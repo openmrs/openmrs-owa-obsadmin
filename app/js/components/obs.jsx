@@ -26,6 +26,7 @@ export default class Obs extends React.Component {
         concept: '',
         comment: 'comment',
         encounterUuid: '',
+        voided: false
       },
       conceptOptions: [],
       conceptSelected: [],
@@ -51,16 +52,17 @@ export default class Obs extends React.Component {
     this.changeValue = this.changeValue.bind(this);
     this.delete = this.delete.bind(this);
     this.update = this.update.bind(this);
+    this.restore = this.restore.bind(this);
   }
 
   componentDidMount() {
     this.state.uuid = this.props.params.obsId;
-    if(this.state.uuid) {
+    if (this.state.uuid) {
       apiCall(null, 'get', '/location')
         .then((result) => {
           apiCall(null, 'get', `/obs/${this.state.uuid}`)
             .then((response) => {
-              if(response) {
+              if (response) {
                 const obs = {
                   person: response.person.display
                     .substr(response.person.display.indexOf('-') + 1).trim() || '',
@@ -72,6 +74,7 @@ export default class Obs extends React.Component {
                   conceptUuid: response.concept.uuid || '',
                   comment: response.comment || '',
                   encounterUuid: response.encounter.uuid,
+                  voided: response.voided,
                 }
                 this.setState({
                   obs,
@@ -80,7 +83,7 @@ export default class Obs extends React.Component {
                   value: this.getValue(response.value) || '',
                   locations: result.results,
                 });
-                if(this.state.obs.conceptUuid) {
+                if (this.state.obs.conceptUuid) {
                   this.loadConcepts();
                 }
               }
@@ -101,17 +104,27 @@ export default class Obs extends React.Component {
     apiCall(null, 'delete', `obs/${this.state.uuid}`)
       .then((result) => {
         toastr.options.closeButton = true;
-        toastr.success('Deleted successfully');
-        this.goToEncounter();
+        this.setState((prevState) => {
+          prevState.obs.voided = true;
+        })
       })
       .catch(error => toastr.error(error));
   }
 
+  restore() {
+    apiCall({ "voided": false }, 'post', `/obs/${this.state.uuid}`)
+      .then((response) => {
+        this.setState((prevState) => {
+          prevState.obs.voided = false;
+        });
+      })
+  }
+
   getValue(value) {
-    if(value === null || undefined) return '';
-    if(typeof value === 'string' || typeof value === 'number') return value;
-    if(typeof value === 'object') {
-      if(value.display) {
+    if (value === null || undefined) return '';
+    if (typeof value === 'string' || typeof value === 'number') return value;
+    if (typeof value === 'object') {
+      if (value.display) {
         return value.display;
       } else {
         return '';
@@ -132,7 +145,7 @@ export default class Obs extends React.Component {
   handleChange(event) {
     let name;
     let value;
-    if(event.target) {
+    if (event.target) {
       name = event.target.name;
       value = event.target.value;
     } else {
@@ -141,7 +154,7 @@ export default class Obs extends React.Component {
     }
     const newEditValues = this.state.editValues;
     newEditValues[name] = value;
-    if(name === "value") {
+    if (name === "value") {
       this.setState({ value, editValues: newEditValues, });
     } else {
       const newObs = this.state.obs;
@@ -160,9 +173,9 @@ export default class Obs extends React.Component {
   }
 
   conceptOnChange(selected) {
-    if(selected.length > 0) {
+    if (selected.length > 0) {
       let filtteredConceptData = [];
-      if(selected[0].answers) {
+      if (selected[0].answers) {
         let newEditValues = this.state.editValues;
         newEditValues.concept = selected[0].uuid;
         delete newEditValues.value;
@@ -174,7 +187,7 @@ export default class Obs extends React.Component {
           return conceptData;
         });
         const newData = selected[0];
-        if(typeof newData === 'object') {
+        if (typeof newData === 'object') {
           newData.answers = filtteredConceptData;
         }
         this.setState({
@@ -195,17 +208,18 @@ export default class Obs extends React.Component {
   }
 
   renderInput(disabled) {
-    return(<input type="text" name="value" disabled={disabled}
-                  onChange={this.handleChange}
-                  className="form-control bootstrap-typeahead-input-main"
-                  value={this.state.value}
-              />);
+    return (<input type="text" name="value" disabled={disabled}
+      onChange={this.handleChange}
+      className="form-control bootstrap-typeahead-input-main"
+      value={this.state.value}
+      disabled={this.state.obs.voided}
+    />);
   }
 
   renderValue() {
     let valueType = this.state.selectedConceptData;
-    if(valueType !== undefined) {
-      if(valueType.datatype !== undefined) {
+    if (valueType !== undefined) {
+      if (valueType.datatype !== undefined) {
         valueType = valueType.datatype;
         valueType = valueType.name ? valueType.name : null;
       } else {
@@ -214,7 +228,7 @@ export default class Obs extends React.Component {
     } else {
       valueType = null;
     }
-    switch(valueType) {
+    switch (valueType) {
       case null:
         return this.renderInput(true)
       case "Text":
@@ -224,44 +238,44 @@ export default class Obs extends React.Component {
       case "Datetime":
       case "Date":
       case "Time":
-        return(<DatePicker
-                dateFormat="DD-MM-YYYY"
-                className="form-control"
-                showClearButton={false}
-                onChange={this.handleChange}
-                name="value"
-                value={this.state.value}
-                onInvalid={this.handleInvalidDate}
-               />);
+        return (<DatePicker
+          dateFormat="DD-MM-YYYY"
+          className="form-control"
+          showClearButton={false}
+          onChange={this.handleChange}
+          name="value"
+          value={this.state.value}
+          onInvalid={this.handleInvalidDate}
+        />);
       case "Boolean":
-        return(<select
-                className="form-control"
-                name="value"
-                value={this.value}
-                onChange={this.handleChange}
-               >
-                <option value="">Select option</option>
-                <option value="false">false</option>
-                <option value="true">true</option>
-              </select>);
+        return (<select
+          className="form-control"
+          name="value"
+          value={this.value}
+          onChange={this.handleChange}
+        >
+          <option value="">Select option</option>
+          <option value="false">false</option>
+          <option value="true">true</option>
+        </select>);
       default:
-        if(this.state.selectedConceptData.answers) {
+        if (this.state.selectedConceptData.answers) {
 
-          if(this.state.selectedConceptData.answers.length > 0) {
+          if (this.state.selectedConceptData.answers.length > 0) {
             const values = this.state.selectedConceptData.answers;
             values.push({ display: 'Select option', uuid: '' });
-            return(<select
-                      className="form-control"
-                      name="value"
-                      onChange={this.changeValue}
-                    >
-                      {
-                        values.map((option, key) => (
-                          <option  selected={option.display === this.state.value? true:false}
-                          value={`${option.uuid}///${option.display}`}>{option.display}</option>
-                        ))
-                      }
-                    </select>
+            return (<select
+              className="form-control"
+              name="value"
+              onChange={this.changeValue}
+            >
+              {
+                values.map((option, key) => (
+                  <option selected={option.display === this.state.value ? true : false}
+                    value={`${option.uuid}///${option.display}`}>{option.display}</option>
+                ))
+              }
+            </select>
 
             );
           } else {
@@ -280,8 +294,8 @@ export default class Obs extends React.Component {
     let allConcepts = [];
     apiCall(null, 'get', url)
       .then((response) => {
-        if(response.results) {
-          if(response.results.length > 0) {
+        if (response.results) {
+          if (response.results.length > 0) {
             allConcepts = response.results.map(concept => {
               const description = concept.descriptions.filter(des =>
                 des.locale == 'en' ? des.description : '');
@@ -300,7 +314,7 @@ export default class Obs extends React.Component {
           }
           this.setState(Object.assign({}, this.state, { conceptOptions: allConcepts }));
         } else {
-          if(response) {
+          if (response) {
             const conceptData = {
               uuid: response.uuid,
               units: response.units || '',
@@ -323,17 +337,17 @@ export default class Obs extends React.Component {
       answerError: '',
       questionError: ''
     })
-    if(!this.refs.typeahead.state.query) {
+    if (!this.refs.typeahead.state.query) {
       this.setState({ questionError: "Question can not be empty" })
     }
-    if(!this.state.value) {
+    if (!this.state.value) {
       this.setState({ answerError: "Answer can not be empty " })
     }
-    if(!this.state.answerError && !this.state.questionError) {
-      if(Object.keys(this.state.editValues).length > 0) {
+    if (!this.state.answerError && !this.state.questionError) {
+      if (Object.keys(this.state.editValues).length > 0) {
         apiCall(this.state.editValues, 'post', `obs/${this.state.uuid}`)
           .then((response) => {
-            if(response.error) {
+            if (response.error) {
               const err = response.error.message ?
                 response.error.message : response.error;
             } else {
@@ -361,7 +375,7 @@ export default class Obs extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div>
         {
           <div className="modal fade" id="myModal" role="dialog">
@@ -369,16 +383,16 @@ export default class Obs extends React.Component {
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Confirm Delete</h4>
+                  <h4 className="modal-title">{!this.state.obs.voided ? 'Confirm Delete' : 'Restore Observation'}</h4>
                 </div>
                 <div className="modal-body">
-                  <p> Are you sure you want to Delete this Observation?</p>
+                  <p>Are you sure you want to {!this.state.obs.voided ? 'Delete' : 'Restore'} this Observation?</p>
                 </div>
                 <div className="modal-footer">
                   <div className="col-sm-6">
                     <button
                       type="button" className="btn btn-success form-control"
-                      onClick={this.delete}
+                      onClick={!this.state.obs.voided ? this.delete : this.restore}
                       data-dismiss="modal"
                     >
                       Confirm
@@ -401,6 +415,11 @@ export default class Obs extends React.Component {
               Observation
             </header>
             <div>
+              {this.state.obs.voided &&
+                <div className="deleted">
+                  <span className="badge badge-error">Deleted</span>
+                </div>
+              }
               <form className="form-horizontal">
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Person:</label>
@@ -435,6 +454,7 @@ export default class Obs extends React.Component {
                       className="form-control"
                       name="location"
                       onChange={this.handleChange}
+                      disabled={this.state.obs.voided}
                     >
                       {
                         this.state.locations.map((location, key) => (
@@ -460,41 +480,42 @@ export default class Obs extends React.Component {
                   </div>
                 </div>
                 <div className="form-group ">
-                <div className={this.state.questionError ? 'has-error':''}>
-                  <label className="control-label col-sm-3">Concept Question:</label>
-                  <div className="col-sm-7">
-                    <AsyncTypeahead
-                      ref="typeahead"
-                      name="concept"
-                      labelKey="name"
-                      className="form-control bootstrap-typeahead-input-main"
-                      options={this.state.conceptOptions}
-                      onSearch={this.loadConcepts}
-                      selected={this.state.conceptSelected}
-                      onChange={this.conceptOnChange}
-                    />
-                  </div>
+                  <div className={this.state.questionError ? 'has-error' : ''}>
+                    <label className="control-label col-sm-3">Concept Question:</label>
+                    <div className="col-sm-7">
+                      <AsyncTypeahead
+                        ref="typeahead"
+                        name="concept"
+                        labelKey="name"
+                        className="form-control bootstrap-typeahead-input-main"
+                        options={this.state.conceptOptions}
+                        onSearch={this.loadConcepts}
+                        selected={this.state.conceptSelected}
+                        onChange={this.conceptOnChange}
+                        disabled={this.state.obs.voided}
+                      />
+                    </div>
                   </div>
                 </div>
                 {
                   this.state.questionError &&
                   <div className='col-sm-offset-3 obs-err-msg'>
-                      { this.state.questionError }
+                    {this.state.questionError}
                   </div>
                 }
                 <div className="form-group ">
-                  <div className={this.state.answerError ? 'has-error':''}>
-                  <label className="control-label col-sm-3">Answer Concept:</label>
-                  <div className="col-sm-7">
-                    {this.renderValue()}
+                  <div className={this.state.answerError ? 'has-error' : ''}>
+                    <label className="control-label col-sm-3">Answer Concept:</label>
+                    <div className="col-sm-7">
+                      {this.renderValue()}
+                    </div>
                   </div>
-                </div>
                 </div>
                 {
                   this.state.answerError &&
-                    <div className='col-sm-offset-3 obs-err-msg'>
-                      { this.state.answerError }
-                    </div>
+                  <div className='col-sm-offset-3 obs-err-msg'>
+                    {this.state.answerError}
+                  </div>
                 }
                 <div className="form-group ">
                   <label className="control-label col-sm-3">Comment:</label>
@@ -504,21 +525,47 @@ export default class Obs extends React.Component {
                       name="comment"
                       className="form-control bootstrap-typeahead-input-main"
                       value={this.state.obs.comment}
+                      disabled={this.state.obs.voided}
                     />
                   </div>
                 </div>
                 <div className="form-group">
-                  <div className="col-sm-offset-3 col-sm-3">
-                    <button type="button" name="update" onClick={this.update}
-                      className="btn btn-success form-control">Update</button>
-                  </div>
-                  <div className="col-sm-3">
-                    <button type="button" name="delete" data-toggle="modal"
-                            data-target="#myModal"
-                            className="btn btn-default form-control cancelBtn">
+                  <div id="button" className="col-sm-2">
+                    <button
+                      type="button"
+                      name="delete"
+                      data-toggle="modal"
+                      data-target="#myModal"
+                      className="btn  btn-danger form-control cancelBtn"
+                      disabled={this.state.obs.voided}
+                    >
                       Delete
                     </button>
                   </div>
+                  {this.state.obs.voided &&
+                    <div id="button" className="col-sm-2">
+                      <button
+                        type="button"
+                        name="delete"
+                        data-toggle="modal"
+                        data-target="#myModal"
+                        className="btn btn-success form-control"
+                      >
+                        Restore
+                    </button>
+                    </div>
+                  }
+                  {!this.state.obs.voided &&
+                    <div id="button" className="col-sm-2">
+                      <button
+                        type="button"
+                        name="update"
+                        onClick={this.update}
+                        className="btn btn-success form-control"
+                        disabled={this.state.obs.voided}
+                      >Update</button>
+                    </div>
+                  }
                 </div>
               </form>
             </div>
