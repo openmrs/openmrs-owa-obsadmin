@@ -20,6 +20,7 @@ export default class Encounters extends React.Component {
       encounterUuid: props.params.encounterId,
       patientUuid: props.params.patentId,
       encounterData: {},
+      observations: [],
       locationArray: [],
       visitArray: [],
       encounterRoles: [],
@@ -88,6 +89,14 @@ export default class Encounters extends React.Component {
             visit: response.visit ? response.visit.uuid : null,
           }),
         });
+      })
+      .catch(error => toastr.error(error));
+
+    apiCall(null, 'get', `obs?encounter=${id}&includeAll=true&v=full`)
+      .then((response) => {
+        this.setState({
+          observations: response.results,
+        })
       })
       .catch(error => toastr.error(error));
   }
@@ -276,7 +285,7 @@ export default class Encounters extends React.Component {
 
   handleCreateNewEncounter() {
     const { encounterData, editValues, newPatientUuid, encounterUuid } = this.state;
-    const observationsUuids = encounterData.obs && encounterData.obs.map(obs => ({ uuid: obs.uuid }));
+    const observations = encounterData.obs;
     const providersUuids = encounterData.encounterProviders.map(provider => (
       {
         provider: provider.provider.uuid,
@@ -298,13 +307,52 @@ export default class Encounters extends React.Component {
           this.setState({ editErrors: { error: response.error.fieldErrors.encounterDatetime[0].message } });
         } else {
           this.setState({ newPatientEncounterUuid: response.uuid });
-          apiCall({
-            obs: observationsUuids,
-          }, 'post', `encounter/${response.uuid}`)
-            .then((res) => {
-              (res.error) ? toastr.error(res.error.message) && this.fetchEncounterData(this.state.encounterUuid) : this.handleDelete();
-            })
-            .catch(error => toastr.error(error.message) && this.fetchEncounterData(this.state.encounterUuid));
+          observations.map((observation) => {
+            const groupMembers = (observation.groupMembers !== null) ?
+              observation.groupMembers.map(groupMember => {
+                const groupMemberObject = {
+                  concept: groupMember.concept.uuid,
+                  encounter: response.uuid,
+                  value: groupMember.value.uuid,
+                  obsDatetime: groupMember.obsDatetime,
+                  person: newPatientUuid,
+                  location: groupMember.location.uuid,
+                  comment: groupMember.comment,
+                  accessionNumber: groupMember.accessionNumber,
+                  valueCodedName: groupMember.valueCodedName,
+                  valueModifier: groupMember.valueModifier,
+                  voided: groupMember.voided,
+                  groupMembers: []
+                }
+                return groupMemberObject
+              })
+              : null
+
+            apiCall({
+              "person": newPatientUuid,
+              "obsDatetime": observation.obsDatetime,
+              "concept": observation.concept && observation.concept.uuid,
+              "location": observation.location && observation.location.uuid,
+              "order": observation.order && observation.order.uuid,
+              "encounter": response.uuid,
+              "accessionNumber": observation.accessionNumber,
+              "groupMembers": groupMembers,
+              "valueCodedName": observation.valueCodedName,
+              "comment": observation.comment,
+              "voided": false,
+              "value": observation.value,
+              "valueModifier": observation.valueModifier,
+              "formFieldPath": observation.formFieldPath,
+              "formFieldNamespace": observation.formFieldNamespace
+            }, 'post', 'obs')
+              .then((res) => {
+                (res.error) ?
+                  toastr.error(res.error.message)
+                  : '';
+              })
+              .catch(error => toastr.error(error.message))
+          })
+          this.handleDelete()
         }
       })
       .catch(error => toastr.error(error.message) && this.fetchEncounterData(this.state.encounterUuid));

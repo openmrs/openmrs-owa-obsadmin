@@ -58,6 +58,16 @@ const Providers = (props) => {
       <div className="form-group row">
         <div id="button" className="col-sm-2">
           <button
+            type="button"
+            name="delete"
+            onClick={props.removeProvider}
+            disabled={!isChecked || voided === true}
+            className="btn btn-danger form-control cancelBtn"
+          >
+            Remove</button>
+        </div>
+        <div id="button" className="col-sm-2">
+          <button
             data-toggle="modal"
             data-target="#exampleModal"
             type="submit"
@@ -67,18 +77,8 @@ const Providers = (props) => {
           >
             Add Provider</button>
         </div>
-
-        <div id="button" className="col-sm-2">
-          <button
-            type="button"
-            name="delete"
-            onClick={props.removeProvider}
-            disabled={!isChecked || voided === true}
-            className="btn btn-danger form-control cancelBtn"
-          >
-            Remove</button>
-        </div>
       </div>
+
       <div
         className="modal fade"
         id="exampleModal"
@@ -150,20 +150,20 @@ const Providers = (props) => {
               </form>
             </div>
             <div className="modal-footer">
-              <div className="col-sm-4">
-                <button
-                  type="button"
-                  className="btn btn-success form-control"
-                  data-dismiss="modal"
-                  onClick={props.saveNewProvider}
-                >Save changes</button>
-              </div>
-              <div className="col-sm-4">
+              <div id="button" className="col-sm-3">
                 <button
                   type="button"
                   className="btn btn-danger form-control cancelBtn"
                   data-dismiss="modal"
                 >Close</button>
+              </div>
+              <div id="button" className="col-sm-3">
+                <button
+                  type="button"
+                  className="btn btn-success form-control"
+                  data-dismiss="modal"
+                  onClick={props.saveNewProvider}
+                >Save </button>
               </div>
             </div>
           </div>

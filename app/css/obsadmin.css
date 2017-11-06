@@ -627,7 +627,7 @@ a{
 }
 
 #button{
-  margin-left: 20%;
+  margin-left: 25%;
 }
 
 .custom-label{
@@ -838,4 +838,7 @@ input[type="radio"]{
 .columnType{
   color: blue;
   cursor:pointer;
+}
+.deletedObs{
+  text-decoration: line-through;
 }

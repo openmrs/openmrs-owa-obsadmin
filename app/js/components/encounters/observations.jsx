@@ -15,34 +15,60 @@ export default class Observations extends React.Component {
     super(props);
     this.state = {
       activeTab: '1',
-      voidedObs: [],
-      unVoidedObs: [],
       observations: [],
       encounterType: undefined,
+      deletedChecked: false,
     };
+    this.showDeletedObs = this.showDeletedObs.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     const { obs, encounterType } = nextProps.stateData.encounterData;
-    const voidedObs = [];
-    const unVoidedObs = [];
     this.setState({
-      observations: nextProps.stateData.encounterData.obs,
+      observations: nextProps.stateData.observations,
       encounterType
-    }, () => {
-      this.state.observations && this.state.observations.map(observation => (
-        (observation.voided) ? voidedObs.push(observation)
-          : unVoidedObs.push(observation)
-      ));
-      this.setState({
-        voidedObs,
-        unVoidedObs
-      })
-    });
+    })
+  }
+
+  showDeletedObs() {
+    this.setState({
+      deletedChecked: !this.state.deletedChecked
+    })
   }
 
   render() {
-    const { voidedObs, unVoidedObs, encounterType } = this.state;
+    const { observations, encounterType, deletedChecked } = this.state;
+    const encounterVoided = this.props.stateData.encounterData.voided;
+    const filteredObs = observations && observations.filter((observation) => {
+      if (deletedChecked) {
+        return observation;
+      } else {
+        return !observation.voided;
+      }
+    });
+    const isGroupMember = observation => !observation.obsGroup && observation.groupMember;
+    const visitNoteObs = filteredObs.reduce((observations, nextObs) => {
+      if (isGroupMember(nextObs)) {
+        if (!observations[nextObs.uuid]) {
+          observations[nextObs.uuid] = nextObs
+          observations[nextObs.uuid].groupMembers = {}
+        }
+        return observations;
+      }
+
+      if (nextObs.obsGroup) {
+        const parentUuid = nextObs.obsGroup.uuid
+        if (observations[parentUuid]) {
+          observations[parentUuid].groupMembers[nextObs.uuid] = nextObs
+        } else {
+          observations[parentUuid] = nextObs.obsGroup
+          observations[parentUuid].groupMembers = { [nextObs.uuid]: nextObs };
+        }
+      }
+      return observations;
+    }, {});
+
+    const visitNoteObsArray = Object.values(visitNoteObs);
     return (
       <div className="observation">
         <header className="encounter-header">
@@ -54,6 +80,9 @@ export default class Observations extends React.Component {
             name="voided"
             className="form-check-input"
             type="checkbox"
+            checked={this.state.deletedChecked}
+            onChange={this.showDeletedObs}
+            disabled={encounterVoided}
           /> Show Deleted
         </span>
 
@@ -68,20 +97,20 @@ export default class Observations extends React.Component {
             </thead>
             <tbody>
               {
-                unVoidedObs && unVoidedObs.length > 0 &&
-                unVoidedObs.map((ob) => (
-                  <tr>
+                filteredObs && filteredObs.length > 0 &&
+                filteredObs.map((observation) => (
+                  <tr className={(observation.voided) ? 'deletedObs' : ''}>
                     <a>
                       <td
                         onClick={
                           () => {
-                            this.props.handleObservationClick(ob.uuid);
+                            this.props.handleObservationClick(observation.uuid);
                           }}
-                      >{ob.concept.display}
+                      >{observation.concept.display}
                       </td>
                     </a>
-                    <td>{ob.value}</td>
-                    <td>{new Date(ob.obsDatetime).toString()}</td>
+                    <td>{observation.value}</td>
+                    <td>{new Date(observation.obsDatetime).toString()}</td>
                   </tr>
                 ))
               }
@@ -90,67 +119,74 @@ export default class Observations extends React.Component {
           :
           <div id="accordion" role="tablist" aria-multiselectable="true">
             {
-              unVoidedObs && unVoidedObs.length > 0 &&
-              unVoidedObs.map((ob, index) => (
-                ob.groupMembers !== null &&
-                <div className="card">
-                  <div
-                    className="card-header"
-                    role="tab"
-                    id={`heading${index}`}
-                  >
-                    <h5 className="mb-0">
-                      <a
-                        data-toggle="collapse"
-                        data-parent="#accordion"
-                        href={`#collapse${index}`}
-                        aria-expanded="true"
-                        aria-controls={`collapse${index}`} >
-                        {ob.display}{' '}
-                      </a>
-                      {new Date(ob.obsDatetime).toString()}
-                    </h5>
-                  </div>
+              visitNoteObsArray &&
+              visitNoteObsArray.length > 0 &&
+              visitNoteObsArray.map((observation, index) => {
+                const groupMembersArray = Object.values(observation.groupMembers);
+                return (
+                  <div className="card" >
+                    <div
+                      className="card-header"
+                      role="tab"
+                      id={`heading${index}`}
+                    >
+                      <h5 className="mb-0">
+                        <a
+                          data-toggle="collapse"
+                          data-parent="#accordion"
+                          href={`#collapse${index}`}
+                          aria-expanded="true"
+                          aria-controls={`collapse${index}`} >
+                          {observation.display}{' '}
+                        </a>
+                        {new Date(observation.obsDatetime).toString()}
+                      </h5>
+                    </div>
 
-                  <div
-                    id={`collapse${index}`}
-                    className="collapse"
-                    role="tabpanel"
-                    aria-labelledby={`heading${index}`}
-                    data-parent="#accordion"
-                  >
-                    <div className="card-block">
-                      <table className="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Question Concept</th>
-                            <th>Value</th>
-                            <th>Created</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(ob.groupMembers.map(observation => (
-                            <tr key={observation.uuid}>
-                              <a>
-                                <td
-                                  onClick={
-                                    () => {
-                                      this.props.handleObservationClick(observation.uuid);
-                                    }}
-                                >{observation.concept.display}
-                                </td>
-                              </a>
-                              <td>{observation.value.display}</td>
-                              <td>{new Date(observation.obsDatetime).toString()}</td>
+                    <div
+                      id={`collapse${index}`}
+                      className="collapse"
+                      role="tabpanel"
+                      aria-labelledby={`heading${index}`}
+                      data-parent="#accordion"
+                    >
+                      <div className="card-block">
+                        <table className="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Question Concept</th>
+                              <th>Value</th>
+                              <th>Created</th>
                             </tr>
-                          )))
-                          }
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {
+                              groupMembersArray.map(observation => {
+                                return (
+                                  <tr className={(observation.voided) ? 'deletedObs' : ''} key={observation.uuid}>
+                                    <a>
+                                      <td
+                                        onClick={
+                                          () => {
+                                            this.props.handleObservationClick(observation.uuid);
+                                          }}
+                                      >{observation.concept.display}
+                                      </td>
+                                    </a>
+                                    <td>{observation.value.display}</td>
+                                    <td>{new Date(observation.obsDatetime).toString()}</td>
+                                  </tr>
+                                )
+                              })
+                            }
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                )
+              }
+              )
             }
           </div>
         }
