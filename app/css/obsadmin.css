@@ -455,6 +455,7 @@ li#location.selected a{
   margin-top: -10px;
   padding-left: 10px;
   padding-right: 10px;
+  margin-left: 40%;
 }
 
 .deleted .badge-error {

@@ -70,7 +70,7 @@ export class VisitsAndEncounters extends React.Component {
   }
 
   componentDidMount() {
-    apiCall(null, 'get', `/visit?patient=${this.state.uuid}`)
+    apiCall(null, 'get', `/visit?patient=${this.state.uuid}&includeAll=true&v=full`)
       .then((res) => {
         let visits = res.results;
         const getVisits = visits.map(visit => apiCall(null, 'get', `/visit/${visit.uuid}`))

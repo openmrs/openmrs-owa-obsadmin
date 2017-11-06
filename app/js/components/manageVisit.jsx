@@ -158,118 +158,123 @@ export class ManageVisit extends React.Component {
         <header className="encounter-header">
           Manage Visit
         </header>
-        {this.state.voided &&
-          <div id="background">
-            <p id="bg-text">SOFT DELETED</p>
-          </div>
-        }
-        <form style={{ width: "" }} className="form-horizontal">
-          <div className="form-group ">
-          </div>
-          <div className="form-group ">
-            <label className="control-label col-sm-2"> Visit</label>
-            <div className="col-sm-6">
-              <input className="form-control"
-                disabled={true}
-                name="display"
-                type="text"
-                value={this.state.display}
-                onChange={this.handleChange}
-              />
+        <div>
+          {this.state.voided &&
+            <div id="deleted">
+              <span className="badge badge-error">Deleted</span>
             </div>
-          </div>
-
-          <div className="form-group ">
-            <label className="control-label col-sm-2">Patient Name </label>
-            <div className="col-sm-6">
-              <input className="form-control"
-                name="patientName"
-                type="text"
-                disabled={true}
-                value={this.state.patientName}
-                onChange={this.handleChange}
-              />
+          }
+          <form style={{ width: "" }} className="form-horizontal">
+            <div className="form-group ">
             </div>
-          </div>
-
-          <div className="form-group ">
-            <label className="control-label col-sm-2"> Location </label>
-            <div className="col-sm-6">
-              <select className="col-sm-6 form-control" name="locationName" value={this.state.locationName} onChange={this.handleChange}>
-                {
-                  this.state.location.map((onelocation) => (
-                    <option >{onelocation.display}</option>
-
-                  ))
-                }
-              </select>
-            </div>
-          </div>
-          <div className="form-group ">
-            <div className={editError.includes('Start') ? editErrorClass : ''}>
-              <label className="control-label col-sm-2"> Start Date </label>
+            <div className="form-group ">
+              <label className="control-label col-sm-2"> Visit</label>
               <div className="col-sm-6">
-                <DateTimeField
-                  inputProps={{ disabled: true }}
-                  className="form-control"
-                  name="finalStartTime"
-                  format={this.state.format}
-                  inputFormat={this.state.inputFormat}
-                  dateTime={this.state.startDatetime} onChange={this.handleTimeChange('finalStartTime')}
+                <input className="form-control"
+                  disabled={true}
+                  name="display"
+                  type="text"
+                  value={this.state.display}
+                  onChange={this.handleChange}
                 />
-                {(editError.includes("Start")) &&
-                  <div className="input">{editError}</div>}
               </div>
             </div>
 
-          </div>
-          <div className="form-group ">
-            <label className="control-label col-sm-2"> Stop Date </label>
-            <div className="col-sm-6">
-              <DateTimeField
-                className="form-control"
-                inputProps={{ disabled: true }}
-                name="finalStopDatetime"
-                format={this.state.format}
-                inputFormat={this.state.inputFormat}
-                dateTime={this.state.stopDatetime} onChange={this.handleTimeChange('finalStopDatetime')}
-              />
+            <div className="form-group ">
+              <label className="control-label col-sm-2">Patient Name </label>
+              <div className="col-sm-6">
+                <input className="form-control"
+                  name="patientName"
+                  type="text"
+                  disabled={true}
+                  value={this.state.patientName}
+                  onChange={this.handleChange}
+                />
+              </div>
             </div>
 
-          </div>
-          <div className="form-group ">
-            <label className="control-label col-sm-2"> Visit Type </label>
-            <div className="col-sm-6">
-              <select className="col-sm-6 form-control" name="visitTypeName" value={this.state.visitTypeName} onChange={this.handleChange}>
-                {
-                  this.state.visitType.map((namedVisitType) => (
-                    <option >{namedVisitType.display}</option>
+            <div className="form-group ">
+              <label className="control-label col-sm-2"> Location </label>
+              <div className="col-sm-6">
+                <select className="col-sm-6 form-control" name="locationName" value={this.state.locationName} onChange={this.handleChange}>
+                  {
+                    this.state.location.map((onelocation) => (
+                      <option >{onelocation.display}</option>
 
-                  ))
-                }
+                    ))
+                  }
+                </select>
+              </div>
+            </div>
+            <div className="form-group ">
+              <div className={editError.includes('Start') ? editErrorClass : ''}>
+                <label className="control-label col-sm-2"> Start Date </label>
+                <div className="col-sm-6">
+                  <DateTimeField
+                    inputProps={{ disabled: true }}
+                    className="form-control"
+                    name="finalStartTime"
+                    format={this.state.format}
+                    inputFormat={this.state.inputFormat}
+                    dateTime={this.state.startDatetime} onChange={this.handleTimeChange('finalStartTime')}
+                  />
+                  {(editError.includes("Start")) &&
+                    <div className="input">{editError}</div>}
+                </div>
+              </div>
 
-              </select>
             </div>
-          </div>
+            <div className="form-group ">
+              <label className="control-label col-sm-2"> Stop Date </label>
+              <div className="col-sm-6">
+                <DateTimeField
+                  className="form-control"
+                  inputProps={{ disabled: true }}
+                  name="finalStopDatetime"
+                  format={this.state.format}
+                  inputFormat={this.state.inputFormat}
+                  dateTime={this.state.stopDatetime} onChange={this.handleTimeChange('finalStopDatetime')}
+                />
+              </div>
 
-          <div className="form-group">
-            <label className="control-label col-sm-2"></label>
-            <div className="col-sm-2">
-              <button type="submit"
-                name="update"
-                onClick={this.handleSave}
-                className="btn btn-success form-control">
-                Save</button>
             </div>
-            <div className="col-sm-2">
-              <button type="button"
-                name="cancel"
-                onClick={this.handleDelete}
-                className="btn btn-danger form-control cancelBtn">
-                Delete</button>
+            <div className="form-group ">
+              <label className="control-label col-sm-2"> Visit Type </label>
+              <div className="col-sm-6">
+                <select className="col-sm-6 form-control" name="visitTypeName" value={this.state.visitTypeName} onChange={this.handleChange}>
+                  {
+                    this.state.visitType.map((namedVisitType) => (
+                      <option >{namedVisitType.display}</option>
+
+                    ))
+                  }
+
+                </select>
+              </div>
             </div>
-          </div>
-        </form>
+
+            <div className="form-group">
+              <label className="control-label col-sm-2"></label>
+              <div className="col-sm-2">
+                <button type="submit"
+                  name="update"
+                  onClick={this.handleSave}
+                  disabled={this.state.voided}
+                  className="btn btn-success form-control">
+                  
+                  Save</button>
+              </div>
+              <div className="col-sm-2">
+                <button type="button"
+                  name="cancel"
+                  onClick={this.handleDelete}
+                  disabled={this.state.voided}
+                  className="btn btn-danger form-control cancelBtn">
+                  Delete</button>
+              </div>
+            </div>
+          </form>
+        </div>
         <header className="encounter-header">
           Encounters
             </header>
