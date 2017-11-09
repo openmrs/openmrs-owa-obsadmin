@@ -10,6 +10,7 @@ import React from 'react';
 import {Modal} from 'react-bootstrap';
 import apiCall from '../../utilities/apiHelper';
 import NewIdentifier from './addIdentifier';
+import FontAwesome from'react-fontawesome';
 
 export default class Identifiers extends React.Component {
   constructor(props) {
@@ -286,7 +287,11 @@ export default class Identifiers extends React.Component {
                       {
                         id.preferred &&
                         <div className="preferred">
-                          <span className="badge badge-info">Preferred</span>
+                            <div>
+                                <span className="badge badge-info">Preferred</span>
+                                <FontAwesome className="fa fa-pencil-square-o" 
+                                             onClick={() => this.callEdit(index, id.uuid)}/>                  
+                            </div>
                         </div>
                       }
                       {(id.voided) ?
@@ -296,12 +301,7 @@ export default class Identifiers extends React.Component {
                             {this.state.activeCard !== index
                               ? id.identifier
                               : editIdentifiers.identifier || id.identifier}
-                            {<br />}
-                            {this.state.editState === false &&
-                              <a onClick={() => this.callEdit(index, id.uuid)}
-                              >Edit
-                            </a>
-                            }
+                            {<br />}                            
                           </p>
                         </del>
                         : <p>
@@ -309,12 +309,7 @@ export default class Identifiers extends React.Component {
                           {(this.state.activeCard !== index)
                             ? id.identifier
                             : editIdentifiers.identifier || id.identifier}
-                          {<br />}
-                          {this.state.editState === false &&
-                            <a onClick={() => this.callEdit(index, id.uuid)}
-                            >Edit
-                            </a>
-                          }
+                          {<br />} 
                         </p>
                       }
                     </div>

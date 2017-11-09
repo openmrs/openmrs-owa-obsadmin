@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'react-proptypes';
 import {Modal} from 'react-bootstrap';
 import apiCall from '../../utilities/apiHelper';
+import FontAwesome from'react-fontawesome';
 
 class NewIdentifier extends React.Component {
   constructor(props) {
@@ -145,12 +146,12 @@ class NewIdentifier extends React.Component {
         {!this.state.isNewIdentifier && !this.props.stateData.editState &&
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-2 btn-margin">
-              <button
-                type="addButton"
-                name="add"
-                onClick={this.handleAddNew}
-                className="btn btn-success form-control"
-              >Add</button>
+              <div >
+                    <FontAwesome 
+                     className="fa fa-plus-square-o add-btn"
+                     onClick={this.handleAddNew}
+                    />
+              </div>
             </div>
           </div>
         }
