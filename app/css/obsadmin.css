@@ -507,6 +507,8 @@ li#location.selected a{
   align-items: left;
   padding: .5%;
   border-radius:5%;
+  margin-bottom: 25px;
+  margin-right: 2%;
 }
 .demographicsCard {
    width: 23%;
@@ -514,7 +516,7 @@ li#location.selected a{
    max-height: 40%;
    float:left;
    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-   margin-left: 3%;
+   margin-left: 20%;
    margin-right: 2%;
    margin-bottom: 5%;
    text-align: auto;
@@ -781,6 +783,11 @@ li>a:hover {
 .fa-pencil-square-o{
 
  float: right;
+}
+
+.fa-trash-o{
+  float: right;
+  color: red !important;
 }
 
 .add-btn {

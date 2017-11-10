@@ -200,8 +200,12 @@ export default class AddressForm extends React.Component {
                         <span className="badge badge-no-color">&nbsp;</span>
                       }
                       {(this.state.action === "display" && this.state.secondryAction === "") ?
-                                <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
+                             <div>
+                               <FontAwesome className="fa fa-trash-o delete"
+                               data-toggle="modal" data-target="#myModal"/>
+                               <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
                                              className="fa fa-pencil-square-o"/>
+                             </div>
                               : ''
                      }
        </div>
@@ -333,23 +337,6 @@ export default class AddressForm extends React.Component {
             }
           </div>
         }
-
-        {(this.state.action === "display" && this.state.secondryAction === "") ?
-          <div className="form-group">
-            <div className="col-sm-3">
-              <button type="button" name="edit" onClick={(e) => this.editClick(e, this.state.uuid)}
-                className="btn btn-success form-control">Edit</button>
-            </div>
-            <div className="col-sm-4">
-              <button type="button" name="delete" data-toggle="modal"
-                data-target="#myModal" className="btn btn-default form-control cancelBtn">
-                  Delete
-              </button>
-            </div>
-          </div>
-          : ''
-        }
-
       </div>
     );
   }

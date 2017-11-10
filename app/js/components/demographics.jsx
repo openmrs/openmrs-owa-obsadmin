@@ -11,6 +11,7 @@ import apiCall from '../utilities/apiHelper';
 import DateTimeField from 'react-bootstrap-datetimepicker';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'react-bootstrap';
 import moment from 'moment';
+import FontAwesome from'react-fontawesome';
 
 export default class Demographics extends React.Component {
   constructor(props) {
@@ -221,7 +222,15 @@ export default class Demographics extends React.Component {
             <div className='form-group demo'>
               <label className='control-label col-sm-3'> DOB: </label>
               <div className='col-sm-9'>
-                <h5>{this.state.birthdate}</h5>
+                <div className='col-sm-6'>
+                  <h5>{this.state.birthdate}</h5>
+                </div>
+                <div>
+                <FontAwesome
+                 className="fa fa-pencil-square-o" 
+                 onClick={this.handleChange}
+                 />
+                </div>                            
               </div>
             </div>
             <div className='form-group demo'>
@@ -230,7 +239,6 @@ export default class Demographics extends React.Component {
                 : <label className='control-label col-sm-3'> Female </label>
               }
             </div>
-            <a onClick={this.handleChange}> Edit </a>
             <Modal show={this.state.showModal} toggle={this.toggle} className={this.props.className}>
               <ModalHeader toggle={this.toggle}>Edit Demographics</ModalHeader>
               <ModalBody>
