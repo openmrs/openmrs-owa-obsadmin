@@ -194,20 +194,20 @@ export default class AddressForm extends React.Component {
           </div>
         </div>
         <div className="preffered">
-                      {this.state.address.preferred ?
-                          <span className="badge badge-info">Preferred</span>
-                        :
-                        <span className="badge badge-no-color">&nbsp;</span>
-                      }
-                      {(this.state.action === "display" && this.state.secondryAction === "") ?
-                             <div>
-                               <FontAwesome className="fa fa-trash-o delete"
-                               data-toggle="modal" data-target="#myModal"/>
-                               <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
-                                             className="fa fa-pencil-square-o"/>
-                             </div>
-                              : ''
-                     }
+          {this.props.address.preferred ?
+             <span className="badge badge-info">Preferred</span>
+            :
+             <span className="badge badge-no-color">&nbsp;</span>
+          }
+          {(this.state.action === "display" && this.state.secondryAction === "") ?
+             <div>
+               <FontAwesome className="fa fa-trash-o delete"
+               data-toggle="modal" data-target="#myModal"/>
+               <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
+                             className="fa fa-pencil-square-o"/>
+             </div>
+                  : ''
+         }
        </div>
         {(this.state.action === 'edit' || this.state.action === 'new')
           && this.state.activeCard === this.state.uuid ?
