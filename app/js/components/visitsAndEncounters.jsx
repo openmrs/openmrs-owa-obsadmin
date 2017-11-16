@@ -27,7 +27,10 @@ import classnames from 'classnames';
 import { withRouter } from 'react-router';
 import ReactTable from 'react-table';
 import matchSorter from 'match-sorter';
-
+import moment from 'moment';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import BS from 'react-bootstrap';
+import jquery from 'jquery';
 
 export class VisitsAndEncounters extends React.Component {
   constructor(props) {
@@ -39,9 +42,19 @@ export class VisitsAndEncounters extends React.Component {
       showEncounters: {},
       encounterSource: "visit",
       encountersWithNoVisits: [],
-      activeTab: '1'
+      activeTab: '1',
+      ranges: {
+    'Today': [moment(), moment()],
+    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+    'This Month': [moment().startOf('month'), moment().endOf('month')],
+    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+  },
+      startDate: moment().subtract(9855, 'days'),
+      endDate: moment()
     };
-
+    this.handleEvent = this.handleEvent.bind(this)
     this.handleVisitClick = this.handleVisitClick.bind(this)
     this.handleShowMore = this.handleShowMore.bind(this)
     this.handleData = this.handleData.bind(this)
@@ -50,7 +63,15 @@ export class VisitsAndEncounters extends React.Component {
     this.handleEncountersWithVisits = this.handleEncountersWithVisits.bind(this)
     this.toggle = this.toggle.bind(this);
     this.getAllEncounters = this.getAllEncounters.bind(this);
+    this.onFiltersChange = this.onFiltersChange.bind(this);
+  }
 
+  handleEvent(event, picker) {
+    this.setState((prevState) => {
+      this.onFiltersChange(picker);
+			return { startDate: picker.startDate,
+      endDate: picker.endDate }
+    });
   }
 
   toggle(tab) {
@@ -188,8 +209,31 @@ export class VisitsAndEncounters extends React.Component {
       })
     return output
   }
+
+  onFiltersChange(value) {
+    let startValue = new Date(value.startDate.format('YYYY-MM-DD'));
+    let endValue = new Date(value.endDate.format('YYYY-MM-DD'));
+    let searchElements = document.getElementsByClassName("filterDate");
+    for(let i = 0; i < searchElements.length; i++) {
+        let colValue = searchElements[i].textContent;
+        let colDateValue= new Date(colValue);
+        let hide_content = searchElements[i].parentElement;
+        if ((colDateValue >= startValue ) && (colDateValue <= endValue)) {          
+          hide_content.style.visibility='visible';
+        }
+        else{
+          hide_content.style.visibility="hidden";
+        }
+  }
+  }
   
   render() {
+  let start = this.state.startDate.format('YYYY-MM-DD');
+  let end = this.state.endDate.format('YYYY-MM-DD');
+  let label = start + ' - ' + end;
+  if (start === end) {
+    label = start;
+  }
     const columns = [{
         className:'columnType',
         id: 'type',
@@ -197,7 +241,8 @@ export class VisitsAndEncounters extends React.Component {
         accessor: rowProps => rowProps.encounter.slice(0, -10),
         filterMethod: (filter, rows) =>
         matchSorter(rows, filter.value, { keys: ["type"] }),
-        filterAll: true
+        filterAll: true,
+        
       },
       {
         id: 'location',
@@ -208,32 +253,55 @@ export class VisitsAndEncounters extends React.Component {
         filterAll: true
       },
       {
-        id: 'date',
-        Header: 'Date',
-        accessor: rowProps => rowProps.date.split("T")[0],
-        filterMethod: (filter, rows) =>
-        matchSorter(rows, filter.value, { keys: ["date"] }),
-        filterAll: true
-      },
+      className:"filterDate",
+      id: 'date',
+      Header: 'Date',
+      accessor: rowProps => rowProps.date.split("T")[0],  
+      Filter: ({ filter, onFiltersChange}) =>  
+         <DateRangePicker  startDate={this.state.startDate}
+                           endDate={this.state.endDate} ranges={this.state.ranges} 
+                           onEvent={this.handleEvent} 
+                          >
+            <Button className="selected-date-range-btn" style={{width:'100%'}}>
+                <input className="dateField"   onChange={this.handleEvent} value={label} />
+                <span className="caret"></span>
+            </Button>
+        </DateRangePicker>         
+   ,
+     }
+    ,
       {
         className:'columnVisit',
         id: 'visit',
         Header: 'Visit',
         accessor: rowProps => rowProps.visit,
-        filterMethod: (filter, rows) =>
-        matchSorter(rows, filter.value, { keys: ["visit"]}),
-        filterAll: true
+        filterMethod: (filter, rows) =>{
+        matchSorter(rows, filter.value, { keys: ["visit"]});
+        filterAll: true;
+      }
+       
       }
     ];
 
     const columnsvisit = [{
+      className:"filterDate",
       id: 'date',
       Header: 'Date',
-      accessor: rowProps => rowProps.date,
-      filterMethod: (filter, rows) =>
-      matchSorter(rows, filter.value, { keys: ["date"] }),
-      filterAll: true
-    },
+      accessor: rowProps => rowProps.date,      
+      Filter: ({ filter, onFiltersChange}) =>  
+         <DateRangePicker  startDate={this.state.startDate}
+                           endDate={this.state.endDate} ranges={this.state.ranges} 
+                           onEvent={this.handleEvent} 
+                          >
+            <Button className="selected-date-range-btn" style={{width:'100%'}}>
+                <input className="dateField"   onChange={this.handleEvent} value={label} />
+                <span className="caret"></span>
+            </Button>
+        </DateRangePicker>        
+   ,
+     }
+    ,
+  
     {
       className:"visitTable",
       id: 'visit',
@@ -274,11 +342,11 @@ export class VisitsAndEncounters extends React.Component {
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
-
             <Row>
               <Col sm="12">
               <ReactTable
-              className="-striped -highlight"
+              id="visit"
+              className="-striped"
               data={this.getAllVisits()}
               filterable
               defaultFilterMethod={(filter, coloums) =>

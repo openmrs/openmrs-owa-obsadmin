@@ -29,7 +29,7 @@ export default class AddressForm extends React.Component {
       postalCode: address.postalCode || null,
       voided: address.voided || false,
       action: action,
-      secondryAction: address.secondryAction || '',
+      secondaryAction: address.secondryAction || '',
       preferred: address.preferred || false,
       activeCard: address.activeCard || '',
       activeButton: null,
@@ -194,20 +194,20 @@ export default class AddressForm extends React.Component {
           </div>
         </div>
         <div className="preffered">
-          {this.props.address.preferred ?
-             <span className="badge badge-info">Preferred</span>
+          {this.state.address.preferred ?
+              <span className="badge badge-info">Preferred</span>
             :
-             <span className="badge badge-no-color">&nbsp;</span>
+            <span className="badge badge-no-color">&nbsp;</span>
           }
-          {(this.state.action === "display" && this.state.secondryAction === "") ?
-             <div>
-               <FontAwesome className="fa fa-trash-o delete"
-               data-toggle="modal" data-target="#myModal"/>
-               <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
-                             className="fa fa-pencil-square-o"/>
-             </div>
+          {(this.state.action === "display" && this.state.secondaryAction === "") ?
+                  <div>
+                    <FontAwesome className="fa fa-trash-o delete"
+                    data-toggle="modal" data-target="#myModal"/>
+                    <FontAwesome onClick={(event) => this.editClick(event, this.state.uuid)}
+                                className="fa fa-pencil-square-o"/>
+                  </div>
                   : ''
-         }
+          }
        </div>
         {(this.state.action === 'edit' || this.state.action === 'new')
           && this.state.activeCard === this.state.uuid ?

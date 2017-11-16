@@ -147,10 +147,9 @@ class NewIdentifier extends React.Component {
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-2 btn-margin">
               <div >
-                    <FontAwesome 
-                     className="fa fa-plus-square-o add-btn"
-                     onClick={this.handleAddNew}
-                    />
+                <FontAwesome className="fa fa-plus-square-o add-btn"
+                            onClick={this.handleAddNew}
+                            />
               </div>
             </div>
           </div>

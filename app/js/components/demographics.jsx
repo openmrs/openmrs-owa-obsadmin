@@ -226,10 +226,8 @@ export default class Demographics extends React.Component {
                   <h5>{this.state.birthdate}</h5>
                 </div>
                 <div>
-                <FontAwesome
-                 className="fa fa-pencil-square-o" 
-                 onClick={this.handleChange}
-                 />
+                 <FontAwesome className="fa fa-pencil-square-o" 
+                              onClick={this.handleChange}/>
                 </div>                            
               </div>
             </div>
