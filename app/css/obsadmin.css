@@ -850,3 +850,10 @@ input[type="radio"]{
 .deletedObs{
   text-decoration: line-through;
 }
+
+.dateField{
+  flex: 100 0 auto;
+  width: 100%;
+  margin-top: -2em;
+}
+
