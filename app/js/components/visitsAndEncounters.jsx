@@ -234,16 +234,24 @@ export class VisitsAndEncounters extends React.Component {
   if (start === end) {
     label = start;
   }
-    const columns = [{
-        className:'columnType',
-        id: 'type',
-        Header: 'Type',
-        accessor: rowProps => rowProps.encounter.slice(0, -10),
-        filterMethod: (filter, rows) =>
-        matchSorter(rows, filter.value, { keys: ["type"] }),
-        filterAll: true,
-        
-      },
+    const columns = [
+      {
+        className:"filterDate",
+        id: 'date',
+        Header: 'Date',
+        accessor: rowProps => rowProps.date.split("T")[0],  
+        Filter: ({ filter, onFiltersChange}) =>  
+           <DateRangePicker  startDate={this.state.startDate}
+                             endDate={this.state.endDate} ranges={this.state.ranges} 
+                             onEvent={this.handleEvent} 
+                            >
+              <Button className="selected-date-range-btn" style={{width:'100%'}}>
+                  <input className="dateField"   onChange={this.handleEvent} value={label} />
+                  <span className="caret"></span>
+              </Button>
+          </DateRangePicker>         
+     ,
+       },
       {
         id: 'location',
         Header: 'Location',
@@ -253,23 +261,15 @@ export class VisitsAndEncounters extends React.Component {
         filterAll: true
       },
       {
-      className:"filterDate",
-      id: 'date',
-      Header: 'Date',
-      accessor: rowProps => rowProps.date.split("T")[0],  
-      Filter: ({ filter, onFiltersChange}) =>  
-         <DateRangePicker  startDate={this.state.startDate}
-                           endDate={this.state.endDate} ranges={this.state.ranges} 
-                           onEvent={this.handleEvent} 
-                          >
-            <Button className="selected-date-range-btn" style={{width:'100%'}}>
-                <input className="dateField"   onChange={this.handleEvent} value={label} />
-                <span className="caret"></span>
-            </Button>
-        </DateRangePicker>         
-   ,
-     }
-    ,
+        className:'columnType',
+        id: 'type',
+        Header: 'Type',
+        accessor: rowProps => rowProps.encounter.slice(0, -10),
+        filterMethod: (filter, rows) =>
+        matchSorter(rows, filter.value, { keys: ["type"] }),
+        filterAll: true,
+        
+      },
       {
         className:'columnVisit',
         id: 'visit',
