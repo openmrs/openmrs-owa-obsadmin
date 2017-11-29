@@ -29,11 +29,12 @@ export default class Observations extends React.Component {
       encounterType
     })
   }
-
+  
   showDeletedObs() {
     this.setState({
       deletedChecked: !this.state.deletedChecked
-    })
+    }
+  )
   }
 
   render() {
@@ -83,7 +84,7 @@ export default class Observations extends React.Component {
             checked={this.state.deletedChecked}
             onChange={this.showDeletedObs}
             disabled={encounterVoided}
-          /> Show Deleted
+          /> Include Deleted
         </span>
 
         {(encounterType && encounterType.display !== "Visit Note") ?
