@@ -245,7 +245,7 @@ export class VisitsAndEncounters extends React.Component {
                              endDate={this.state.endDate} ranges={this.state.ranges} 
                              onEvent={this.handleEvent} 
                             >
-              <Button className="selected-date-range-btn" style={{width:'100%'}}>
+              <Button className="selected-date-range-btn">
                   <input className="dateField"   onChange={this.handleEvent} value={label} />
                   <span className="caret"></span>
               </Button>

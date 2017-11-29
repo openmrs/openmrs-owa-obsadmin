@@ -97,10 +97,12 @@ export default class Encounters extends React.Component {
         this.setState({
           observations: response.results,
         })
-      })
+      }
+    )
+
       .catch(error => toastr.error(error));
   }
-
+  
   fetchStaticData() {
     apiCall(null, 'get', `visit?patient=${this.state.patientUuid}&v=full`)
       .then((res) => {
