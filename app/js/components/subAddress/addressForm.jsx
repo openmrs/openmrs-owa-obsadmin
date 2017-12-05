@@ -325,7 +325,7 @@ export default class AddressForm extends React.Component {
             </Modal>
           :
           <div>
-            {this.state.secondryAction === 'new' ?
+            {this.props.address.secondryAction === 'new' ?
               <div className="form-group">
                 <div >
                   <FontAwesome className="fa fa-plus-square-o add-btn"
