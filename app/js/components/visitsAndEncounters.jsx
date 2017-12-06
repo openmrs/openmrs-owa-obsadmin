@@ -94,8 +94,7 @@ export class VisitsAndEncounters extends React.Component {
     apiCall(null, 'get', `/visit?patient=${this.state.uuid}&includeAll=true&v=full`)
       .then((res) => {
         let visits = res.results;
-        const getVisits = visits.map(visit => apiCall(null, 'get', `/visit/${visit.uuid}`))
-
+        const getVisits = visits.map(visit => apiCall(null, 'get', `/visit/${visit.uuid}`));
         return Promise.all(getVisits).then(data => {
             this.setState({ visits: data, encounters: this.handleData(data) });
             return data;
@@ -202,6 +201,7 @@ export class VisitsAndEncounters extends React.Component {
     this.state.visits.map((visit) => {
         data["date"] = visit.startDatetime.split("T")[0]
         data["visit"] = visit['display'].split("@")[0]
+        data["voided"] = visit.voided.toString()
         data["location"] = visit.location.display
         data["visitUuid"] = visit.uuid
         output.push(data)
@@ -287,7 +287,14 @@ export class VisitsAndEncounters extends React.Component {
       className:"filterDate",
       id: 'date',
       Header: 'Date',
-      accessor: rowProps => rowProps.date,      
+      accessor: rowProps => rowProps.date,           
+      getProps: (state, rowInfo, column) => {
+        return {
+          style: {
+            textDecoration: rowInfo.row.voided === 'true' ? 'line-through' : null 
+          }
+        }
+      },
       Filter: ({ filter, onFiltersChange}) =>  
          <DateRangePicker  startDate={this.state.startDate}
                            endDate={this.state.endDate} ranges={this.state.ranges} 
@@ -307,6 +314,13 @@ export class VisitsAndEncounters extends React.Component {
       id: 'visit',
       Header: 'Visit',
       accessor: rowProps => rowProps.visit,
+      getProps: (state, rowInfo, column) => {
+        return {
+          style: {
+            textDecoration: rowInfo.row.voided === 'true' ? 'line-through' : null           
+          }
+        }
+      },
       filterMethod: (filter, rows) =>
       matchSorter(rows, filter.value, { keys: ["visit"] }),
       filterAll: true
@@ -315,9 +329,22 @@ export class VisitsAndEncounters extends React.Component {
       id: 'location',
       Header: 'Location',
       accessor: rowProps => rowProps.location,
+      getProps: (state, rowInfo, column) => {
+        return {
+          style: {
+            textDecoration: rowInfo.row.voided === 'true' ? 'line-through' : null           
+          }
+        }
+      },
       filterMethod: (filter, rows) =>
       matchSorter(rows, filter.value, { keys: ["location"] }),
       filterAll: true
+    },
+    {
+      id: 'voided',
+      Header: 'Deleted Visits',
+      show: false,
+      accessor: rowProps => rowProps.voided,
     },
   ];
     return(
@@ -348,7 +375,7 @@ export class VisitsAndEncounters extends React.Component {
               id="visit"
               className="-striped"
               data={this.getAllVisits()}
-              filterable
+              filterable          
               defaultFilterMethod={(filter, coloums) =>
                 String(row[filter.id]) === filter.value}
               pageSize= {this.getAllVisits().length}
@@ -367,6 +394,12 @@ export class VisitsAndEncounters extends React.Component {
                   }
                 }
               }}
+              defaultSorted={[
+                {
+                  id: "voided",
+                  desc: false
+                }
+              ]}
             />
               </Col>
             </Row>
