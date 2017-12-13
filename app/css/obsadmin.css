@@ -851,6 +851,10 @@ input[type="radio"]{
   text-decoration: line-through;
 }
 
+.breadcrumb{
+  cursor: pointer;
+}
+
 .dateField{
   flex: 100 0 auto;
   width: 100%;
