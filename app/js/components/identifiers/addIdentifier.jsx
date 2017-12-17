@@ -150,6 +150,7 @@ class NewIdentifier extends React.Component {
                 <FontAwesome className="fa fa-plus-square-o add-btn"
                             onClick={this.handleAddNew}
                             />
+                <p className='add-content'>add Identifier</p>
               </div>
             </div>
           </div>

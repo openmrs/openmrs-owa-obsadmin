@@ -794,6 +794,16 @@ li>a:hover {
   font-size: 3rem !important;
 }
 
+.form-group .add-content{
+  position:relative;
+  bottom:30px;
+  left:25px;
+  display:none;
+}
+.form-group:hover .add-content{
+  display: block;
+}
+
 #move-encounter{
   width: fit-content;
 }
@@ -849,6 +859,10 @@ input[type="radio"]{
 }
 .deletedObs{
   text-decoration: line-through;
+}
+
+.breadcrumb{
+  cursor: pointer;
 }
 
 .dateField{
