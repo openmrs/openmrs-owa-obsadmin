@@ -327,9 +327,10 @@ export default class AddressForm extends React.Component {
           <div>
             {this.props.address.secondryAction === 'new' ?
               <div className="form-group">
-                <div >
+                <div className='add'>
                   <FontAwesome className="fa fa-plus-square-o add-btn"
                                onClick={(event) => this.addClick(event, this.state.uuid)}/>
+                  <p className='add-content'>Add Address</p>
                 </div>
               </div>
               :
