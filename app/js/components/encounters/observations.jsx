@@ -164,7 +164,7 @@ export default class Observations extends React.Component {
                             {
                               groupMembersArray.map(observation => {
                                 return (
-                                  <tr className={(observation.voided) ? 'deletedObs' : ''} key={observation.uuid}>
+                                  <tr className={(observation.voided) ? 'deletedObs' : 'undeletedObs'} key={observation.uuid}>
                                     <a>
                                       <td
                                         onClick={
