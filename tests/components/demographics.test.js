@@ -9,7 +9,7 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('Demographics component', () => {
   it('renders the div tag', () => {
     const wrapper = shallow(<Demographics />);
-    expect(wrapper.find('div')).to.have.length(13);
+    expect(wrapper.find('div')).to.have.length(20);
   });
   it('Should render a DateTimeField', () => {
     const wrapper = shallow(<Demographics />);
