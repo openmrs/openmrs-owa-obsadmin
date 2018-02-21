@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Elbertbiggs360/openmrs-owa-obsadmin.svg?branch=master)](https://travis-ci.org/Elbertbiggs360/openmrs-owa-obsadmin)
+
 # openmrs-owa-obsadmin
 Open Web Application for managing patient observations data
 <img src="https://cloud.githubusercontent.com/assets/668093/12567089/0ac42774-c372-11e5-97eb-00baf0fccc37.jpg" alt="OpenMRS"/>

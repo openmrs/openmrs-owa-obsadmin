@@ -18,7 +18,7 @@ describe('<VisitsAndEncounters />', () => {
   });
   it('Should render a table', () => {
     const wrapper = shallow(<VisitsAndEncounters />);
-    expect(wrapper.find("Table")).to.have.length(2);
+    expect(wrapper.find("ReactTable")).to.have.length(2);
   });
   it('Should render the NavLink tag', () => {
     const wrapper = shallow(<VisitsAndEncounters />);
@@ -27,11 +27,6 @@ describe('<VisitsAndEncounters />', () => {
   it('Should render a nav item tag', () => {
     const wrapper = shallow(<VisitsAndEncounters />);
     expect(wrapper.find("NavItem")).to.have.length(2);
-  });
-
-  it('Should render atleast four th tags', () => {
-    const wrapper = shallow(<VisitsAndEncounters />);
-    expect(wrapper.find("th")).to.have.lengthOf.at.least(4);
   });
 
 });

@@ -10,3 +10,5 @@ npm-debug.log
 obsadmin.zip
 libs
 .nyc_output
+coverage
+.nyc_output

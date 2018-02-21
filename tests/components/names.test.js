@@ -9,7 +9,7 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('Names Component', () => {
   it('renders the div tags', () => {
     const wrapper = shallow(<Names />);
-    expect(wrapper.find('div')).to.have.length(11);
+    expect(wrapper.find('div')).to.have.length(10);
   });
    it('renders the form', () => {
     const wrapper = shallow(<Names />);
