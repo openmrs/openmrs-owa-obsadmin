@@ -11,10 +11,6 @@ describe('Demographics component', () => {
     const wrapper = shallow(<Demographics />);
     expect(wrapper.find('div')).to.have.length(20);
   });
-  it('Should render a DateTimeField', () => {
-    const wrapper = shallow(<Demographics />);
-    expect(wrapper.find("DateTimeField")).to.have.length(1);
-  });
   it('Should render the label tag', () => {
     const wrapper = shallow(<Demographics />);
     expect(wrapper.find("label")).to.have.lengthOf.at.least(2);

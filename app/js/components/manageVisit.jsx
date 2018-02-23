@@ -10,7 +10,7 @@ import React from 'react';
 import toastr from 'toastr';
 import moment from 'moment';
 import apiCall from '../utilities/apiHelper';
-import DateTimeField from 'react-bootstrap-datetimepicker';
+import Datetime from "react-datetime";
 import { Button, Form, FormGroup, Label, Input, FormText, Table, ListGroup, ListGroupItem } from 'reactstrap';
 import { withRouter } from 'react-router'
 
@@ -210,7 +210,7 @@ export class ManageVisit extends React.Component {
               <div className={editError.includes('Start') ? editErrorClass : ''}>
                 <label className="control-label col-sm-2"> Start Date </label>
                 <div className="col-sm-6">
-                  <DateTimeField
+                  <Datetime
                     inputProps={{ disabled: true }}
                     className="form-control"
                     name="finalStartTime"
@@ -227,7 +227,7 @@ export class ManageVisit extends React.Component {
             <div className="form-group ">
               <label className="control-label col-sm-2"> Stop Date </label>
               <div className="col-sm-6">
-                <DateTimeField
+                <Datetime
                   className="form-control"
                   inputProps={{ disabled: true }}
                   name="finalStopDatetime"
