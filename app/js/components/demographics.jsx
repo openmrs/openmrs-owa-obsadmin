@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import apiCall from '../utilities/apiHelper';
-import DateTimeField from 'react-bootstrap-datetimepicker';
+import Datetime from "react-datetime";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'react-bootstrap';
 import moment from 'moment';
 import FontAwesome from'react-fontawesome';
@@ -271,7 +271,7 @@ export default class Demographics extends React.Component {
                       'has-error' : ''}>
                       <label className='control-label col-sm-4'>Birth Date:</label>
                       <div className='col-sm-8 '>
-                        <DateTimeField
+                        <Datetime
                           className='form-control'
                           name='birthdate'
                           inputProps={{ disabled: true }}
@@ -324,7 +324,7 @@ export default class Demographics extends React.Component {
                           'has-error' : ''}>
                           <label className='control-label col-sm-4'> Death Date: </label>
                           <div className='col-sm-8'>
-                            <DateTimeField
+                            <Datetime
                               className='form-control'
                               name='deathDate'
                               defaultText={this.state.deathDateTime ?
