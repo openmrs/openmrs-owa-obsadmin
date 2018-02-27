@@ -117,6 +117,10 @@ Sharing in Tomcat.
 
 See instructions [here](http://enable-cors.org/server_tomcat.html) for Tomcat 7 and [here](https://www.dforge.net/2013/09/16/enabling-cors-on-apache-tomcat-6/) for Tomcat 6.
 
+## Releasing
+
+In order to release, set a new version in package.json, bintray.json and app/manifest.webapp. Once you commit and push changes to github, go to https://github.com/openmrs/openmrs-owa-obsadmin/releases and create a new release named after the version you want to release. Travis CI should pick up a newly created tag and deploy the release to Bintray at https://bintray.com/openmrs/owa/openmrs-owa-obsadmin
+
 ## License
 
 [MPL 2.0 w/ HD](http://openmrs.org/license/)
