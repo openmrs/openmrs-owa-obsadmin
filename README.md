@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Elbertbiggs360/openmrs-owa-obsadmin.svg?branch=master)](https://travis-ci.org/Elbertbiggs360/openmrs-owa-obsadmin)
+[![Build Status](https://travis-ci.org/openmrs/openmrs-owa-obsadmin.svg?branch=master)](https://travis-ci.org/openmrs/openmrs-owa-obsadmin)
 
 # openmrs-owa-obsadmin
 Open Web Application for managing patient observations data

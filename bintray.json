@@ -1,0 +1,15 @@
+{
+    "package": {
+        "name": "openmrs-owa-obsadmin",
+        "repo": "owa",
+        "subject": "openmrs"
+    },
+
+    "version": {
+        "name": "1.0.0-beta",
+        "released": "2018-02-21"
+    },
+
+    "files":[{"includePattern": "./(.*\\.zip)", "uploadPattern": "$1"}],
+    "publish": true
+}

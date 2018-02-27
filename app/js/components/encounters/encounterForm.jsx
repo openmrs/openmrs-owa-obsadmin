@@ -9,7 +9,7 @@
 import React from 'react';
 import PropTypes from 'react-proptypes';
 import moment from 'moment';
-import DateTimeField from 'react-bootstrap-datetimepicker';
+import Datetime from "react-datetime";
 
 const Encounter = (props) => {
   const {
@@ -117,7 +117,7 @@ const Encounter = (props) => {
           >
             <label className="col-sm-4 col-form-label"> Encounter Date: </label>
             <div className="col-sm-8">
-              <DateTimeField
+              <Datetime
                 className="form-control"
                 name="encounterDatetime"
                 format={format}

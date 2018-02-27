@@ -3,3 +3,14 @@ node_js:
   - "6.10.1"
 after_success:
   - npm run coveralls
+install:
+- npm install
+script: npm run build:prod
+deploy:
+  provider: bintray
+  file: bintray.json
+  user: rkorytkowski
+  dry-run: false
+  on:
+    tags: true
+  key: $BINTRAY_API_KEY
